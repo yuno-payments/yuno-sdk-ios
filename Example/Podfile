@@ -1,0 +1,30 @@
+use_frameworks!
+
+platform :ios, '12.0'
+
+target 'YunoSDK_Example' do
+  pod 'YunoSDK', '~> 0.1.0'
+
+  target 'YunoSDK_Tests' do
+    inherit! :search_paths
+
+    pod 'Quick', '~> 2.2.0'
+    pod 'Nimble', '~> 8.0.7'
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      deployment_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      config.build_settings['SWIFT_VERSION'] = '5.0'
+      target_components = deployment_target.split
+      if target_components.length > 0
+        target_initial = target_components[0].to_i
+        if target_initial < 12
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = "12.0"
+        end
+      end
+    end
+  end
+end
