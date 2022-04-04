@@ -3,7 +3,7 @@ use_frameworks!
 platform :ios, '12.0'
 
 target 'YunoSDK_Example' do
-  pod 'YunoSDK', '~> 0.1.0'
+  pod 'YunoSDK'
 
   target 'YunoSDK_Tests' do
     inherit! :search_paths
