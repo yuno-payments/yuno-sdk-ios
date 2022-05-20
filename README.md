@@ -46,26 +46,53 @@ To display a ViewController of Enrollment flow call the following method:
 
 ```swift
 let configuration = YunoEnrollmentConfiguration(
-    customerSession: "<Customer Session>",
-    navigationController: self.navigationController,
-    callbackDelegate: self
+    customerSession: "<your customer session>",
+    delegate: self
 )
-Yuno.startEnrollment(with: configuration)
+Yuno.startEnrollment(with: self)
 ```
 #### Start payment
 
 To display a ViewController of Payment flow call the following method:
 
 ```swift
-let configuration = YunoPaymentConfiguration(
-    checkoutSession: "<Checkout Session>",
-    countryCode: "<Country Code iso>",
-    paymentMethodId: "<Payment Vaulted Token>",
-    paymentMethodType: "<Payment Method Type>",
-    navigationController: self.navigationController,
-    callbackDelegate: self
-)
-Yuno.startPayment(with: configuration)
+
+protocol PaymentSelected {
+    var id: String { get }
+    var type: String { get }
+}
+
+final class AnyClassDelegate: YunoPaymentDelegate {
+    
+    let checkoutSession: String = "<Your PaymentId>"
+    let countryCode: String = "<Your country code>" // ISO: CO, AR, BR, etc.
+    var paymentSelected: PaymentSelected?
+    
+    var navigationController: UINavigationController?
+
+    func yunoPaymentResultSuccess() {
+        // TODO: Write your code
+    }
+
+    func yunoPaymentResultError() {
+        // TODO: Write your code
+    }
+
+    func yunoPaymentResultCanceled() {
+        // TODO: Write your code
+    }
+
+    private func startPaymentWithYuno() {
+        Yuno.startPayment(with: self) { [weak self] (token: String, completion: () -> Void) in
+            self?.makePayBackToBack(token, completion: completion)
+        }
+    }
+
+    private func makePayBackToBack(token: String, completion: () -> Void) {
+        //Method to create payment
+        completion()
+    }
+}
 ```
 
 ## Author
