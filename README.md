@@ -37,7 +37,7 @@ First, you'll need to get your Yuno app ID and iOS API key, Then, Then initializ
 ```swift
 import YunoSDK
 
-Yuno.initialize(apiKey: "<Your iOS API Key>", forAppId: "<Your App ID>")
+Yuno.initialize(apiKey: "<Your API Key>")
 ```
 
 #### Start enrollment
@@ -46,8 +46,7 @@ To display a ViewController of Enrollment flow call the following method:
 
 ```swift
 let configuration = YunoEnrollmentConfiguration(
-    sessionId: "<Your SessionId>",
-    paymentId: "<Your PaymentId>",
+    customerSession: "<Customer Session>",
     navigationController: self.navigationController,
     callbackDelegate: self
 )
@@ -59,8 +58,10 @@ To display a ViewController of Payment flow call the following method:
 
 ```swift
 let configuration = YunoPaymentConfiguration(
-    sessionId: "<Your SessionId>",
-    paymentId: "<Your PaymentId>",
+    checkoutSession: "<Checkout Session>",
+    countryCode: "<Country Code iso>",
+    paymentMethodId: "<Payment Vaulted Token>",
+    paymentMethodType: "<Payment Method Type>",
     navigationController: self.navigationController,
     callbackDelegate: self
 )
@@ -70,7 +71,3 @@ Yuno.startPayment(with: configuration)
 ## Author
 
 Yuno Payments Inc.
-
-## License
-
-YunoSDK is available under the MIT license. See the LICENSE file for more info.
