@@ -24,6 +24,10 @@ Pod::Spec.new do |s|
   s.requires_arc          = true
 
   s.vendored_frameworks = "YunoSDK.xcframework"
+  
+  s.dependency 'RxSwift'
+  s.dependency 'RxCocoa'
+  
   s.frameworks = 'UIKit'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => ['${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK'] }
 end

@@ -1,0 +1,11 @@
+framework module YunoSDK {
+  umbrella header "YunoSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module YunoSDK.Swift {
+    header "YunoSDK-Swift.h"
+    requires objc
+}

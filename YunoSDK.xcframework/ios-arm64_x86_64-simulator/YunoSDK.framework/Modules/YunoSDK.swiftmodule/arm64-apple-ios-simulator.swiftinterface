@@ -1,0 +1,93 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)
+// swift-module-flags: -target arm64-apple-ios15.5-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name YunoSDK
+import CoreGraphics
+import Foundation
+import RxCocoa
+import RxRelay
+import RxSwift
+import Swift
+import UIKit.UIGeometry
+import UIKit
+import WebKit
+@_exported import YunoSDK
+import _Concurrency
+public protocol YunoEnrollmentDelegate : AnyObject {
+  var isLite: Swift.Bool { get }
+  var countryCode: Swift.String { get }
+  var customerSession: Swift.String { get }
+  var enrollmentSelected: YunoSDK.EnrollmentMethodSelected? { get }
+  var navigationController: UIKit.UINavigationController? { get }
+  func yunoEnrollmentResultSuccess()
+  func yunoEnrollmentResultError()
+  func yunoEnrollmentResultCanceled()
+}
+public protocol YunoPaymentDelegate : AnyObject {
+  var isLite: Swift.Bool { get }
+  var checkoutSession: Swift.String { get }
+  var countryCode: Swift.String { get }
+  var paymentSelected: YunoSDK.PaymentMethodSelected? { get }
+  var navigationController: UIKit.UINavigationController? { get }
+  func yunoPaymentResultSuccess()
+  func yunoPaymentResultError()
+  func yunoPaymentResultCanceled()
+}
+extension YunoSDK.YunoPaymentDelegate {
+  public var isLite: Swift.Bool {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers final public class Yuno {
+  public static func initialize(apiKey: Swift.String)
+  public static func addNewPaymentMethod(with delegate: YunoSDK.YunoEnrollmentDelegate, completion: @escaping (Swift.String, @escaping () -> Swift.Void) -> Swift.Void)
+  public static func methodsView() -> YunoSDK.MethodsView
+  public static func startPayment(with delegate: YunoSDK.YunoPaymentDelegate, completion: @escaping (Swift.String, @escaping () -> Swift.Void) -> Swift.Void)
+  @objc deinit
+}
+public enum YunoEnvirotment : Swift.String {
+  case dev
+  case sandbox
+  case prod
+  case local
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol MethodsView : AnyObject {
+  var delegate: YunoSDK.YunoMethodsViewDelegate? { get set }
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0.0, *)
+  func getPaymentMethodsView(checkoutSession: Swift.String) async -> UIKit.UIView
+  #endif
+
+  func getPaymentMethodsView(checkoutSession: Swift.String, block: @escaping (UIKit.UIView) -> Swift.Void)
+  
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0.0, *)
+  func getEnrollmentMethodsView(customerSession: Swift.String) async -> UIKit.UIView
+  #endif
+
+  func getEnrollmentMethodsView(customerSession: Swift.String, block: @escaping (UIKit.UIView) -> Swift.Void)
+}
+public protocol PaymentMethodSelected {
+  var id: Swift.String { get }
+  var type: Swift.String { get }
+}
+public protocol EnrollmentMethodSelected {
+  var type: Swift.String { get }
+}
+public protocol YunoMethodsViewDelegate : AnyObject {
+  func yunoDidSelect(paymentMethod: YunoSDK.PaymentMethodSelected)
+  func yunoDidSelect(enrollmentMethod: YunoSDK.EnrollmentMethodSelected)
+  func yunoUpdatePaymentMethodsViewHeight(_ height: CoreGraphics.CGFloat)
+  func yunoUpdateEnrollmentMethodsViewHeight(_ height: CoreGraphics.CGFloat)
+}
+extension UIKit.UINavigationController {
+  @_Concurrency.MainActor(unsafe) public func pushViewController(_ viewController: UIKit.UIViewController, animated: Swift.Bool, completion: (() -> Swift.Void)?)
+}
+extension YunoSDK.YunoEnvirotment : Swift.Equatable {}
+extension YunoSDK.YunoEnvirotment : Swift.Hashable {}
+extension YunoSDK.YunoEnvirotment : Swift.RawRepresentable {}
