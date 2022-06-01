@@ -3,11 +3,7 @@ use_frameworks!
 platform :ios, '12.0'
 
 target 'YunoSDK_Example' do
-  pod 'YunoSDK'#, :path => '../'
-
-  target 'YunoSDK_Tests' do
-    inherit! :search_paths
-  end
+  pod 'YunoSDK', :path => '../'
 end
 
 post_install do |installer|

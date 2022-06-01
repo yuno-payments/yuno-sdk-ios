@@ -7,43 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		562137BE217A8E2D2A319C0B /* Pods_YunoSDK_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 823B5C438FFE9A90C8F4EE43 /* Pods_YunoSDK_Example.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
-		6FC79D726946800B292DFB21 /* Pods_YunoSDK_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4EAA3AE1805D5F03CC8E768 /* Pods_YunoSDK_Tests.framework */; };
-		7597316227F7600700C8DF63 /* BuildFile in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6619F6F88AF6047E19414EF2 /* Pods_YunoSDK_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31DAF9AA3B23C06D4A4F8730 /* Pods_YunoSDK_Example.framework */; };
+		757E4F8F2841323200E1739F /* EnvirotmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757E4F8E2841323200E1739F /* EnvirotmentViewController.swift */; };
+		758C471D2837844C000C3DE1 /* ExampleApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758C471C2837844C000C3DE1 /* ExampleApi.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		607FACE61AFB9204008FA782 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
-			remoteInfo = YunoSDK;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		7597316327F7600700C8DF63 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				7597316227F7600700C8DF63 /* BuildFile in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		351D9F2666CCBF87ABA12966 /* YunoSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = YunoSDK.podspec; path = ../YunoSDK.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		0FE6D0DADA08B3B9E60A36BB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		194B80B567DC1A72A84CE2EB /* Pods-YunoSDK_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YunoSDK_Example.debug.xcconfig"; path = "Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		31DAF9AA3B23C06D4A4F8730 /* Pods_YunoSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YunoSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* YunoSDK_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YunoSDK_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,17 +28,15 @@
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		607FACE51AFB9204008FA782 /* YunoSDK_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YunoSDK_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		6CF41DEF227EED6970133278 /* Pods-YunoSDK_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YunoSDK_Example.debug.xcconfig"; path = "Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		823B5C438FFE9A90C8F4EE43 /* Pods_YunoSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YunoSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8428AF0D82A0CBCD754F028B /* Pods-YunoSDK_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YunoSDK_Tests.debug.xcconfig"; path = "Target Support Files/Pods-YunoSDK_Tests/Pods-YunoSDK_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		8EC290B87184AFE9FA5B51BF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		A3E555337DE7039175CB15EA /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		A4EAA3AE1805D5F03CC8E768 /* Pods_YunoSDK_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YunoSDK_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D21A9E7E77C6993FF7DDDD7D /* Pods-YunoSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YunoSDK_Example.release.xcconfig"; path = "Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
-		E2ECF841AFF322CC2B2219E4 /* Pods-YunoSDK_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YunoSDK_Tests.release.xcconfig"; path = "Target Support Files/Pods-YunoSDK_Tests/Pods-YunoSDK_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		7521A7572836997A0025A101 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Main.strings"; sourceTree = "<group>"; };
+		7521A7582836997A0025A101 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		7575C0D32836994E00F9266D /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
+		7575C0D42836994E00F9266D /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		757E4F8E2841323200E1739F /* EnvirotmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvirotmentViewController.swift; sourceTree = "<group>"; };
+		758C471C2837844C000C3DE1 /* ExampleApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApi.swift; sourceTree = "<group>"; };
+		99DCCEABFFD95E525B4FFE56 /* Pods-YunoSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YunoSDK_Example.release.xcconfig"; path = "Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
+		A576B194077209836A42CF58 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		DF8433A9A0E98E8CBCA17C5C /* YunoSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = YunoSDK.podspec; path = ../YunoSDK.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,50 +44,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				562137BE217A8E2D2A319C0B /* Pods_YunoSDK_Example.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		607FACE21AFB9204008FA782 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6FC79D726946800B292DFB21 /* Pods_YunoSDK_Tests.framework in Frameworks */,
+				6619F6F88AF6047E19414EF2 /* Pods_YunoSDK_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1FA021FB71765047BA538D65 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				823B5C438FFE9A90C8F4EE43 /* Pods_YunoSDK_Example.framework */,
-				A4EAA3AE1805D5F03CC8E768 /* Pods_YunoSDK_Tests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		38B6AF9C4823769B7E5D2DF5 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6CF41DEF227EED6970133278 /* Pods-YunoSDK_Example.debug.xcconfig */,
-				D21A9E7E77C6993FF7DDDD7D /* Pods-YunoSDK_Example.release.xcconfig */,
-				8428AF0D82A0CBCD754F028B /* Pods-YunoSDK_Tests.debug.xcconfig */,
-				E2ECF841AFF322CC2B2219E4 /* Pods-YunoSDK_Tests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for YunoSDK */,
-				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,
-				38B6AF9C4823769B7E5D2DF5 /* Pods */,
-				1FA021FB71765047BA538D65 /* Frameworks */,
+				FC461468E35E4DD6C784A118 /* Pods */,
+				AB33998319FCB6CDF455D234 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -120,7 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				607FACD01AFB9204008FA782 /* YunoSDK_Example.app */,
-				607FACE51AFB9204008FA782 /* YunoSDK_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,11 +74,13 @@
 			isa = PBXGroup;
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
+				757E4F8E2841323200E1739F /* EnvirotmentViewController.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				758C471C2837844C000C3DE1 /* ExampleApi.swift */,
 			);
 			name = "Example for YunoSDK";
 			path = YunoSDK;
@@ -147,31 +94,31 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		607FACE81AFB9204008FA782 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
-				607FACE91AFB9204008FA782 /* Supporting Files */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
-		607FACE91AFB9204008FA782 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				607FACEA1AFB9204008FA782 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				351D9F2666CCBF87ABA12966 /* YunoSDK.podspec */,
-				A3E555337DE7039175CB15EA /* README.md */,
-				8EC290B87184AFE9FA5B51BF /* LICENSE */,
+				DF8433A9A0E98E8CBCA17C5C /* YunoSDK.podspec */,
+				0FE6D0DADA08B3B9E60A36BB /* README.md */,
+				A576B194077209836A42CF58 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		AB33998319FCB6CDF455D234 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				31DAF9AA3B23C06D4A4F8730 /* Pods_YunoSDK_Example.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FC461468E35E4DD6C784A118 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				194B80B567DC1A72A84CE2EB /* Pods-YunoSDK_Example.debug.xcconfig */,
+				99DCCEABFFD95E525B4FFE56 /* Pods-YunoSDK_Example.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,11 +128,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "YunoSDK_Example" */;
 			buildPhases = (
-				8001871E2C493DB5E69092C7 /* [CP] Check Pods Manifest.lock */,
+				831802F17A8DA36D52EED6D9 /* [CP] Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				7597316327F7600700C8DF63 /* Embed Frameworks */,
+				B380C2F6561BD84B283273B7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,43 +143,20 @@
 			productReference = 607FACD01AFB9204008FA782 /* YunoSDK_Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		607FACE41AFB9204008FA782 /* YunoSDK_Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "YunoSDK_Tests" */;
-			buildPhases = (
-				45469F89D1302C8D7393734D /* [CP] Check Pods Manifest.lock */,
-				607FACE11AFB9204008FA782 /* Sources */,
-				607FACE21AFB9204008FA782 /* Frameworks */,
-				607FACE31AFB9204008FA782 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				607FACE71AFB9204008FA782 /* PBXTargetDependency */,
-			);
-			name = YunoSDK_Tests;
-			productName = Tests;
-			productReference = 607FACE51AFB9204008FA782 /* YunoSDK_Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		607FACC81AFB9204008FA782 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = F839DTCL97;
 						LastSwiftMigration = 0900;
-					};
-					607FACE41AFB9204008FA782 = {
-						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
-						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
 			};
@@ -244,6 +168,8 @@
 				English,
 				en,
 				Base,
+				"pt-BR",
+				"es-419",
 			);
 			mainGroup = 607FACC71AFB9204008FA782;
 			productRefGroup = 607FACD11AFB9204008FA782 /* Products */;
@@ -251,7 +177,6 @@
 			projectRoot = "";
 			targets = (
 				607FACCF1AFB9204008FA782 /* YunoSDK_Example */,
-				607FACE41AFB9204008FA782 /* YunoSDK_Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -267,39 +192,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		607FACE31AFB9204008FA782 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		45469F89D1302C8D7393734D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-YunoSDK_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8001871E2C493DB5E69092C7 /* [CP] Check Pods Manifest.lock */ = {
+		831802F17A8DA36D52EED6D9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -321,6 +217,30 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B380C2F6561BD84B283273B7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK/YunoSDK.framework/YunoSDK",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YunoSDK.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -328,34 +248,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				757E4F8F2841323200E1739F /* EnvirotmentViewController.swift in Sources */,
+				758C471D2837844C000C3DE1 /* ExampleApi.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		607FACE11AFB9204008FA782 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		607FACE71AFB9204008FA782 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 607FACCF1AFB9204008FA782 /* YunoSDK_Example */;
-			targetProxy = 607FACE61AFB9204008FA782 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				607FACDA1AFB9204008FA782 /* Base */,
+				7575C0D32836994E00F9266D /* pt-BR */,
+				7521A7572836997A0025A101 /* es-419 */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -364,6 +272,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				607FACDF1AFB9204008FA782 /* Base */,
+				7575C0D42836994E00F9266D /* pt-BR */,
+				7521A7582836997A0025A101 /* es-419 */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
@@ -375,6 +285,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -383,14 +294,17 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -416,11 +330,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -428,6 +343,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -436,14 +352,17 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -462,83 +381,42 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CF41DEF227EED6970133278 /* Pods-YunoSDK_Example.debug.xcconfig */;
+			baseConfigurationReference = 194B80B567DC1A72A84CE2EB /* Pods-YunoSDK_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = F839DTCL97;
 				INFOPLIST_FILE = YunoSDK/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D21A9E7E77C6993FF7DDDD7D /* Pods-YunoSDK_Example.release.xcconfig */;
+			baseConfigurationReference = 99DCCEABFFD95E525B4FFE56 /* Pods-YunoSDK_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = F839DTCL97;
 				INFOPLIST_FILE = YunoSDK/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
-			};
-			name = Release;
-		};
-		607FACF31AFB9204008FA782 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8428AF0D82A0CBCD754F028B /* Pods-YunoSDK_Tests.debug.xcconfig */;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YunoSDK_Example.app/YunoSDK_Example";
-			};
-			name = Debug;
-		};
-		607FACF41AFB9204008FA782 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E2ECF841AFF322CC2B2219E4 /* Pods-YunoSDK_Tests.release.xcconfig */;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YunoSDK_Example.app/YunoSDK_Example";
 			};
 			name = Release;
 		};
@@ -559,15 +437,6 @@
 			buildConfigurations = (
 				607FACF01AFB9204008FA782 /* Debug */,
 				607FACF11AFB9204008FA782 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "YunoSDK_Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				607FACF31AFB9204008FA782 /* Debug */,
-				607FACF41AFB9204008FA782 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

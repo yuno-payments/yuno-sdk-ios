@@ -1,0 +1,12 @@
+
+/* Class = "UIButton"; configuration.title = "Start enrollment"; ObjectID = "A3c-QB-a8u"; */
+"A3c-QB-a8u.configuration.title" = "Start enrollment";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "A3c-QB-a8u"; */
+"A3c-QB-a8u.normalTitle" = "Button";
+
+/* Class = "UIButton"; configuration.title = "Start payment"; ObjectID = "DoG-Vh-xJa"; */
+"DoG-Vh-xJa.configuration.title" = "Start payment";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "DoG-Vh-xJa"; */
+"DoG-Vh-xJa.normalTitle" = "Button";

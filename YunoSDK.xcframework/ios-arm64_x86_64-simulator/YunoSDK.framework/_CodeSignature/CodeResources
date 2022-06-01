@@ -14,31 +14,31 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		9tjseRukrhnYTpcX+OndH0j3o3c=
+		InCdrQoJEIk1QcJZU6tNK7qedV8=
 		</data>
 		<key>Modules/YunoSDK.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		UUkHqThT2MRl+rY7S6pzDZsva78=
+		TVSbCQykxIdmQejn2Jnqo0MseAM=
 		</data>
 		<key>Modules/YunoSDK.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		Ogk27YEggimufFI1bxAUQbOXvr4=
+		bbFB4dFzM6Yys/ewrMwHP2jOmRo=
 		</data>
 		<key>Modules/YunoSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		sAFZZvAN5pN4PVH9QaUSelox4dg=
+		g6xfr6G4s4Tm6mabTWZbme5IHTE=
 		</data>
 		<key>Modules/YunoSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		Cxh2isT2GSV+jBTR72nGq+gmFtI=
+		dER/ogRBucKpAMPtHinTYwguMiw=
 		</data>
 		<key>Modules/YunoSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		h2lmMfNjoBXccScdECh1GoG5AuA=
+		D4waXqGYPgr04sS8S+Dn9aZNGgA=
 		</data>
 		<key>Modules/YunoSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		+dxgVj2vd+JDCfOUzVIujOyqp5Y=
+		U3EyG5M8Q4NEDeDJPaYk71IT2Sw=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -65,42 +65,42 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			bhYF3HdfSHiSnymYH9Vux3yvqVgIGf7GNhMG8XAxAQ4=
+			QCW7MLMNq8cxVs9HDoKWgasLNtOsQLL3rLigvn32wZ4=
 			</data>
 		</dict>
 		<key>Modules/YunoSDK.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			815C/WtapZ/3SbPLjyrGNgi0KylpGnZ5kRWRivr8d9U=
+			gtyibQhjI1Q22+nZ6yFaFbJ4P7pT5+HEsB/hXzzIve0=
 			</data>
 		</dict>
 		<key>Modules/YunoSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ZYXPe+sYkEdlqEC8Ufgb1dLCrG5XZXYl2sUqzAImyBY=
+			aX6AwcnQdHAA/gdD+n6p6GZFZaTw3WUdHP58WvcZoiQ=
 			</data>
 		</dict>
 		<key>Modules/YunoSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			y0epoXOzSxfM9idxST5zHBfmExHWxBudsFRU1UM3YAo=
+			icDul3wKP9SK4P4534SfXL3JoYeDEV5dy6O6fi4NGVw=
 			</data>
 		</dict>
 		<key>Modules/YunoSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			LnS9+ziWrPLBitErXS8WRbdYJj/cE3Bg88Dzl9d1m44=
+			K+Xg6qzsHGHzG2qXF6JS0UEaJm0a1uIebmGutuQBVrk=
 			</data>
 		</dict>
 		<key>Modules/YunoSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			PTY6cB20dOMQ4yt4iRvdFID1NQcLWu98BBBcZdSclhs=
+			eTn8HybKzLHqD+OJ7vOXgqSbzlB2ljlrAqKng4T2U/U=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
