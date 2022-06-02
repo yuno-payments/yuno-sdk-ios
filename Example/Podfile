@@ -11,6 +11,7 @@ post_install do |installer|
     target.build_configurations.each do |config|
       deployment_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
       config.build_settings['SWIFT_VERSION'] = '5.0'
+      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
       target_components = deployment_target.split
       if target_components.length > 0
         target_initial = target_components[0].to_i
