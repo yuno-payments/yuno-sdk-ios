@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://www.y.uno/'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jonathan Pacheco' => 'jonathan.pacheco@y.uno.com' }
-  s.source           = { :git => 'https://github.com/yuno-payments/yuno-sdk-ios.git', :tag => s.version.to_s }
+  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/' + s.version.to_s + '/YunoSDK.xcframework.zip' }
 
   s.ios.deployment_target = '12.0'
   s.swift_version         = '5.4'
