@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://www.y.uno/'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jonathan Pacheco' => 'jonathan.pacheco@y.uno.com' }
-  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/' + s.version.to_s + '/YunoSDK.xcframework.zip' }
+  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/0.1.1/YunoSDK.xcframework.zip' }
 
   s.ios.deployment_target = '12.0'
   s.swift_version         = '5.4'
@@ -27,6 +27,7 @@ Pod::Spec.new do |s|
   
   s.dependency 'RxSwift'
   s.dependency 'RxCocoa'
+  s.dependency 'RxRelay'
   
   s.frameworks = 'UIKit'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => ['${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK'] }
