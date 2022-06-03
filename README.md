@@ -19,7 +19,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install. 
 
 ```ruby
-pod 'YunoSDK'
+pod 'YunoSDK', '0.1.2'
 ```
 
 Then run pod install in your directory:
@@ -45,12 +45,37 @@ Yuno.initialize(apiKey: "<Your API Key>")
 To display a ViewController of Enrollment flow call the following method:
 
 ```swift
-let configuration = YunoEnrollmentConfiguration(
-    customerSession: "<your customer session>",
-    delegate: self
-)
-Yuno.startEnrollment(with: self)
+
+protocol EnrollmentMethodSelected {
+    var type: String { get }
+}
+
+class AnyClassDelegate: YunoEnrollmentDelegate {
+
+    let countryCode: String = "<Your country code>" // ISO: CO, AR, BR, etc.
+    let customerSession: String = "<Your customer session>"
+
+    var enrollmentSelected: EnrollmentMethodSelected?
+    weak var navigationController: UINavigationController?
+    
+    func yunoEnrollmentResultSuccess() {
+        // TODO: Write your code
+    }
+
+    func yunoEnrollmentResultError() {
+        // TODO: Write your code
+    }
+
+    func yunoEnrollmentResultCanceled() {
+        // TODO: Write your code
+    }
+
+    Yuno.startEnrollment(with: self)
+}
 ```
+> If your implementation is Lite (without list the payment methods), please declare: 
+    `let isLite: Bool = true`
+
 #### Start payment
 
 To display a ViewController of Payment flow call the following method:
@@ -64,11 +89,11 @@ protocol PaymentSelected {
 
 final class AnyClassDelegate: YunoPaymentDelegate {
     
-    let checkoutSession: String = "<Your PaymentId>"
     let countryCode: String = "<Your country code>" // ISO: CO, AR, BR, etc.
+    let checkoutSession: String = "<Your checkout session>"
     var paymentSelected: PaymentSelected?
     
-    var navigationController: UINavigationController?
+    weak var navigationController: UINavigationController?
 
     func yunoPaymentResultSuccess() {
         // TODO: Write your code
