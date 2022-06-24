@@ -16,7 +16,7 @@ class EnvirotmentViewController: UIViewController {
     
     @IBOutlet private weak var apiKeyTextField: UITextField!
     
-    @UserDefault(key: .apiKey, defaultValue: "")
+    @UserDefault(key: Key.apiKey.rawValue, defaultValue: "")
     var apiKey: String
     
     override func viewDidLoad() {
@@ -25,7 +25,9 @@ class EnvirotmentViewController: UIViewController {
         apiKeyTextField.text = apiKey
         apiKeyTextField.rx.text
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(_apiKey)
+            .subscribe(with: self, onNext: { (self, apiKey: String) in
+                self.apiKey = apiKey
+            })
             .disposed(by: disposeBag)
     }
     

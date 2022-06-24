@@ -10,6 +10,10 @@ import UIKit
 import RxSwift
 import YunoSDK
 
+enum Key: String {
+    case checkoutSession, customerSession, country, apiKey, language
+}
+
 class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDelegate, YunoMethodsViewDelegate {
     
     @IBOutlet private weak var paymentMethodsContainer: UIView!
@@ -17,22 +21,25 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @IBOutlet private weak var enrollmentMethodsContainer: UIView!
     @IBOutlet private weak var enrollmentMethodsContainerHeight: NSLayoutConstraint!
     @IBOutlet private weak var isLiteSwitch: UISwitch!
+    @IBOutlet private weak var pickerView: UIPickerView!
     
     @IBOutlet private weak var checkoutSessionTextField: UITextField!
     @IBOutlet private weak var customerSessionTextField: UITextField!
     @IBOutlet private weak var countryTextField: UITextField!
+    @IBOutlet private weak var languageTextField: UITextField!
     
-    @UserDefault(key: .checkoutSession, defaultValue: "")
+    @UserDefault(key: Key.checkoutSession.rawValue, defaultValue: "")
     var checkoutSession: String
-    @UserDefault(key: .customerSession, defaultValue: "")
+    @UserDefault(key: Key.customerSession.rawValue, defaultValue: "")
     var customerSession: String
-    @UserDefault(key: .country, defaultValue: "")
+    @UserDefault(key: Key.country.rawValue, defaultValue: "")
     var countryCode: String
-    private let disposeBag = DisposeBag()
+    @UserDefault(key: Key.language.rawValue, defaultValue: "es")
+    var language: String
     
-    var paymentSelected: PaymentMethodSelected?
-    var enrollmentSelected: EnrollmentMethodSelected?
-    var isLite: Bool { isLiteSwitch.isOn }
+    private let disposeBag = DisposeBag()
+    private var paymentSelected: PaymentMethodSelected?
+    private var enrollmentSelected: EnrollmentMethodSelected?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +48,8 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         } else {
             navigationController?.view.backgroundColor = .white
         }
-        let generator = Yuno.methodsView()
-        generator.delegate = self
+        
+        let generator = Yuno.methodsView(delegate: self)
         generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
             guard let self = self else { return }
             self.paymentMethodsContainer.addSubview(view)
@@ -68,87 +75,91 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         
         checkoutSessionTextField.text = checkoutSession
         checkoutSessionTextField.rx.text
-            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(_checkoutSession)
+            .compactMap { (string: String?) -> String? in
+                string?.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            .subscribe(with: self, onNext: { (self, checkoutSession: String) in
+                self.checkoutSession = checkoutSession
+                Yuno.startCheckout(with: self)
+            })
             .disposed(by: disposeBag)
         
         customerSessionTextField.text = customerSession
         customerSessionTextField.rx.text
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(_customerSession)
+            .subscribe(with: self, onNext: { (self, customerSession: String) in
+                self.customerSession = customerSession
+                Yuno.startCheckout(with: self)
+            })
             .disposed(by: disposeBag)
         
         countryTextField.text = countryCode
         countryTextField.rx.text
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(_countryCode)
+            .subscribe(with: self, onNext: { (self, countryCode: String) in
+                self.countryCode = countryCode
+                Yuno.startCheckout(with: self)
+            })
             .disposed(by: disposeBag)
+        languageTextField.text = language
+        languageTextField.inputView = pickerView
+        languageTextField.rx.text
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .subscribe(with: self, onNext: { (self, language: String) in
+                self.language = language
+                Yuno.startCheckout(with: self)
+            })
+            .disposed(by: disposeBag)
+        Yuno.startCheckout(with: self)
     }
     
     @IBAction func startPayment(sender: Any) {
-        Yuno.startPayment(with: self) { (token: String, completion: @escaping () -> Void) in
-            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
-            debugPrint(token)
-            let debugView = DebugView(token: token)
-            window.addSubview(debugView)
-            debugView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                debugView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-                debugView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 24.0)
-            ])
-            
-            debugView.layoutIfNeeded()
-            
-            debugView.continueObservable
-                .subscribe(onNext: {
-                    debugView.removeFromSuperview()
-                    completion()
-                })
-                .disposed(by: self.disposeBag)
+        if isLiteSwitch.isOn, let paymentSelected = paymentSelected {
+            Yuno.startPaymentLite(paymentSelected: paymentSelected)
+        } else {
+            Yuno.startPayment()
         }
+    }
+    
+    @IBAction func endEditing(sender: Any) {
+        view.endEditing(true)
+    }
+    
+    func yunoCreatePayment(with token: String) {
+        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+        debugPrint(token)
+        let debugView = DebugView(token: token)
+        window.addSubview(debugView)
+        debugView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            debugView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            debugView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24.0)
+        ])
+        
+        debugView.layoutIfNeeded()
+        
+        debugView.continueObservable
+            .subscribe(onNext: {
+                debugView.removeFromSuperview()
+                Yuno.continuePayment()
+            })
+            .disposed(by: self.disposeBag)
     }
     
     @IBAction func startEnrollment(sender: Any) {
-        Yuno.addNewPaymentMethod(with: self) { (token: String, completion: @escaping () -> Void) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                completion()
-            }
-        }
+        Yuno.enrollPayment(with: self)
     }
     
-    func yunoPaymentResultSuccess() {
-        debugPrint("yunoPaymentResultSuccess")
+    func yunoPaymentResult(_ result: Yuno.Result) {
+        debugPrint("yunoPaymentResult \(result)")
     }
     
-    func yunoPaymentResultError() {
-        debugPrint("yunoPaymentResultError")
-    }
-    
-    func yunoPaymentResultCanceled() {
-        debugPrint("yunoPaymentResultCanceled")
-    }
-    
-    func yunoEnrollmentResultSuccess() {
-        debugPrint("yunoEnrollmentResultSuccess")
-    }
-    
-    func yunoEnrollmentResultError() {
-        debugPrint("yunoEnrollmentResultError")
-    }
-    
-    func yunoEnrollmentResultCanceled() {
-        debugPrint("yunoEnrollmentResultCanceled")
+    func yunoEnrollmentResult(_ result: Yuno.Result) {
+        debugPrint("yunoEnrollmentResult \(result)")
     }
     
     func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
         paymentMethodsContainerHeight.constant = height
-        UIView.animate(withDuration: 0.33) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
-        enrollmentMethodsContainerHeight.constant = height
         UIView.animate(withDuration: 0.33) {
             self.view.layoutIfNeeded()
         }
@@ -159,41 +170,16 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         self.paymentSelected = paymentMethod
     }
     
+    func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
+        enrollmentMethodsContainerHeight.constant = height
+        UIView.animate(withDuration: 0.33) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     func yunoDidSelect(enrollmentMethod: EnrollmentMethodSelected) {
         debugPrint("yunoDidSelect(paymentMethod \(enrollmentMethod)")
         self.enrollmentSelected = enrollmentMethod
-    }
-}
-
-@propertyWrapper
-final class UserDefault<Value>: ObserverType {
-    
-    enum Key: String {
-        case checkoutSession, customerSession, country, apiKey
-    }
-    
-    let key: Key
-    let defaultValue: Value
-    var container: UserDefaults = .standard
-    
-    init(key: Key, defaultValue: Value) {
-        self.key = key
-        self.defaultValue = defaultValue
-    }
-
-    var wrappedValue: Value {
-        get {
-            return container.object(forKey: key.rawValue) as? Value ?? defaultValue
-        }
-        set {
-            container.set(newValue, forKey: key.rawValue)
-        }
-    }
-    
-    func on(_ event: Event<Value>) {
-        if case Event<Value>.next(let value) = event {
-            wrappedValue = value
-        }
     }
 }
 
@@ -220,7 +206,7 @@ final class DebugView: UIView {
         if #available(iOS 13.0, *) {
             backgroundColor = .secondarySystemBackground
         } else {
-            backgroundColor = .lightGray
+            backgroundColor = .white
         }
         layer.masksToBounds = true
         layer.cornerRadius = 8.0
@@ -233,10 +219,9 @@ final class DebugView: UIView {
             tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
             tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0)
         ])
-        
         let copyButton = UIButton()
         addSubview(copyButton)
-        copyButton.backgroundColor = .gray
+        copyButton.backgroundColor = .lightGray
         copyButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             copyButton.topAnchor.constraint(equalTo: tokenLabel.bottomAnchor, constant: 16.0),
@@ -249,8 +234,8 @@ final class DebugView: UIView {
         copyButton.setTitle("Copiar", for: .normal)
         copyButton.rx.tap
             .throttle(.microseconds(400), latest: false, scheduler: MainScheduler.instance)
-            .subscribe(onNext: {
-                UIPasteboard.general.string = self.token
+            .subscribe(onNext: { [weak self] in
+                UIPasteboard.general.string = self?.token
             })
             .disposed(by: disposeBag)
         
@@ -265,12 +250,51 @@ final class DebugView: UIView {
             continueButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24.0),
             continueButton.heightAnchor.constraint(equalToConstant: 44.0)
         ])
-        continueButton.layer.masksToBounds = true
+        continueButton.layer.masksToBounds = false
         continueButton.layer.cornerRadius = 4.0
         continueButton.setTitle("Continuar", for: .normal)
         continueButton.rx.tap
             .throttle(.microseconds(400), latest: false, scheduler: MainScheduler.instance)
             .subscribe(continueSubject)
             .disposed(by: disposeBag)
+    }
+}
+
+extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    private var languages: [String] { ["EN", "ES", "PT"] }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        3
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        languages[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        languageTextField.text = languages[row]
+        language = languages[row]
+    }
+}
+
+@propertyWrapper
+struct UserDefault<Value> {
+    
+    let key: String
+    let defaultValue: Value
+    var container: UserDefaults = .standard
+
+    var wrappedValue: Value {
+        get {
+            return container.object(forKey: key) as? Value ?? defaultValue
+        }
+        set {
+            container.set(newValue, forKey: key)
+        }
     }
 }
