@@ -19,7 +19,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install. 
 
 ```ruby
-pod 'YunoSDK', '0.1.3'
+pod 'YunoSDK', '~> 1.0.0'
 ```
 
 Then run pod install in your directory:
@@ -54,10 +54,13 @@ protocol YunoEnrollmentDelegate: AnyObject {
 class ViewController: YunoEnrollmentDelegate {
 
     @IBAction func startEnrollment(sender: Any) {
-        Yuno.enrollPayment(with: self)
+        Yuno.enrollPayment(with: self, showPaymentStatus: Bool)
     }
 }
 ```
+
+> showPaymentStatus by default is true
+
 ### Checkout
 To start a new payment process, it is necessary to call the following method with a payment delegate as a parameter
 ```swift 
@@ -113,8 +116,10 @@ func yunoCreatePayment(with token: String) { ... }
 #### Complete Payment
 If the payment required a start an action to complete the payment, you can call the following method to execute the payment and get state of the transaction
 ```swift 
-Yuno.continuePayment()
+Yuno.continuePayment(showPaymentStatus: Bool)
 ```
+
+> showPaymentStatus by default is true
 
 #### Callback
 The transactions could return three different states: success, fail, processing and reject, to listen this state you have to implement the delegate, like in the follow piece of code:
