@@ -7,13 +7,12 @@
 //
 
 import UIKit
-import RxSwift
 import YunoSDK
+import Combine
 
 class EnvirotmentViewController: UIViewController {
     
-    private let disposeBag = DisposeBag()
-    
+    private var anyCancellables = Set<AnyCancellable>()
     @IBOutlet private weak var apiKeyTextField: UITextField!
     
     @UserDefault(key: Key.apiKey.rawValue, defaultValue: "")
@@ -23,12 +22,12 @@ class EnvirotmentViewController: UIViewController {
         super.viewDidLoad()
         
         apiKeyTextField.text = apiKey
-        apiKeyTextField.rx.text
+        apiKeyTextField.publisher(for: \.text)
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(with: self, onNext: { (self, apiKey: String) in
-                self.apiKey = apiKey
-            })
-            .disposed(by: disposeBag)
+            .sink { [weak self] (apiKey: String) in
+                self?.apiKey = apiKey
+            }
+            .store(in: &anyCancellables)
     }
     
     @IBAction private func goToPay() {

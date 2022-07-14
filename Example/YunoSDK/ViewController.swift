@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import YunoSDK
+import Then
 
 enum Key: String {
     case checkoutSession, customerSession, country, apiKey, language
@@ -37,18 +38,13 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @UserDefault(key: Key.language.rawValue, defaultValue: "es")
     var language: String
     
-    private let disposeBag = DisposeBag()
-    private var paymentSelected: PaymentMethodSelected?
-    private var enrollmentSelected: EnrollmentMethodSelected?
-
+    private var anyCancellables = Set<AnyCancellable>()
+    var paymentSelected: PaymentMethodSelected?
+    var enrollmentSelected: EnrollmentMethodSelected?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            navigationController?.view.backgroundColor = .systemBackground
-        } else {
-            navigationController?.view.backgroundColor = .white
-        }
-        
+        navigationController?.view.backgroundColor = .systemBackground
         let generator = Yuno.methodsView(delegate: self)
         generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
             guard let self = self else { return }
@@ -74,46 +70,51 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         }
         
         checkoutSessionTextField.text = checkoutSession
-        checkoutSessionTextField.rx.text
+        checkoutSessionTextField.publisher(for: \.text)
             .compactMap { (string: String?) -> String? in
                 string?.trimmingCharacters(in: .whitespacesAndNewlines)
             }
-            .subscribe(with: self, onNext: { (self, checkoutSession: String) in
+            .sink { [weak self] (checkoutSession: String) in
+                guard let self = self else { return }
                 self.checkoutSession = checkoutSession
                 Yuno.startCheckout(with: self)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &anyCancellables)
         
         customerSessionTextField.text = customerSession
-        customerSessionTextField.rx.text
+        customerSessionTextField.publisher(for: \.text)
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(with: self, onNext: { (self, customerSession: String) in
+            .sink { [weak self] (customerSession: String) in
+                guard let self = self else { return }
                 self.customerSession = customerSession
                 Yuno.startCheckout(with: self)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &anyCancellables)
         
         countryTextField.text = countryCode
-        countryTextField.rx.text
+        countryTextField.publisher(for: \.text)
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(with: self, onNext: { (self, countryCode: String) in
+            .sink { [weak self] (countryCode: String) in
+                guard let self = self else { return }
                 self.countryCode = countryCode
                 Yuno.startCheckout(with: self)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &anyCancellables)
         languageTextField.text = language
         languageTextField.inputView = pickerView
-        languageTextField.rx.text
+        languageTextField.publisher(for: \.text)
             .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .subscribe(with: self, onNext: { (self, language: String) in
+            .sink { [weak self] (language: String) in
+                guard let self = self else { return }
                 self.language = language
                 Yuno.startCheckout(with: self)
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &anyCancellables)
         Yuno.startCheckout(with: self)
     }
-    
+
     @IBAction func startPayment(sender: Any) {
+
         if isLiteSwitch.isOn, let paymentSelected = paymentSelected {
             Yuno.startPaymentLite(paymentSelected: paymentSelected)
         } else {
@@ -127,23 +128,20 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     
     func yunoCreatePayment(with token: String) {
         guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
-        debugPrint(token)
         let debugView = DebugView(token: token)
         window.addSubview(debugView)
         debugView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            debugView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            debugView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24.0)
+            debugView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            debugView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 24.0)
         ])
-        
         debugView.layoutIfNeeded()
-        
-        debugView.continueObservable
-            .subscribe(onNext: {
+        debugView.continuePublisher
+            .sink {
                 debugView.removeFromSuperview()
                 Yuno.continuePayment()
-            })
-            .disposed(by: self.disposeBag)
+            }
+            .store(in: &self.anyCancellables)
     }
     
     @IBAction func startEnrollment(sender: Any) {
@@ -186,10 +184,11 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
 final class DebugView: UIView {
     
     let token: String
-    private let disposeBag = DisposeBag()
-    private let continueSubject = PublishSubject<Void>()
-    var continueObservable: Observable<Void> {
-        continueSubject.asObservable()
+    private var anyCancellables = Set<AnyCancellable>()
+
+    private let continueSubject = PassthroughSubject<Void, Never>()
+    var continuePublisher: AnyPublisher<Void, Never> {
+        continueSubject.eraseToAnyPublisher()
     }
     
     init(token: String) {
@@ -203,60 +202,58 @@ final class DebugView: UIView {
     }
     
     private func setupSubviews() {
-        if #available(iOS 13.0, *) {
-            backgroundColor = .secondarySystemBackground
-        } else {
-            backgroundColor = .white
-        }
+        backgroundColor = .secondarySystemBackground
         layer.masksToBounds = true
         layer.cornerRadius = 8.0
-        let tokenLabel = UILabel()
-        tokenLabel.text = token
-        addSubview(tokenLabel)
-        tokenLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tokenLabel.topAnchor.constraint(equalTo: topAnchor, constant: 24.0),
-            tokenLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-            tokenLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0)
-        ])
-        let copyButton = UIButton()
-        addSubview(copyButton)
-        copyButton.backgroundColor = .lightGray
-        copyButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            copyButton.topAnchor.constraint(equalTo: tokenLabel.bottomAnchor, constant: 16.0),
-            copyButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-            copyButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0),
-            copyButton.heightAnchor.constraint(equalToConstant: 44.0)
-        ])
-        copyButton.layer.masksToBounds = true
-        copyButton.layer.cornerRadius = 4.0
-        copyButton.setTitle("Copiar", for: .normal)
-        copyButton.rx.tap
-            .throttle(.microseconds(400), latest: false, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                UIPasteboard.general.string = self?.token
-            })
-            .disposed(by: disposeBag)
-        
-        let continueButton = UIButton()
-        addSubview(continueButton)
-        continueButton.backgroundColor = .purple
-        continueButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            continueButton.topAnchor.constraint(equalTo: copyButton.bottomAnchor, constant: 16.0),
-            continueButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-            continueButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0),
-            continueButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24.0),
-            continueButton.heightAnchor.constraint(equalToConstant: 44.0)
-        ])
-        continueButton.layer.masksToBounds = false
-        continueButton.layer.cornerRadius = 4.0
-        continueButton.setTitle("Continuar", for: .normal)
-        continueButton.rx.tap
-            .throttle(.microseconds(400), latest: false, scheduler: MainScheduler.instance)
-            .subscribe(continueSubject)
-            .disposed(by: disposeBag)
+        let tokenLabel = UILabel().then {
+            $0.text = token
+            addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                $0.topAnchor.constraint(equalTo: topAnchor, constant: 24.0),
+                $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
+                $0.trailingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0)
+            ])
+        }
+        let copyButton = UIButton().then {
+            addSubview($0)
+            $0.backgroundColor = UIColor.lightGray
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                $0.topAnchor.constraint(equalTo: tokenLabel.bottomAnchor, constant: 16.0),
+                $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
+                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 24.0),
+                $0.heightAnchor.constraint(equalToConstant: 44.0)
+            ])
+            $0.layer.masksToBounds = true
+            $0.layer.cornerRadius = 4.0
+            $0.setTitle("Copiar", for: .normal)
+            $0.addTarget(self, action: #selector(copyCode), for: .touchUpInside)
+        }
+        UIButton().do {
+            addSubview($0)
+            $0.backgroundColor = .purple
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                $0.topAnchor.constraint(equalTo: copyButton.bottomAnchor, constant: 16.0),
+                $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
+                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 24.0),
+                $0.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 24.0),
+                $0.heightAnchor.constraint(equalToConstant: 44.0)
+            ])
+            $0.layer.masksToBounds = true
+            $0.layer.cornerRadius = 4.0
+            $0.setTitle("Continuar", for: .normal)
+            $0.addTarget(self, action: #selector(continueAction), for: .touchUpInside)
+        }
+    }
+    
+    @objc private func continueAction() {
+        continueSubject.send(())
+    }
+    
+    @objc private func copyCode() {
+        UIPasteboard.general.string = token
     }
 }
 
@@ -279,22 +276,5 @@ extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         languageTextField.text = languages[row]
         language = languages[row]
-    }
-}
-
-@propertyWrapper
-struct UserDefault<Value> {
-    
-    let key: String
-    let defaultValue: Value
-    var container: UserDefaults = .standard
-
-    var wrappedValue: Value {
-        get {
-            return container.object(forKey: key) as? Value ?? defaultValue
-        }
-        set {
-            container.set(newValue, forKey: key)
-        }
     }
 }
