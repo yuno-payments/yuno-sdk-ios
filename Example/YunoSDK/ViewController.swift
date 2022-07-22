@@ -133,7 +133,8 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         debugView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             debugView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            debugView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 24.0)
+            debugView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 24.0),
+            debugView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.8)
         ])
         debugView.layoutIfNeeded()
         debugView.continuePublisher
@@ -209,10 +210,15 @@ final class DebugView: UIView {
             $0.text = token
             addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.numberOfLines = 0
+            $0.textAlignment = .center
+            $0.lineBreakMode = .byCharWrapping
+            $0.setContentCompressionResistancePriority(.required, for: .vertical)
+            $0.minimumScaleFactor = 0.5
             NSLayoutConstraint.activate([
                 $0.topAnchor.constraint(equalTo: topAnchor, constant: 24.0),
-                $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-                $0.trailingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0)
+                $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12.0),
+                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12.0),
             ])
         }
         let copyButton = UIButton().then {
@@ -222,7 +228,7 @@ final class DebugView: UIView {
             NSLayoutConstraint.activate([
                 $0.topAnchor.constraint(equalTo: tokenLabel.bottomAnchor, constant: 16.0),
                 $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 24.0),
+                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0),
                 $0.heightAnchor.constraint(equalToConstant: 44.0)
             ])
             $0.layer.masksToBounds = true
@@ -237,8 +243,8 @@ final class DebugView: UIView {
             NSLayoutConstraint.activate([
                 $0.topAnchor.constraint(equalTo: copyButton.bottomAnchor, constant: 16.0),
                 $0.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 24.0),
-                $0.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 24.0),
+                $0.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24.0),
+                $0.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24.0),
                 $0.heightAnchor.constraint(equalToConstant: 44.0)
             ])
             $0.layer.masksToBounds = true
