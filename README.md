@@ -19,7 +19,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install. 
 
 ```ruby
-pod 'YunoSDK', '~> 1.0.7'
+pod 'YunoSDK', '~> 1.0.8'
 ```
 
 Then run pod install in your directory:
