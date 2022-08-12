@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YunoSDK'
-  s.version          = '1.0.6'
+  s.version          = '1.0.7'
   s.summary          = 'A short description of YunoSDK.'
 
   s.description      = <<-DESC
@@ -26,9 +26,9 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = 'YunoSDK.xcframework'
   s.resource_bundles = {
         'Resources' => [
-            'Assets/**/*.xcassets',
-            'Assets/Localization/*.lproj',
-            'Assets/**/*.{storyboard,xib,json}'
+            'YunoSDK.xcframework/Assets/**/*.xcassets',
+            'YunoSDK.xcframework/Assets/Localization/*.lproj',
+            'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json}'
         ]
     }
   
