@@ -3,6 +3,8 @@
 [![Version](https://img.shields.io/cocoapods/v/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
 [![License](https://img.shields.io/cocoapods/l/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
 [![Platform](https://img.shields.io/cocoapods/p/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
+[![iOS Minimum Deploy Target - 13.0](https://img.shields.io/static/v1?label=iOS+Minimum+Deploy+Target&message=13.0&color=2ea44f)](https://)
+      
 
 A fast checkout that integrates your company to the payments and fraud ecosystem.
 ‍
@@ -29,10 +31,11 @@ $ pod install
 ```
 
 ## Usage
+YunoSDK minimum required version is iOS 13.0
 
-First, you'll need to get your Yuno app ID and iOS API key, Then, Then initialize Yuno by importing Yuno and adding the following to your application delegate:
+First, you'll need to get your Yuno app ID and iOS API key. Then initialize Yuno by importing Yuno and adding the following to your application delegate:
 
-> If your app is using a UISceneDelegate you will need to put your Yuno initialisation code into your SceneDelegate
+> Note: If your app is using a UISceneDelegate you will need to put your Yuno initialisation code into your SceneDelegate
 
 ```swift
 import YunoSDK
@@ -59,7 +62,7 @@ class ViewController: YunoEnrollmentDelegate {
 }
 ```
 
-> showPaymentStatus by default is true
+> Note: showPaymentStatus by default is true
 
 ### Checkout
 To start a new payment process, it is necessary to call the following method with a payment delegate as a parameter
