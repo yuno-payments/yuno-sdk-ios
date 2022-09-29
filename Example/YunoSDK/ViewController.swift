@@ -41,53 +41,38 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     private var anyCancellables = Set<AnyCancellable>()
     var paymentSelected: PaymentMethodSelected?
     var enrollmentSelected: EnrollmentMethodSelected?
+    var generator: MethodsView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.view.backgroundColor = .systemBackground
-        let generator = Yuno.methodsView(delegate: self)
-        generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
-            guard let self = self else { return }
-            self.paymentMethodsContainer.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
-                view.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
-                view.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
-            ])
-        }
-        generator.getEnrollmentMethodsView(customerSession: customerSession) { [weak self] (view: UIView) in
-            guard let self = self else { return }
-            self.enrollmentMethodsContainer.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: self.enrollmentMethodsContainer.topAnchor),
-                view.leadingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.trailingAnchor),
-                view.bottomAnchor.constraint(equalTo: self.enrollmentMethodsContainer.bottomAnchor)
-            ])
-        }
+        self.generator = Yuno.methodsView(delegate: self)
+
+        generatePaymentView(with: checkoutSession)
+        
+        generateEnrollmentView(with: customerSession)
         
         checkoutSessionTextField.text = checkoutSession
-        checkoutSessionTextField.publisher(for: \.text)
-            .compactMap { (string: String?) -> String? in
-                string?.trimmingCharacters(in: .whitespacesAndNewlines)
+        checkoutSessionTextField.textPublisher
+            .compactMap { (string: String) -> String in
+                string.trimmingCharacters(in: .whitespacesAndNewlines)
             }
             .sink { [weak self] (checkoutSession: String) in
                 guard let self = self else { return }
                 self.checkoutSession = checkoutSession
                 Yuno.startCheckout(with: self)
+                self.generatePaymentView(with: checkoutSession)
             }
             .store(in: &anyCancellables)
         
         customerSessionTextField.text = customerSession
-        customerSessionTextField.publisher(for: \.text)
-            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        customerSessionTextField.textPublisher
+            .compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .sink { [weak self] (customerSession: String) in
                 guard let self = self else { return }
                 self.customerSession = customerSession
                 Yuno.startCheckout(with: self)
+                self.generateEnrollmentView(with: customerSession)
             }
             .store(in: &anyCancellables)
         
@@ -111,6 +96,50 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
             }
             .store(in: &anyCancellables)
         Yuno.startCheckout(with: self)
+    }
+    
+    func generatePaymentView(with checkoutSession: String) {
+        guard !checkoutSession.isEmpty else { return }
+        
+        UIView.animate(withDuration: 0.33, animations: {
+            self.paymentMethodsContainer.alpha = 0.0
+        }, completion: { _ in
+            self.paymentMethodsContainer.alpha = 1.0
+            self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
+            self.generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
+                guard let self = self else { return }
+                self.paymentMethodsContainer.addSubview(view)
+                view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    view.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
+                    view.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
+                    view.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
+                    view.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
+                ])
+            }
+        })
+    }
+    
+    private func generateEnrollmentView(with customerSession: String) {
+        guard !customerSession.isEmpty else { return }
+        UIView.animate(withDuration: 0.33, animations: {
+            self.enrollmentMethodsContainer.alpha = 0.0
+        }, completion: { _ in
+            self.enrollmentMethodsContainer.alpha = 1.0
+            self.enrollmentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
+            self.generator.getEnrollmentMethodsView(customerSession: customerSession) { [weak self] (view: UIView) in
+                guard let self = self else { return }
+                self.enrollmentMethodsContainer.addSubview(view)
+                view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    view.topAnchor.constraint(equalTo: self.enrollmentMethodsContainer.topAnchor),
+                    view.leadingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.leadingAnchor),
+                    view.trailingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.trailingAnchor),
+                    view.bottomAnchor.constraint(equalTo: self.enrollmentMethodsContainer.bottomAnchor)
+                ])
+            }
+        })
+        
     }
 
     @IBAction func startPayment(sender: Any) {
@@ -283,4 +312,17 @@ extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         languageTextField.text = languages[row]
         language = languages[row]
     }
+}
+
+extension UITextField {
+
+    var textPublisher: AnyPublisher<String, Never> {
+        NotificationCenter.default.publisher(
+            for: UITextField.textDidChangeNotification,
+            object: self
+        )
+        .compactMap { ($0.object as? UITextField)?.text }
+        .eraseToAnyPublisher()
+    }
+
 }
