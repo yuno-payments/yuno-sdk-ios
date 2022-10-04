@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(
             name: "YunoSDK",
+            type: .static,
             targets: ["YunoSDK"]),
     ],
     targets: [
