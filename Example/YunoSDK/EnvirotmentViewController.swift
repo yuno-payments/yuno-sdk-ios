@@ -32,6 +32,6 @@ class EnvirotmentViewController: UIViewController {
     
     @IBAction private func goToPay() {
         Yuno.initialize(apiKey: apiKey)
-        performSegue(withIdentifier: "goToPay", sender: self)
+        performSegue(withIdentifier: "goToHome", sender: self)
     }
 }
