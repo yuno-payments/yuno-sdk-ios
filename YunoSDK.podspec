@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YunoSDK'
-  s.version          = '1.0.13'
+  s.version          = '1.0.14'
   s.summary          = 'A short description of YunoSDK.'
 
   s.description      = <<-DESC
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
             'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json}'
         ]
     }
-  
+
   s.frameworks = 'UIKit'
   s.frameworks = 'Combine'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => ['${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK'] }

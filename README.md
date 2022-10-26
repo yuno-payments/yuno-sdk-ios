@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/cocoapods/l/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
 [![Platform](https://img.shields.io/cocoapods/p/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
 [![iOS Minimum Deploy Target - 13.0](https://img.shields.io/static/v1?label=iOS+Minimum+Deploy+Target&message=13.0&color=2ea44f)](https://)
-      
+
 
 A fast checkout that integrates your company to the payments and fraud ecosystem.
 ‍
@@ -18,10 +18,10 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ### [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html)
 
-To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install. 
+To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 1.0.13'
+pod 'YunoSDK', '~> 1.0.14'
 ```
 
 Then run pod install in your directory:
@@ -49,7 +49,7 @@ Yuno.initialize(apiKey: "<Your iOS API Key>")
 To display a view controller with the flow to enroll a new payment method, call the following method:
 ```swift
 protocol YunoEnrollmentDelegate: AnyObject {
-        
+
     var customerSession: String { get }
     func yunoEnrollmentResult(_ result: Yuno.Result)
 }
@@ -66,14 +66,14 @@ class ViewController: YunoEnrollmentDelegate {
 
 ### Checkout
 To start a new payment process, it is necessary to call the following method with a payment delegate as a parameter
-```swift 
+```swift
 protocol YunoPaymentDelegate: AnyObject {
-        
+
     var checkoutSession: String { get }
     var countryCode: String { get }
     var language: String { get }
     var navigationController: UINavigationController? { get }
-    
+
     func yunoCreatePayment(with token: String)
     func yunoPaymentResult(_ result: Yuno.Result)
 }
@@ -88,7 +88,7 @@ class ViewController: YunoPaymentDelegate {
 ```
 #### Show Payment Methods
 When you implement a SDK Full you have to add the next view on your layout to show the payment methods available
-```swift 
+```swift
 Yuno.methodsView(delegate: self)
     generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
         // Add view to your superview
@@ -97,12 +97,12 @@ Yuno.methodsView(delegate: self)
 ```
 #### Start Payment
 To start a payment process you have to call the method `startPayment` but if your are using the lite version you must to call `startPaymentLite`
-```swift 
+```swift
 Yuno.startPayment()
 ```
-for the Lite version you need to send an additional parameter, these consist, the vaulted token and/or payment type with which the user will pay  
+for the Lite version you need to send an additional parameter, these consist, the vaulted token and/or payment type with which the user will pay
 
-```swift 
+```swift
 protocol PaymentMethodSelected {
     var vaultedToken: String? { get }
     var paymentMethodType: String { get }
@@ -114,12 +114,12 @@ At the end of this process you will obtain the One Time Token to create back-bac
 
 You can get some information like OTT after call a `startPayment` or `startPaymentLite` method, how is showing in the next code:
 
-```swift 
+```swift
 func yunoCreatePayment(with token: String) { ... }
 ```
 #### Complete Payment
 If the payment required a start an action to complete the payment, you can call the following method to execute the payment and get state of the transaction
-```swift 
+```swift
 Yuno.continuePayment(showPaymentStatus: Bool)
 ```
 
@@ -127,7 +127,7 @@ Yuno.continuePayment(showPaymentStatus: Bool)
 
 #### Callback
 The transactions could return three different states: success, fail, processing and reject, to listen this state you have to implement the delegate, like in the follow piece of code:
-```swift 
+```swift
 enum Result {
     case reject, success, fail, processing, internalError, userCancell
 }
