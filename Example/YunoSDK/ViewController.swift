@@ -12,13 +12,24 @@ import YunoSDK
 import Then
 
 enum Key: String {
-    case checkoutSession, customerSession, country, apiKey, language
+    case checkoutSession, customerSession, country, apiKey, language, paymentSelectedString, paymentToken
+}
+
+class PaymentMethod: PaymentMethodSelected {
+    var vaultedToken: String?
+    
+    var paymentMethodType: String
+    
+    init(vaultedToken: String?, paymentMethodType: String) {
+        self.vaultedToken = vaultedToken
+        self.paymentMethodType = paymentMethodType
+    }
 }
 
 class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDelegate, YunoMethodsViewDelegate {
     
     enum TestType {
-        case enrollment, payment
+        case enrollment, payment, paymentLite
     }
     var type: TestType = .payment
 
@@ -52,14 +63,24 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @IBOutlet weak var customerContainerBottom: NSLayoutConstraint!
     @IBOutlet weak var customerTitleButtom: NSLayoutConstraint!
     
+    // Payment Lite
+    @IBOutlet weak var paymentTokenTextField: UITextField!
+    @IBOutlet weak var paymentMethodSelectedTextField: UITextField!
+    @IBOutlet weak var paymentTokenStackView: UIStackView!
+    @IBOutlet weak var paymentMethodSelectedStackView: UIStackView!
+    
     @UserDefault(key: Key.checkoutSession.rawValue, defaultValue: "")
     var checkoutSession: String
     @UserDefault(key: Key.customerSession.rawValue, defaultValue: "")
     var customerSession: String
-    @UserDefault(key: Key.country.rawValue, defaultValue: "")
+    @UserDefault(key: Key.country.rawValue, defaultValue: "AR")
     var countryCode: String
-    @UserDefault(key: Key.language.rawValue, defaultValue: "es")
+    @UserDefault(key: Key.language.rawValue, defaultValue: "ES")
     var language: String
+    @UserDefault(key: Key.paymentToken.rawValue, defaultValue: "")
+    var paymentToken: String
+    @UserDefault(key: Key.paymentSelectedString.rawValue, defaultValue: "")
+    var paymentSelectedString: String
     
     private var anyCancellables = Set<AnyCancellable>()
     var paymentSelected: PaymentMethodSelected?
@@ -81,7 +102,8 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
                     self.generateEnrollmentViews()
                 }
                 .store(in: &anyCancellables)
-        } else {
+        }
+        if type == .payment {
             hideEnrollmentSection()
             checkoutSessionTextField.text = checkoutSession
             checkoutSessionTextField.publisher(for: \.text)
@@ -95,6 +117,10 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
                     self.generatePaymentViews()
                 }
                 .store(in: &anyCancellables)
+        }
+        
+        if type == .paymentLite {
+            preparePaymentLiteUI()
         }
         
         countryTextField.text = countryCode
@@ -153,8 +179,10 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     }
     
     @IBAction func startPayment(sender: Any) {
-
-        if isLiteSwitch.isOn, let paymentSelected = paymentSelected {
+        if type == .paymentLite {
+            let paymentSelected = PaymentMethod(vaultedToken: paymentTokenTextField.text ?? "", paymentMethodType: paymentMethodSelectedTextField.text ?? "")
+            
+            
             Yuno.startPaymentLite(paymentSelected: paymentSelected)
         } else {
             Yuno.startPayment()
@@ -340,5 +368,32 @@ extension ViewController {
         [customerSepHeight, customerTitleHeight, customerButtonHeight,
          customerContainerBottom, customerTitleButtom]
             .forEach({ $0?.constant = 0 })
+    }
+    
+    func preparePaymentLiteUI() {
+        hideEnrollmentSection()
+        liteStack.isHidden = true
+        paymentTitleHeight.constant = 0
+        paymentTokenStackView.isHidden = false
+        paymentMethodSelectedStackView.isHidden = false
+        
+        
+        paymentTokenTextField.text = paymentToken
+        paymentTokenTextField.publisher(for: \.text)
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .sink { [weak self] (paymentToken: String) in
+                guard let self = self else { return }
+                self.paymentToken = paymentToken
+            }
+            .store(in: &anyCancellables)
+
+        paymentMethodSelectedTextField.text = paymentSelectedString
+        paymentMethodSelectedTextField.publisher(for: \.text)
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .sink { [weak self] (paymentMethodString: String) in
+                guard let self = self else { return }
+                self.paymentSelectedString = paymentMethodString
+            }
+            .store(in: &anyCancellables)
     }
 }

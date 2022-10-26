@@ -21,7 +21,7 @@ class HomeViewController: UIViewController {
     }
     
     @IBAction func startPaymentLite(_ sender: Any) {
-        selectedTestType = .payment
+        selectedTestType = .paymentLite
         performSegue(withIdentifier: "goToPay", sender: self)
     }
     
