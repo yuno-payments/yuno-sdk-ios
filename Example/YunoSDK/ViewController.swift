@@ -35,8 +35,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
 
     @IBOutlet private weak var paymentMethodsContainer: UIView!
     @IBOutlet private weak var paymentMethodsContainerHeight: NSLayoutConstraint!
-    @IBOutlet private weak var enrollmentMethodsContainer: UIView!
-    @IBOutlet private weak var enrollmentMethodsContainerHeight: NSLayoutConstraint!
     @IBOutlet private weak var isLiteSwitch: UISwitch!
     @IBOutlet private weak var pickerView: UIPickerView!
     
@@ -44,6 +42,8 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @IBOutlet private weak var customerSessionTextField: UITextField!
     @IBOutlet private weak var countryTextField: UITextField!
     @IBOutlet private weak var languageTextField: UITextField!
+    @IBOutlet private weak var countryStackView: UIStackView!
+    @IBOutlet private weak var languageStackView: UIStackView!
     
     //Payment Section
     @IBOutlet weak var checkoutStack: UIStackView!
@@ -60,8 +60,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @IBOutlet weak var customerSepHeight: NSLayoutConstraint!
     @IBOutlet weak var customerTitleHeight: NSLayoutConstraint!
     @IBOutlet weak var customerButtonHeight: NSLayoutConstraint!
-    @IBOutlet weak var customerContainerBottom: NSLayoutConstraint!
-    @IBOutlet weak var customerTitleButtom: NSLayoutConstraint!
     
     // Payment Lite
     @IBOutlet weak var paymentTokenTextField: UITextField!
@@ -98,8 +96,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
                 .sink { [weak self] (customerSession: String) in
                     guard let self = self else { return }
                     self.customerSession = customerSession
-                    Yuno.startCheckout(with: self)
-                    self.generateEnrollmentViews()
                 }
                 .store(in: &anyCancellables)
         }
@@ -158,22 +154,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
                 view.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
                 view.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
                 view.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
-            ])
-        }
-    }
-    
-    func generateEnrollmentViews() {
-        let generator = Yuno.methodsView(delegate: self)
-        
-        generator.getEnrollmentMethodsView(customerSession: customerSession) { [weak self] (view: UIView) in
-            guard let self = self else { return }
-            self.enrollmentMethodsContainer.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: self.enrollmentMethodsContainer.topAnchor),
-                view.leadingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.trailingAnchor),
-                view.bottomAnchor.constraint(equalTo: self.enrollmentMethodsContainer.bottomAnchor)
             ])
         }
     }
@@ -237,7 +217,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     }
     
     func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
-        enrollmentMethodsContainerHeight.constant = height
         UIView.animate(withDuration: 0.33) {
             self.view.layoutIfNeeded()
         }
@@ -357,6 +336,9 @@ extension ViewController {
         checkoutStack.isHidden = true
         liteStack.isHidden = true
         paymentMethodsContainer.isHidden = true
+        
+        languageStackView.isHidden = true
+        
         [paymentMethodsContainerHeight, paymentButtonHeight, paymentTitleHeight,
          paymentSeparatorHeight, paymentSepBottom, paymentButtBottom, paymentContBottom]
             .forEach({ $0?.constant = 0 })
@@ -364,9 +346,7 @@ extension ViewController {
     
     func hideEnrollmentSection() {
         customerStack.isHidden = true
-        enrollmentMethodsContainer.isHidden = true
-        [customerSepHeight, customerTitleHeight, customerButtonHeight,
-         customerContainerBottom, customerTitleButtom]
+        [customerSepHeight, customerTitleHeight, customerButtonHeight]
             .forEach({ $0?.constant = 0 })
     }
     
@@ -376,7 +356,6 @@ extension ViewController {
         paymentTitleHeight.constant = 0
         paymentTokenStackView.isHidden = false
         paymentMethodSelectedStackView.isHidden = false
-        
         
         paymentTokenTextField.text = paymentToken
         paymentTokenTextField.publisher(for: \.text)
