@@ -12,15 +12,29 @@ import YunoSDK
 import Then
 
 enum Key: String {
-    case checkoutSession, customerSession, country, apiKey, language
+    case checkoutSession, customerSession, country, apiKey, language, paymentSelectedString, paymentToken
+}
+
+class PaymentMethod: PaymentMethodSelected {
+    var vaultedToken: String?
+    
+    var paymentMethodType: String
+    
+    init(vaultedToken: String?, paymentMethodType: String) {
+        self.vaultedToken = vaultedToken
+        self.paymentMethodType = paymentMethodType
+    }
 }
 
 class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDelegate, YunoMethodsViewDelegate {
     
+    enum TestType {
+        case enrollment, payment, paymentLite
+    }
+    var type: TestType = .payment
+
     @IBOutlet private weak var paymentMethodsContainer: UIView!
     @IBOutlet private weak var paymentMethodsContainerHeight: NSLayoutConstraint!
-    @IBOutlet private weak var enrollmentMethodsContainer: UIView!
-    @IBOutlet private weak var enrollmentMethodsContainerHeight: NSLayoutConstraint!
     @IBOutlet private weak var isLiteSwitch: UISwitch!
     @IBOutlet private weak var pickerView: UIPickerView!
     
@@ -28,15 +42,43 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @IBOutlet private weak var customerSessionTextField: UITextField!
     @IBOutlet private weak var countryTextField: UITextField!
     @IBOutlet private weak var languageTextField: UITextField!
+    @IBOutlet private weak var countryStackView: UIStackView!
+    @IBOutlet private weak var languageStackView: UIStackView!
+    
+    //Payment Section
+    @IBOutlet weak var checkoutStack: UIStackView!
+    @IBOutlet weak var liteStack: UIStackView!
+    @IBOutlet weak var paymentButtonHeight: NSLayoutConstraint!
+    @IBOutlet weak var paymentTitleHeight: NSLayoutConstraint!
+    @IBOutlet weak var paymentSeparatorHeight: NSLayoutConstraint!
+    @IBOutlet weak var paymentSepBottom: NSLayoutConstraint!
+    @IBOutlet weak var paymentButtBottom: NSLayoutConstraint!
+    @IBOutlet weak var paymentContBottom: NSLayoutConstraint!
+    
+    //Enrollment section
+    @IBOutlet weak var customerStack: UIStackView!
+    @IBOutlet weak var customerSepHeight: NSLayoutConstraint!
+    @IBOutlet weak var customerTitleHeight: NSLayoutConstraint!
+    @IBOutlet weak var customerButtonHeight: NSLayoutConstraint!
+    
+    // Payment Lite
+    @IBOutlet weak var paymentTokenTextField: UITextField!
+    @IBOutlet weak var paymentMethodSelectedTextField: UITextField!
+    @IBOutlet weak var paymentTokenStackView: UIStackView!
+    @IBOutlet weak var paymentMethodSelectedStackView: UIStackView!
     
     @UserDefault(key: Key.checkoutSession.rawValue, defaultValue: "")
     var checkoutSession: String
     @UserDefault(key: Key.customerSession.rawValue, defaultValue: "")
     var customerSession: String
-    @UserDefault(key: Key.country.rawValue, defaultValue: "")
+    @UserDefault(key: Key.country.rawValue, defaultValue: "AR")
     var countryCode: String
-    @UserDefault(key: Key.language.rawValue, defaultValue: "es")
+    @UserDefault(key: Key.language.rawValue, defaultValue: "ES")
     var language: String
+    @UserDefault(key: Key.paymentToken.rawValue, defaultValue: "")
+    var paymentToken: String
+    @UserDefault(key: Key.paymentSelectedString.rawValue, defaultValue: "")
+    var paymentSelectedString: String
     
     private var anyCancellables = Set<AnyCancellable>()
     var paymentSelected: PaymentMethodSelected?
@@ -45,51 +87,37 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.view.backgroundColor = .systemBackground
-        let generator = Yuno.methodsView(delegate: self)
-        generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
-            guard let self = self else { return }
-            self.paymentMethodsContainer.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
-                view.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
-                view.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
-            ])
+        
+        if type == .enrollment {
+            hidePaymentSection()
+            customerSessionTextField.text = customerSession
+            customerSessionTextField.publisher(for: \.text)
+                .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .sink { [weak self] (customerSession: String) in
+                    guard let self = self else { return }
+                    self.customerSession = customerSession
+                }
+                .store(in: &anyCancellables)
         }
-        generator.getEnrollmentMethodsView(customerSession: customerSession) { [weak self] (view: UIView) in
-            guard let self = self else { return }
-            self.enrollmentMethodsContainer.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: self.enrollmentMethodsContainer.topAnchor),
-                view.leadingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: self.enrollmentMethodsContainer.trailingAnchor),
-                view.bottomAnchor.constraint(equalTo: self.enrollmentMethodsContainer.bottomAnchor)
-            ])
+        if type == .payment {
+            hideEnrollmentSection()
+            checkoutSessionTextField.text = checkoutSession
+            checkoutSessionTextField.publisher(for: \.text)
+                .compactMap { (string: String?) -> String? in
+                    string?.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+                .sink { [weak self] (checkoutSession: String) in
+                    guard let self = self else { return }
+                    self.checkoutSession = checkoutSession
+                    Yuno.startCheckout(with: self)
+                    self.generatePaymentViews()
+                }
+                .store(in: &anyCancellables)
         }
         
-        checkoutSessionTextField.text = checkoutSession
-        checkoutSessionTextField.publisher(for: \.text)
-            .compactMap { (string: String?) -> String? in
-                string?.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-            .sink { [weak self] (checkoutSession: String) in
-                guard let self = self else { return }
-                self.checkoutSession = checkoutSession
-                Yuno.startCheckout(with: self)
-            }
-            .store(in: &anyCancellables)
-        
-        customerSessionTextField.text = customerSession
-        customerSessionTextField.publisher(for: \.text)
-            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .sink { [weak self] (customerSession: String) in
-                guard let self = self else { return }
-                self.customerSession = customerSession
-                Yuno.startCheckout(with: self)
-            }
-            .store(in: &anyCancellables)
+        if type == .paymentLite {
+            preparePaymentLiteUI()
+        }
         
         countryTextField.text = countryCode
         countryTextField.publisher(for: \.text)
@@ -113,9 +141,28 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         Yuno.startCheckout(with: self)
     }
 
+    func generatePaymentViews() {
+        let generator = Yuno.methodsView(delegate: self)
+        
+        generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
+            guard let self = self else { return }
+            self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
+            self.paymentMethodsContainer.addSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
+                view.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
+                view.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
+            ])
+        }
+    }
+    
     @IBAction func startPayment(sender: Any) {
-
-        if isLiteSwitch.isOn, let paymentSelected = paymentSelected {
+        if type == .paymentLite {
+            let paymentSelected = PaymentMethod(vaultedToken: paymentTokenTextField.text ?? "", paymentMethodType: paymentMethodSelectedTextField.text ?? "")
+            
+            
             Yuno.startPaymentLite(paymentSelected: paymentSelected)
         } else {
             Yuno.startPayment()
@@ -170,7 +217,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     }
     
     func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
-        enrollmentMethodsContainerHeight.constant = height
         UIView.animate(withDuration: 0.33) {
             self.view.layoutIfNeeded()
         }
@@ -282,5 +328,51 @@ extension ViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         languageTextField.text = languages[row]
         language = languages[row]
+    }
+}
+
+extension ViewController {
+    func hidePaymentSection() {
+        checkoutStack.isHidden = true
+        liteStack.isHidden = true
+        paymentMethodsContainer.isHidden = true
+        
+        languageStackView.isHidden = true
+        
+        [paymentMethodsContainerHeight, paymentButtonHeight, paymentTitleHeight,
+         paymentSeparatorHeight, paymentSepBottom, paymentButtBottom, paymentContBottom]
+            .forEach({ $0?.constant = 0 })
+    }
+    
+    func hideEnrollmentSection() {
+        customerStack.isHidden = true
+        [customerSepHeight, customerTitleHeight, customerButtonHeight]
+            .forEach({ $0?.constant = 0 })
+    }
+    
+    func preparePaymentLiteUI() {
+        hideEnrollmentSection()
+        liteStack.isHidden = true
+        paymentTitleHeight.constant = 0
+        paymentTokenStackView.isHidden = false
+        paymentMethodSelectedStackView.isHidden = false
+        
+        paymentTokenTextField.text = paymentToken
+        paymentTokenTextField.publisher(for: \.text)
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .sink { [weak self] (paymentToken: String) in
+                guard let self = self else { return }
+                self.paymentToken = paymentToken
+            }
+            .store(in: &anyCancellables)
+
+        paymentMethodSelectedTextField.text = paymentSelectedString
+        paymentMethodSelectedTextField.publisher(for: \.text)
+            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .sink { [weak self] (paymentMethodString: String) in
+                guard let self = self else { return }
+                self.paymentSelectedString = paymentMethodString
+            }
+            .store(in: &anyCancellables)
     }
 }
