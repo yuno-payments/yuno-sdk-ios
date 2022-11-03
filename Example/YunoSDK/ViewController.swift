@@ -16,8 +16,8 @@ enum Key: String {
 }
 
 class PaymentMethod: PaymentMethodSelected {
-    var vaultedToken: String?
     
+    var vaultedToken: String?
     var paymentMethodType: String
     
     init(vaultedToken: String?, paymentMethodType: String) {
@@ -99,7 +99,7 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
                 }
                 .store(in: &anyCancellables)
         }
-        if type == .payment {
+        if type == .payment || type == .paymentLite {
             hideEnrollmentSection()
             checkoutSessionTextField.text = checkoutSession
             checkoutSessionTextField.publisher(for: \.text)
@@ -110,13 +110,15 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
                     guard let self = self else { return }
                     self.checkoutSession = checkoutSession
                     Yuno.startCheckout(with: self)
-                    self.generatePaymentViews()
+                    if self.type == .payment {
+                        self.generatePaymentViews()
+                    }
                 }
                 .store(in: &anyCancellables)
-        }
-        
-        if type == .paymentLite {
-            preparePaymentLiteUI()
+            
+            if type == .paymentLite {
+                preparePaymentLiteUI()
+            }
         }
         
         countryTextField.text = countryCode
@@ -160,9 +162,10 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     
     @IBAction func startPayment(sender: Any) {
         if type == .paymentLite {
-            let paymentSelected = PaymentMethod(vaultedToken: paymentTokenTextField.text ?? "", paymentMethodType: paymentMethodSelectedTextField.text ?? "")
-            
-            
+            let paymentSelected = PaymentMethod(
+                vaultedToken: paymentTokenTextField.text,
+                paymentMethodType: paymentMethodSelectedTextField.text ?? ""
+            )
             Yuno.startPaymentLite(paymentSelected: paymentSelected)
         } else {
             Yuno.startPayment()
@@ -351,7 +354,6 @@ extension ViewController {
     }
     
     func preparePaymentLiteUI() {
-        hideEnrollmentSection()
         liteStack.isHidden = true
         paymentTitleHeight.constant = 0
         paymentTokenStackView.isHidden = false
