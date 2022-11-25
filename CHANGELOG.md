@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.0] - 11 de noviembre de 2022
+### Changed
+- Swift Pacakge Manager support
+
 ## Version [1.0.17] - 11 de noviembre de 2022
 ### Changed
 - Card form general improvements
@@ -27,7 +31,3 @@ All notable changes to this project will be documented in this file.
 - PIX
 - Nupay
 - MercadoPago Wallet
-
-- Wibond (Sandbox only)
-
-[1.0.9]: https://bitbucket.org/yunopayments/yuno-sdk-ios/src/1.0.9/
