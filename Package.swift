@@ -12,10 +12,8 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Resources",
-            resources: [
-                .copy("Assets")
-            ]
+            name: "YunoSDK-Resources",
+            resources: [.process("Resources")]
         ),
         .binaryTarget(
             name: "YunoSDK",
