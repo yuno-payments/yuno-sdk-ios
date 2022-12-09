@@ -4,12 +4,19 @@ import PackageDescription
 
 let package = Package(
     name: "YunoSDK",
+    defaultLocalization: "en",
     products: [
         .library(
             name: "YunoSDK",
             targets: ["YunoSDK"]),
     ],
     targets: [
+        .target(
+            name: "Resources",
+            resources: [
+                .copy("YunoSDK.xcframework/Assets")
+            ]
+        ),
         .binaryTarget(
             name: "YunoSDK",
             url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/1.1.0/YunoSDK.xcframework.zip",
