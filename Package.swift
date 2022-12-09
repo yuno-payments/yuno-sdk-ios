@@ -12,7 +12,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "YunoSDK-Resources",
+            name: "Resources",
             resources: [.process("Resources")]
         ),
         .binaryTarget(
