@@ -1,0 +1,48 @@
+{
+  "name": "missing_user_data_form",
+  "title": "{{title_name}}",
+  "offset": 0,
+  "limit": 10,
+  "components": [
+    {
+      "name": "typed_form",
+      "index": 0,
+      "resource": {
+        "title": "formPhoneNumberTitle",
+        "items": [
+          {
+            "type": "phone",
+            "metadata": {
+              "number_field": "number",
+              "code_field": "country_code",
+              "title": "formPhoneTitle",
+              "placeholder": "formPhonePlaceholder",
+              "codes": {{phone-country-codes}},
+              "default_code": null,
+              "default_number": null,
+              "error_message": "formPhoneErrorMessage",
+              "is_required": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "checkbox_with_linkable_text",
+      "index": 1,
+      "resource": {
+        "text": "formAgreeTermsAndConditions",
+        "links": [
+          {
+            "keyword": "termsAndConditions",
+            "link": "{{terms-and-conditions-link}}"
+          },
+          {
+            "keyword": "privacyPolicy",
+            "link": "{{privacy-policy-link}}"
+          }
+        ]
+      }
+    }
+  ]
+}

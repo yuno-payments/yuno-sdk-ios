@@ -14,7 +14,7 @@ let package = Package(
         .target(
             name: "Resources",
             resources: [
-                .copy("YunoSDK.xcframework/Assets")
+                .copy("Assets")
             ]
         ),
         .binaryTarget(

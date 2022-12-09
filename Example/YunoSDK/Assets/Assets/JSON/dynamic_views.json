@@ -1,0 +1,149 @@
+{
+  "header":null,
+  "body":{
+     "key":"mainContainer",
+     "width":-1,
+     "height":-1,
+     "render":{
+        "type":"container",
+        "attributes":{
+           "orientation":"vertical",
+           "children":[
+              {
+                 "key":"textName",
+                 "width":-1,
+                 "height":0,
+                 "render":{
+                    "type":"text",
+                    "attributes": {
+                       "text_style": {
+                           "color": "#FF0000",
+                           "text_decorator": "italic",
+                           "font_size": 16.0,
+                           "font_family": "Helvetica-Bold",
+                           "font_weight": 100.0
+                       },
+                       "text":"Hola ${user.name}"
+                    }
+                 }
+              },
+              {
+                 "key":null,
+                 "width":-1,
+                 "height":44,
+                 "on_change":{
+                    "text":"${user.name}"
+                 },
+                 "render":{
+                    "type":"edit_text",
+                    "attributes":{
+                       "text":"",
+                       "hint":"Tu nombre",
+                       "hint_style":null,
+                       "text_style":null,
+                       "text_decorator":null,
+                       "validators":[
+                          {
+                             "type":"regex",
+                             "errorMessage":"Error",
+                             "regex":"[a-z]"
+                          }
+                       ]
+                    }
+                 }
+              },
+              {
+                 "key":null,
+                 "width":-1,
+                 "height":50,
+                 "decorator": {
+                  "active:": {
+                     "background_color": "#",
+                     "corner_radius": {
+                        "top_left": 8,
+                        "top_right": 4,
+                        "bottom_left": 4,
+                        "bottom_right": 4
+                     },
+                     "stroke_color": null,
+                     "stroke_width": null
+                  },
+                  "disabled:": null,
+                  "selected:": null,
+                  "pressed:": null
+                 },
+                 "render":{
+                    "type":"button",
+                    "attributes":{
+                       "text":"Continuar",
+                       "text_style":null,
+                       "decorator":null,
+                       "enable":"${action_enable}"
+                    }
+                 }
+              },
+              {
+                "key":null,
+                "width":-1,
+                "height":50,
+                "render":{
+                   "type":"yuno_payment_method",
+                   "attributes":{
+                      "name":"Card",
+                      "image":"https://icons.sandbox.y.uno/card_logosimbolo.png"
+                   }
+                }
+             },
+              {
+                 "key":null,
+                 "width":-1,
+                 "height":-1,
+                 "on_change":{
+                    "checked":"${action_enable}"
+                 },
+                 "render":{
+                    "type":"check_box",
+                    "attributes":{
+                       "view":"Continuar",
+                       "checked":"false"
+                    },
+                    "view":{
+                       "key":"textName",
+                       "width":-1,
+                       "height":0,
+                       "render":{
+                          "type":"text",
+                          "check_position":"top",
+                          "attributes":{
+                             "text":"Acepto Terminos y condiciones",
+                             "text_style":null
+                          }
+                       }
+                    }
+                 }
+              }
+           ]
+        }
+     },
+     "margin":{
+        "left":10,
+        "top":10,
+        "right":10,
+        "bottom":10
+     },
+     "padding":{
+        "left":10,
+        "top":10,
+        "right":10,
+        "bottom":10
+     }
+  },
+  "bottom":null,
+  "state":{
+      "user": {
+        "name": "Jonathanathan"
+      },
+      "main_visibility":true,
+      "action_enable":false
+  }
+}

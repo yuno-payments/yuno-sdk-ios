@@ -1,0 +1,120 @@
+/* 
+  Localizable.strings
+  Pods
+
+  Created by Jonathan Pacheco on 7/04/22.
+*/
+
+// MARK: Generic titles
+"exit" = "Exit";
+"tryAgain" = "Try again";
+"backToHome" = "Back to home";
+"select" = "Select";
+"termsAndConditions" = "Terms & Conditions";
+"privacyPolicy" = "Privacy Policy";
+"goTo" = "Go to %@";
+"paymentMethod" = "Payment method";
+
+// MARK: Loader
+"loaderOneMomentPlease" = "One moment please";
+"loaderWeAreConnecting" = "We are connecting you to %@";
+"loaderWeAreProcessing" = "We are processing the information, this may take a few minutes";
+
+// MARK: Status payment
+"statusPaymentTitleInProcess" = "Transactions in progress";
+"statusPaymentTitleExpired" = "Transaction timeout";
+"statusPaymentTitleRejected" = "Transaction rejected";
+"statusPaymentTitleSuccessful" = "Transaction approved";
+"statusPaymentTitleFailed" = "Oops something failed";
+"statusPaymentDescriptionInProcess" = "We are processing your payment, please wait a few seconds";
+"statusPaymentDescriptionExpired" = "This transaction did not receive a response";
+"statusPaymentDescriptionRejected" = "Sorry an error occurred in your payment";
+"statusPaymentDescriptionSuccessful" = "Your payment has been approved";
+"statusPaymentDescriptionFailed" = "Our apologies an error occurred, please try again";
+
+// MARK: Status enrollment
+"statusEnrollmentTitleInProcess" = "Registration in progress";
+"statusEnrollmentTitleExpired" = "Registration timeout";
+"statusEnrollmentTitleRejected" = "Registration failed";
+"statusEnrollmentTitleSuccessful" = "Registration approved";
+"statusEnrollmentTitleFailed" = "Oops something failed";
+"statusEnrollmentDescriptionInProcess" = "We are processing your registration, please wait a few seconds";
+"statusEnrollmentDescriptionExpired" = "This registration did not receive a response";
+"statusEnrollmentDescriptionRejected" = "Sorry an error occurred in your registration";
+"statusEnrollmentDescriptionSuccessful" = "Your registration has been approved";
+"statusEnrollmentDescriptionFailed" = "Our apologies an error occurred, please try again";
+
+// MARK: Form
+
+"formTitleEnterDetailsToContinue" = "Enter de following details to continue";
+"formNameTitle" = "Name (s)";
+"formNamePlaceholder" = "Enter your name";
+"formNameErrorMessage" = "Please enter your name with letters only";
+"formSurnameTitle" = "Surname (s)";
+"formSurnamePlaceHolder" = "Enter your surname";
+"formSurnameErrorMessage" = "Please enter your surname with letters only";
+"formEmailTitle" = "E-mail";
+"formEmailPlaceholder" = "Enter your e-mail";
+"formEmailErrorMessage" = "Please enter your e-mail in the following format: yourname@example.com";
+"formPhoneTitle" = "Cellular number";
+"formPhonePlaceholder" = "Please enter your cellular number";
+"formPhoneErrorMessage" = "Please only enter numerical characters";
+"formGenderTitle" = "Select your gender";
+"formGenderMale" = "Male";
+"formGenderFemale" = "Female";
+"formTypeOfDocumentTitle" = "Type of document";
+"formDocumentNumberTitle" = "Document number";
+"formDocumentNumberPlaceholder" = "Enter your identification";
+"formDocumentNumberErrorMessage" = "Please only enter numerical characters";
+"formAddressTitle" = "Address";
+"formAddressPlaceHolder" = "Enter your address";
+"formCountryTitle" = "Country";
+"formStateTitle" = "State";
+"formCityTitle" = "City";
+"formAgreeTermsAndConditions" = "I agree with the Terms & Conditions and Privacy Policy";
+"formPhoneNumberTitle" = "Ingresa tu número telefonico";
+
+// MARK: Pix viewController
+"pixYouHaveTenMinutes" = "You have 10 minutes to complete payment before the code expires";
+"pixCopyPaymentCode" = "Copy payment code";
+"pixCopyCode" = "Copy code";
+"pixInstructions" = "Instructions";
+"pixOpenYourBankingApplication" = "Open your banking application";
+"pixSelectPix" = "Select Pix as payment method";
+"pixEnterCopiedCode" = "Enter the copied code";
+"pixCodeHasBeenCopied" = "The code has been copied";
+"pixTimeLeft" = "Time left:";
+
+// MARK: Credit card form
+"creditCardFormViewTitle" = "Pay with Credit Card";
+"creditCardFormViewTitleEnrollment" = "Insert your credit/debit card";
+"creditCardFormCardNumber" = "Card number";
+"creditCardFormExpirationDate" = "Expiration date";
+"creditCardFormSecurityCode" = "Security code";
+"creditCardFormCardholderName" = "Name (s)";
+"creditCardFormCardholderPlaceholder" = "Cardholder name";
+"creditCardFormSaveThisCards" = "Save this cards";
+"creditCardFormInvalidCardNumber" = "Invalid card number";
+"creditCardFormInvalidExpirationDate" = "Invalid expiration date";
+"creditCardFormInvalidSecurityCode" = "Invalid security code";
+"creditCardFormInvalidCardholderName" = "Invalid cardholder name";
+"creditCardFormPayNow" = "Pay now";
+"creditCardFormSecurePayment" = "100% secure payment";
+"orPayWithTitle" = "or pay with";
+"creditCardFormEnrollmentButtonTitle" = "Save";
+
+//MARK: Spei code view wording
+"speiCopyPaymentCode" = "Deposita via SPEI";
+"speiCopyCode" = "Copiar CLABE";
+"speiInstructions" = "Instrucciones para pagar";
+"speiOpenYourBankingApp" = "Abre tu aplicación de banco";
+"speiSelectTransfer" = "Selecciona transferencia a otros bancos";
+"speiEnterCopiedCode" = "Ingresa la cuenta CLABE de 18 digitos";
+"speiAddAmount" = "Agrega el monto ";
+"speiReadyWording" = "Listo, el deposito se vera reflejado de forma instantanea";
+
+//MARK: Codi view wording
+"codiInstructions" = "Instrucciones de uso";
+"codiReceivePaymentRequest" = "Recibe una soliticud de pago al número registrado en CODI";
+"codiCheckRequestDetail" = "Desde tu app de CoDi revisa los detalles de la solicitud y realiza el pago";
+"codiCheckTransactionStatus" = "Verifica que la transacción sea exitosa y vuelve a la aplicación";

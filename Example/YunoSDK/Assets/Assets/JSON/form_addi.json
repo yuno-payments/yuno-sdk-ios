@@ -1,0 +1,137 @@
+{
+  "name": "missing_user_data_form",
+  "title": "{{title_name}}",
+  "offset": 0,
+  "limit": 10,
+  "components": [
+    {
+      "name": "typed_form",
+      "index": 0,
+      "resource": {
+        "title": "formTitleEnterDetailsToContinue",
+        "items": [
+          {
+            "type": "text",
+            "metadata": {
+              "field": "first_name",
+              "title": "formNameTitle",
+              "placeholder": "formNamePlaceholder",
+              "type": "first_name",
+              "default_data": null,
+              "regex": "^[A-Za-zÀ-ÖØ-öø-ÿ\\s]{2,}$",
+              "error_message": "formNameErrorMessage",
+              "is_required": true
+            }
+          },
+          {
+            "type": "text",
+            "metadata": {
+              "field": "last_name",
+              "title": "formSurnameTitle",
+              "placeholder": "formSurnamePlaceHolder",
+              "type": "last_name",
+              "default_data": null,
+              "regex": "^[A-Za-zÀ-ÖØ-öø-ÿ\\s]{2,}$",
+              "error_message": "formSurnameErrorMessage",
+              "is_required": true
+            }
+          },
+          {
+            "type": "text",
+            "metadata": {
+              "field": "email",
+              "title": "formEmailTitle",
+              "placeholder": "formEmailPlaceholder",
+              "type": "email",
+              "default_data": null,
+              "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+              "error_message": "formEmailErrorMessage",
+              "is_required": true
+            }
+          },
+          {
+            "type": "text",
+            "metadata": {
+              "field": "document_type",
+              "title": "formTypeOfDocumentTitle",
+              "placeholder": "select",
+              "type": "drop_down",
+              "drop_down_items": {{document-types}},
+              "default_data": null,
+              "is_required": true
+            }
+          },
+          {
+            "type": "phone",
+            "metadata": {
+              "number_field": "number",
+              "code_field": "country_code",
+              "title": "formPhoneTitle",
+              "placeholder": "formPhonePlaceholder",
+              "codes": {{phone-country-codes}},
+              "default_code": null,
+              "default_number": null,
+              "error_message": "formPhoneErrorMessage",
+              "is_required": true
+            }
+          },
+          {
+            "type": "text",
+            "metadata": {
+              "field": "document_number",
+              "title": "formDocumentNumberTitle",
+              "placeholder": "formDocumentNumberPlaceholder",
+              "type": "number",
+              "default_data": null,
+              "regex": "^\\d{5,15}$",
+              "error_message": "formDocumentNumberErrorMessage",
+              "is_required": true
+            }
+          },
+          {
+            "type": "text",
+            "metadata": {
+              "field": "country",
+              "title": "formCountryTitle",
+              "placeholder": "select",
+              "type": "drop_down",
+              "drop_down_items": {{countries}},
+              "default_data": null,
+              "is_required": true
+            }
+          },
+          {
+            "type": "text",
+            "metadata": {
+              "field": "city",
+              "title": "formCityTitle",
+              "placeholder": null,
+              "type": "text",
+              "default_data": null,
+              "regex": "^.{2,}$",
+              "error_message": null,
+              "is_required": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "checkbox_with_linkable_text",
+      "index": 1,
+      "resource": {
+        "text": "formAgreeTermsAndConditions",
+        "links": [
+          {
+            "keyword": "termsAndConditions",
+            "link": "{{terms-and-conditions-link}}"
+          },
+          {
+            "keyword": "privacyPolicy",
+            "link": "{{privacy-policy-link}}"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "missing_user_data_form",
+  "title": "{{title_name}}",
+  "offset": 0,
+  "limit": 10,
+  "components": [
+    {
+      "name": "typed_form",
+      "index": 0,
+      "resource": {
+        "title": "formTitleEnterDetailsToContinue",
+        "items": [
+          {
+            "type": "text",
+            "metadata": {
+              "field": "email",
+              "title": "formEmailTitle",
+              "placeholder": "formEmailPlaceholder",
+              "type": "email",
+              "default_data": null,
+              "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+              "error_message": "formEmailErrorMessage",
+              "is_required": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "checkbox_with_linkable_text",
+      "index": 1,
+      "resource": {
+        "text": "formAgreeTermsAndConditions",
+        "links": [
+          {
+            "keyword": "termsAndConditions",
+            "link": "{{terms-and-conditions-link}}"
+          },
+          {
+            "keyword": "privacyPolicy",
+            "link": "{{privacy-policy-link}}"
+          }
+        ]
+      }
+    }
+  ]
+}
