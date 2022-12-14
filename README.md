@@ -21,7 +21,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 1.1.1'
+pod 'YunoSDK', '~> 1.1.2'
 ```
 
 Then run pod install in your directory:
@@ -60,6 +60,8 @@ To display a view controller with the flow to enroll a new payment method, call 
 protocol YunoEnrollmentDelegate: AnyObject {
 
     var customerSession: String { get }
+    var countryCode: String { get }
+    var language: String { get }
     func yunoEnrollmentResult(_ result: Yuno.Result)
 }
 
