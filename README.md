@@ -149,6 +149,11 @@ enum Result {
 func yunoPaymentResult(_ result: Yuno.Result) { ... }
 func yunoEnrollmentResult(_ result: Yuno.Result) { ... }
 ```
+
+## Appearance
+
+YunoSDK allows the modification of the appearance of some of its components, allowing you to specify the font and some colors, we have some examples in [documentation](./README.md)
+
 ## Author
 
 Yuno Payments Inc.
