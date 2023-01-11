@@ -51,8 +51,19 @@ import YunoSDK
 
 Yuno.initialize(
     apiKey: "<Your iOS API Key>",
-    cardFormType: .oneStep // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
+    config: YunoConfig() // This is optional, by default it configures .oneStep card form and disables save card checkbox.
 )
+```
+
+YunoConfig:
+
+```swift
+
+final class YunoConfig {
+    let cardFormType: CardFormType // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
+    let appearance: Yuno.Appearance // This is optional, by default uses Yuno styles.
+    let saveCardEnabled: Bool // This is to choose if show save card checkbox on cards flows. It is false by default
+}
 ```
 
 ## Functions
