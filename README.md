@@ -21,7 +21,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 1.1.3'
+pod 'YunoSDK', '~> 1.1.4'
 ```
 
 Then run pod install in your directory:
@@ -35,7 +35,7 @@ Once you have your Swift package set up, adding YunoSDK as a dependency is as ea
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.3"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.4"))
 ]
 ```
 
@@ -51,8 +51,19 @@ import YunoSDK
 
 Yuno.initialize(
     apiKey: "<Your iOS API Key>",
-    cardFormType: .oneStep // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
+    config: YunoConfig() // This is optional, by default it configures .oneStep card form and disables save card checkbox.
 )
+```
+
+YunoConfig:
+
+```swift
+
+final class YunoConfig {
+    let cardFormType: CardFormType // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
+    let appearance: Yuno.Appearance // This is optional, by default uses Yuno styles.
+    let saveCardEnabled: Bool // This is to choose if show save card checkbox on cards flows. It is false by default
+}
 ```
 
 ## Functions
