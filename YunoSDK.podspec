@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YunoSDK'
-  s.version          = '1.1.3'
+  s.version          = '1.1.4'
   s.summary          = 'A short description of YunoSDK.'
 
   s.description      = <<-DESC
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://www.y.uno/'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jonathan Pacheco' => 'jonathan.pacheco@y.uno.com' }
-  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/' + s.version.to_s + '/YunoSDK.xcframework.zip' }
+  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/1.1.4/YunoSDK.xcframework.zip' }
 
   s.ios.deployment_target = '13.0'
   s.swift_version         = '5.4'
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
         'Resources' => [
             'YunoSDK.xcframework/Assets/**/*.xcassets',
             'YunoSDK.xcframework/Assets/Localization/*.lproj',
-            'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json}'
+            'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json,ttf}'
         ]
     }
 
