@@ -120,6 +120,8 @@ Yuno.methodsView(delegate: self)
     }
 }
 ```
+If you are using SwiftUI, in the [documentation](./documentation/SwiftUI.md) folder you can find an example demonstrating how to show the payment methods with this framework
+
 #### Start Payment
 To start a payment process you have to call the method `startPayment` but if your are using the lite version you must to call `startPaymentLite`
 ```swift
