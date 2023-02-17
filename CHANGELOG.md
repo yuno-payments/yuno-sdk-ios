@@ -3,12 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## Version [1.1.7] - 17 de febrero de 2023
 ### Added
-- Soporte Tarjeta Clave
-- Soporte Kushki
+- Tarjeta Clave payment method support 
+- Kushki payment method support
 
 ### Changed
-- Mejoras de experiencia en Daviplata
-- Mejoras para tarjetas Diners en formulario de tarjeta
+- Daviplata UX improvements
+- Diners improvements at card form
 
 ## Version [1.1.3] - 19 de diciembre de 2022
 ### Changed
