@@ -63,6 +63,7 @@ final class YunoConfig {
     let cardFormType: CardFormType // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
     let appearance: Yuno.Appearance // This is optional, by default uses Yuno styles.
     let saveCardEnabled: Bool // This is to choose if show save card checkbox on cards flows. It is false by default
+    let requestSecurityCode: Bool // This field is optional (false by default) and can be used to request the security code when the payment is made with enrolled cards
 }
 ```
 
