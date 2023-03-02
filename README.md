@@ -67,6 +67,28 @@ final class YunoConfig {
 }
 ```
 
+
+##### Appearance
+With Yuno.Appearance you can customize the SDK styles:
+
+```swift
+let appearance = Yuno.Appearance(fontFamily: "Climate Crisis",
+                                 accentColor: .orange, 
+                                 buttonBackgroundColor: .yellow, 
+                                 buttonTitleColor: .black, 
+                                 buttonBorderColor: .black,
+                                 secondaryButtonBackgroundColor: .yellow,
+                                 secondaryButtonTitleColor: .black,
+                                 secondaryButtonBorderColor: .black,
+                                 disableButtonBackgroundColor: .gray,
+                                 disableButtonTitleColor: .black)
+
+Yuno.initialize(
+    apiKey: apiKey,
+    config: YunoConfig(appearance: appearance)
+)
+```
+
 ## Functions
 
 ### Enroll a new payment method
