@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.8] - 2 de marzo de 2023
+### Fixed
+- Multiple step card form was improved
+
 ## Version [1.1.7] - 17 de febrero de 2023
 ### Added
 - Tarjeta Clave payment method support 
