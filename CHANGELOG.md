@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.9] - 8 de marzo de 2023
+### Fixed
+- Bug during Yuno.Appearance object initialization.
+
+### Added
+Payment method support: 
+- Dlocal redirect 
+- Khipu
+- Dlocal PSE
+
+### Changed
+- Multiple step card form improvements.
+
 ## Version [1.1.8] - 2 de marzo de 2023
 ### Fixed
 - Multiple step card form was improved
