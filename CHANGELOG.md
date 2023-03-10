@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.11] - 10 de marzo de 2023
+### Changed
+- Multistep card form was improved.
+
 ## Version [1.1.9] - 8 de marzo de 2023
 ### Fixed
 - Bug during Yuno.Appearance object initialization.
