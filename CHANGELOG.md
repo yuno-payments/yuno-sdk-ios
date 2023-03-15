@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.12] - 15 de marzo de 2023
+### Added
+- PagSeguro checkout support
+- UNLIMINT checkout support
+
 ## Version [1.1.11] - 10 de marzo de 2023
 ### Changed
 - Multistep card form was improved.
