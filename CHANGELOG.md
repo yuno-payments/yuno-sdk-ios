@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.13] - 20 de marzo de 2023
+### Added
+- Support for new payment method types.
+
 ## Version [1.1.12] - 15 de marzo de 2023
 ### Added
 - PagSeguro checkout support
