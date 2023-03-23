@@ -21,7 +21,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 1.1.13'
+pod 'YunoSDK', '~> 1.1.14'
 ```
 
 Then run pod install in your directory:
@@ -35,7 +35,7 @@ Once you have your Swift package set up, adding YunoSDK as a dependency is as ea
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.13"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.14"))
 ]
 ```
 
@@ -55,7 +55,7 @@ Yuno.initialize(
 )
 ```
 
-YunoConfig:
+### YunoConfig:
 
 ```swift
 
@@ -66,7 +66,22 @@ final class YunoConfig {
     let requestSecurityCode: Bool // This field is optional (false by default) and can be used to request the security code when the payment is made with enrolled cards
 }
 ```
+#### Card form customization
+With YunoConfig you can customize the card form using the `cardFormFields` property. You can decide in which order the fields will be shown.
 
+```swift
+let cardFormFields: [YunoCardField] = [.holderName, 
+                                        .expirationDateAndSecurityCode, 
+                                        .cardNumber,
+                                        .documentType, 
+                                        .documentNumber
+                                        ]
+        
+Yuno.initialize(
+    apiKey: apiKey,
+    config: YunoConfig(cardFormFields: cardFormFields)
+)
+```
 
 ##### Appearance
 With Yuno.Appearance you can customize the SDK styles:
