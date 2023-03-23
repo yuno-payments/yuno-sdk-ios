@@ -55,7 +55,7 @@ Yuno.initialize(
 )
 ```
 
-YunoConfig:
+### YunoConfig:
 
 ```swift
 
@@ -66,7 +66,22 @@ final class YunoConfig {
     let requestSecurityCode: Bool // This field is optional (false by default) and can be used to request the security code when the payment is made with enrolled cards
 }
 ```
+#### Card form customization
+With YunoConfig you can customize the card form using the `cardFormFields` property. You can decide in which order the fields will be shown.
 
+```swift
+let cardFormFields: [YunoCardField] = [.holderName, 
+                                        .expirationDateAndSecurityCode, 
+                                        .cardNumber,
+                                        .documentType, 
+                                        .documentNumber
+                                        ]
+        
+Yuno.initialize(
+    apiKey: apiKey,
+    config: YunoConfig(cardFormFields: cardFormFields)
+)
+```
 
 ##### Appearance
 With Yuno.Appearance you can customize the SDK styles:
