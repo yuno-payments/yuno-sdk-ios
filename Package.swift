@@ -19,7 +19,7 @@ let package = Package(
         .binaryTarget(
             name: "OpenpayKit",
             url: "https://github.com/open-pay/openpay-swift-ios/releases/download/3.2.0/OpenpayKit.xcframework.zip",
-            checksum: "4441bb503600d4082858a7cd3645019980836344b379832799ae8c089347139a"
+            checksum: "a70869c996b1512e9d5167628d30c4a686dab3c743a8cd85117a194a781b3ae6"
         )
     ]
 )
