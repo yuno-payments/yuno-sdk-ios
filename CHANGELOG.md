@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.15] - 28 de marzo de 2023
+### Added
+- Required fields in card form
+
 ## Version [1.1.14] - 23 de marzo de 2023
 ### Added
 - Openpay payment method support
