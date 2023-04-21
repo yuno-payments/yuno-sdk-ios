@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.16] - 21 de abril de 2023
+### Added
+- Card form improvements.
+
 ## Version [1.1.15] - 28 de marzo de 2023
 ### Added
 - Required fields in card form
