@@ -13,8 +13,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "YunoSDK",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/1.1.16/YunoSDK_SPM.xcframework.zip",
-            checksum: "0786e1b6d63687551a276db0d32ceac33c929c81ea85adc966a040d8c92ab526"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/1.1.17/YunoSDK_SPM.xcframework.zip",
+            checksum: "fd8c77449c066bfec3551976cb5d9586ca92eb2d4026a40313f3f7eba8ae226d"
         ),
         .binaryTarget(
             name: "OpenpayKit",
