@@ -96,7 +96,8 @@ let appearance = Yuno.Appearance(fontFamily: "Climate Crisis",
                                  secondaryButtonTitleColor: .black,
                                  secondaryButtonBorderColor: .black,
                                  disableButtonBackgroundColor: .gray,
-                                 disableButtonTitleColor: .black)
+                                 disableButtonTitleColor: .black,
+                                 checkboxColor: .black)
 
 Yuno.initialize(
     apiKey: apiKey,
