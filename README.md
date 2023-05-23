@@ -21,7 +21,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 1.1.16'
+pod 'YunoSDK', '~> 1.1.17'
 ```
 
 Then run pod install in your directory:
@@ -35,7 +35,7 @@ Once you have your Swift package set up, adding YunoSDK as a dependency is as ea
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.16"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.17"))
 ]
 ```
 
@@ -96,7 +96,8 @@ let appearance = Yuno.Appearance(fontFamily: "Climate Crisis",
                                  secondaryButtonTitleColor: .black,
                                  secondaryButtonBorderColor: .black,
                                  disableButtonBackgroundColor: .gray,
-                                 disableButtonTitleColor: .black)
+                                 disableButtonTitleColor: .black,
+                                 checkboxColor: .black)
 
 Yuno.initialize(
     apiKey: apiKey,
