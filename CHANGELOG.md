@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.18] - June 12, 2023
+### Added
+- Loader persistance support.
+
 ## Version [1.1.17] - May 04, 2023
 ### Fixed
 - Bug that occurred when opening terms and conditions.
