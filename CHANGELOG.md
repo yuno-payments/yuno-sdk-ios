@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## Version [1.1.19] - June 22, 2023
+### Fixed
+- Resolved caching issue in MP Checkout Pro.
+### Added
+- Implemented document type filtering in Daviplata form
+
 ## Version [1.1.18] - June 12, 2023
 ### Added
 - Loader persistance support.
