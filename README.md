@@ -21,7 +21,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 1.1.22'
+pod 'YunoSDK', '~> 1.1.23'
 ```
 
 Then run pod install in your directory:
@@ -63,7 +63,6 @@ final class YunoConfig {
     let cardFormType: CardFormType, // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
     let appearance: Yuno.Appearance, // This is optional, by default uses Yuno styles.
     let saveCardEnabled: Bool, // This is to choose if show save card checkbox on cards flows. It is false by default
-    let cardFormFields: [YunoCardField],
     let keepLoader: Bool,
 }
 ```
@@ -88,24 +87,6 @@ let appearance = Yuno.Appearance(fontFamily: "Climate Crisis",
 Yuno.initialize(
     apiKey: apiKey,
     config: YunoConfig(appearance: appearance)
-)
-```
-
-#### Card form customization
-With YunoConfig you can customize the card form using the `cardFormFields` property. You can decide in which order the fields will be shown.
-
-```swift
-let cardFormFields: [YunoCardField] = [.holderName, 
-                                        .expirationDateAndSecurityCode, 
-                                        .cardNumber,
-                                        .documentType, 
-                                        .documentNumber,
-                                        .saveCardCheck
-                                        ]
-        
-Yuno.initialize(
-    apiKey: apiKey,
-    config: YunoConfig(cardFormFields: cardFormFields)
 )
 ```
 
