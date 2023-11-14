@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
         'Resources' => [
             'YunoSDK.xcframework/Assets/**/*.xcassets',
             'YunoSDK.xcframework/Assets/Localization/*.lproj',
-            'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json}'
+            'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json,ttf}'
         ]
     }
 
