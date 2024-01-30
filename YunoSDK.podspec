@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YunoSDK'
-  s.version          = '1.2.6-alpha'
+  s.version          = '1.2.6-beta'
   s.summary          = 'A short description of YunoSDK.'
 
   s.description      = <<-DESC
@@ -23,13 +23,8 @@ Pod::Spec.new do |s|
 
   s.requires_arc          = true
 
-  s.prepare_command = <<-CMD
-    curl -L -o OpenpayKit.xcframework.zip https://github.com/open-pay/openpay-swift-ios/releases/download/3.1.0/OpenpayKit.xcframework.zip && \
-    unzip OpenpayKit.xcframework.zip && \
-    rm OpenpayKit.xcframework.zip
-    CMD
 
-  s.vendored_frameworks = 'YunoSDK.xcframework', 'OpenpayKit.xcframework'
+  s.vendored_frameworks = 'YunoSDK.xcframework'
   
   s.resource_bundles = {
         'Resources' => [
