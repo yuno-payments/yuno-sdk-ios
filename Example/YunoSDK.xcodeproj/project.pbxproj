@@ -37,7 +37,7 @@
 		757E4F8E2841323200E1739F /* EnvirotmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvirotmentViewController.swift; sourceTree = "<group>"; };
 		A576B194077209836A42CF58 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		BF043B99FA8DCC801FF82AFB /* Pods_YunoSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YunoSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF8433A9A0E98E8CBCA17C5C /* YunoSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = YunoSDK.podspec; path = ../YunoSDK.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		DF8433A9A0E98E8CBCA17C5C /* YunoSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = YunoSDK.podspec; path = ../YunoSDK.podspec; sourceTree = "<group>"; };
 		E947BEF228FEECFF000622E6 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
