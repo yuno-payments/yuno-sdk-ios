@@ -144,7 +144,7 @@ protocol YunoPaymentDelegate: AnyObject {
 
     var checkoutSession: String { get }
     var countryCode: String { get }
-    var language: String { get }
+    var language: String? { get }
     var navigationController: UINavigationController? { get }
 
     func yunoCreatePayment(with token: String)
@@ -171,7 +171,7 @@ Yuno.methodsView(delegate: self)
 #### Start Payment
 To start a payment process you have to call the method `startPayment` but if your are using the lite version you must to call `startPaymentLite`
 ```swift
-Yuno.startPayment()
+Yuno.startPayment(showPaymentStatus: Bool)
 ```
 for the Lite version you need to send an additional parameter, these consist, the vaulted token and/or payment type with which the user will pay
 
@@ -181,7 +181,7 @@ protocol PaymentMethodSelected {
     var paymentMethodType: String { get }
 }
 
-Yuno.startPaymentLite(paymentSelected: paymentSelected)
+Yuno.startPaymentLite(paymentSelected: PaymentMethodSelected, showPaymentStatus: Bool)
 ```
 At the end of this process you will obtain the One Time Token to create back-back the payment, this data you can obtain from the callback of the delegate.
 
