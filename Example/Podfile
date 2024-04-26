@@ -3,6 +3,6 @@ use_frameworks!
 platform :ios, '13.0'
 
 target 'YunoSDK_Example' do
-  pod 'YunoSDK', '~> 1.8.1'
+  pod 'YunoSDK', '~> 1.9.0'
   pod 'Then'
 end
