@@ -22,8 +22,8 @@ class EnvirotmentViewController: UIViewController {
         super.viewDidLoad()
         
         apiKeyTextField.text = apiKey
-        apiKeyTextField.publisher(for: \.text)
-            .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        apiKeyTextField.textPublisher()
+            .compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .sink { [weak self] (apiKey: String) in
                 self?.apiKey = apiKey
             }
