@@ -74,7 +74,7 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     @UserDefault(key: Key.country.rawValue, defaultValue: "AR")
     var countryCode: String
     @UserDefault(key: Key.language.rawValue, defaultValue: "ES")
-    var language: String
+    var language: String?
     @UserDefault(key: Key.paymentToken.rawValue, defaultValue: "")
     var paymentToken: String
     @UserDefault(key: Key.paymentSelectedString.rawValue, defaultValue: "")
@@ -91,8 +91,8 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         if type == .enrollment {
             hidePaymentSection()
             customerSessionTextField.text = customerSession
-            customerSessionTextField.publisher(for: \.text)
-                .compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+            customerSessionTextField.textPublisher()
+                .compactMap { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                 .sink { [weak self] (customerSession: String) in
                     guard let self = self else { return }
                     self.customerSession = customerSession
@@ -102,7 +102,7 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         if type == .payment || type == .paymentLite {
             hideEnrollmentSection()
             checkoutSessionTextField.text = checkoutSession
-            checkoutSessionTextField.publisher(for: \.text)
+            checkoutSessionTextField.textPublisher()
                 .compactMap { (string: String?) -> String? in
                     string?.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
