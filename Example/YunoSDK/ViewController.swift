@@ -146,7 +146,7 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     func generatePaymentViews() {
         let generator = Yuno.methodsView(delegate: self)
         
-        generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
+        generator.getPaymentMethodsView(checkoutSession: checkoutSession, viewType: .separated) { [weak self] (view: UIView) in
             guard let self = self else { return }
             self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
             self.paymentMethodsContainer.addSubview(view)
