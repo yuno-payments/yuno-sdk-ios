@@ -9,6 +9,7 @@
 import UIKit
 import YunoSDK
 import Combine
+import YunoAntifraudClearsale
 
 class EnvirotmentViewController: UIViewController {
     
@@ -31,6 +32,7 @@ class EnvirotmentViewController: UIViewController {
     }
     
     @IBAction private func goToPay() {
+        Yuno.setFraudProviders(with: [YunoAntifraudClearsale()])
         Yuno.initialize(apiKey: apiKey)
         performSegue(withIdentifier: "goToHome", sender: self)
     }
