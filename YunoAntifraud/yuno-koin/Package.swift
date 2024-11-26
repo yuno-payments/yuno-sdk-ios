@@ -14,8 +14,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "YunoKoin",
-            url: "https://github.com/yuno-payments/yuno-antifraud-riskified-ios/releases/download/1.0.0/YunoAntifraudRiskified.xcframework.zip",
-            checksum: "09d90ab395adb1d487b19cb5cf8d5069c3cb92e6414a4ebed49650bbc8dd0406"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/1.20.0-betaYunoKoin.xcframework.zip",
+            checksum: "d496080f65dd1bd70cbc4850453cb6f02ffce0d4d172499175a3c2263fc84f8a"
         ),
         .binaryTarget(
             name: "KoinFingerprint",
