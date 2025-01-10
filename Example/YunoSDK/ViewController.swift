@@ -176,7 +176,7 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
         view.endEditing(true)
     }
     
-    func yunoCreatePayment(with token: String) {
+    func yunoCreatePayment(with token: String, information: [String : Any]) {
         guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
         let debugView = DebugView(token: token)
         window.addSubview(debugView)
