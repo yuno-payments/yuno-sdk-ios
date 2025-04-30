@@ -19,8 +19,7 @@ struct PaymentFullView: View {
         Group {
             VStack {
                 ScrollView(showsIndicators: false) {
-                    UIViewRepresentedView(view: viewContainer.view)
-                        .frame(height: viewModel.paymentViewHeight)
+                    Yuno.getPaymentMethodView(delegate: viewModel)
                 }
                 Button {
                     Yuno.startPayment(showPaymentStatus: true)
@@ -42,9 +41,7 @@ struct PaymentFullView: View {
             .navigationBarTitleDisplayMode(.large)
             .navigationTitle("Merchant App")
         }
-        .onAppear {
-            viewContainer.subscribe(to: viewModel.methodsView, checkoutSession: viewModel.checkoutSession)
-        }
+
         .optionsView(
             type: .ott(token: viewModel.ott) {
                 viewModel.continuePayment = true
@@ -59,15 +56,6 @@ final class ViewContainer: ObservableObject {
     
     let view = UIView()
     weak var currentView: UIView?
-    
-    func subscribe(to methodsView: MethodsView, checkoutSession: String) {
-        methodsView.getPaymentMethodsView(
-            checkoutSession: checkoutSession,
-            viewType: .separated
-        ) { [weak self] (newView: UIView) in
-            self?.addNewView(newView)
-        }
-    }
     
     private func addNewView(_ newView: UIView) {
         currentView?.removeFromSuperview()
