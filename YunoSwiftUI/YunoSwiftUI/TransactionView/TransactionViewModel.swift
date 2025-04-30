@@ -155,17 +155,6 @@ extension TransactionView.ViewModel: YunoPaymentFullDelegate {
     func yunoDidSelect(paymentMethod: YunoSDK.PaymentMethodSelected) {
         selectedPaymentMehtod = paymentMethod
     }
-    
-    func yunoDidSelect(enrollmentMethod: YunoSDK.EnrollmentMethodSelected) {
-        
-    }
-    
-    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
-        paymentViewHeight = height
-    }
-    
-    func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
-        
-    }
+
 }
 
