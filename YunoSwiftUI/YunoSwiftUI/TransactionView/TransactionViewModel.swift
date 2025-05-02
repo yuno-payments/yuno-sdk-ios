@@ -142,12 +142,16 @@ extension TransactionView.ViewModel: YunoEnrollmentDelegate {
         case .internalError:
             print(">>>>>>> yunoEnrollmentResult InternalError")
         case .userCancell:
-            print(">>>>>>> yunoEnrollmentResult UserCancell")
+            print(">>>>>>> yunoEnrollmentResult UserCancel")
         }
     }
 }
 
 extension TransactionView.ViewModel: YunoPaymentFullDelegate {
+    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
+        print("paymentViewHeight \(height)")
+    }
+    
     func yunoDidUnenrollSuccessfully(_ success: Bool) {
         
     }
