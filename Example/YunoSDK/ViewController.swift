@@ -26,7 +26,11 @@ class PaymentMethod: PaymentMethodSelected {
     }
 }
 
-class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDelegate, YunoMethodsViewDelegate {
+class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullDelegate {
+    func yunoDidUnenrollSuccessfully(_ success: Bool) {
+        
+    }
+    
     
     enum TestType {
         case enrollment, payment, paymentLite
@@ -144,21 +148,18 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     }
 
     func generatePaymentViews() {
-        let generator = Yuno.methodsView(delegate: self)
-        
-        generator.getPaymentMethodsView(checkoutSession: checkoutSession, viewType: .separated) { [weak self] (view: UIView) in
-            guard let self = self else { return }
-            self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
-            self.paymentMethodsContainer.addSubview(view)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
-                view.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
-                view.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
-                view.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
-            ])
-        }
+        let methodsView: UIView = Yuno.getPaymentMethodView(delegate: self)
+        self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
+        self.paymentMethodsContainer.addSubview(methodsView)
+        methodsView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            methodsView.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
+            methodsView.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
+            methodsView.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
+            methodsView.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
+        ])
     }
+   
     
     @IBAction func startPayment(sender: Any) {
         if type == .paymentLite {
@@ -217,12 +218,6 @@ class ViewController: UIViewController, YunoPaymentDelegate, YunoEnrollmentDeleg
     func yunoDidSelect(paymentMethod: PaymentMethodSelected) {
         debugPrint("yunoDidSelect(paymentMethod \(paymentMethod)")
         self.paymentSelected = paymentMethod
-    }
-    
-    func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
-        UIView.animate(withDuration: 0.33) {
-            self.view.layoutIfNeeded()
-        }
     }
     
     func yunoDidSelect(enrollmentMethod: EnrollmentMethodSelected) {

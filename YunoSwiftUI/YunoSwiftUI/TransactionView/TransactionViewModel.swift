@@ -56,7 +56,6 @@ extension TransactionView {
             self.apiKey = apiKey
         }
         
-        lazy var methodsView: MethodsView = Yuno.methodsView(delegate: self)
         
         var viewController: UIViewController? {
             UIApplication.shared.windows.first?.rootViewController
@@ -143,27 +142,23 @@ extension TransactionView.ViewModel: YunoEnrollmentDelegate {
         case .internalError:
             print(">>>>>>> yunoEnrollmentResult InternalError")
         case .userCancell:
-            print(">>>>>>> yunoEnrollmentResult UserCancell")
+            print(">>>>>>> yunoEnrollmentResult UserCancel")
         }
     }
 }
 
-extension TransactionView.ViewModel: YunoMethodsViewDelegate {
+extension TransactionView.ViewModel: YunoPaymentFullDelegate {
+    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
+        print("paymentViewHeight \(height)")
+    }
+    
+    func yunoDidUnenrollSuccessfully(_ success: Bool) {
+        
+    }
     
     func yunoDidSelect(paymentMethod: YunoSDK.PaymentMethodSelected) {
         selectedPaymentMehtod = paymentMethod
     }
-    
-    func yunoDidSelect(enrollmentMethod: YunoSDK.EnrollmentMethodSelected) {
-        
-    }
-    
-    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
-        paymentViewHeight = height
-    }
-    
-    func yunoUpdateEnrollmentMethodsViewHeight(_ height: CGFloat) {
-        
-    }
+
 }
 
