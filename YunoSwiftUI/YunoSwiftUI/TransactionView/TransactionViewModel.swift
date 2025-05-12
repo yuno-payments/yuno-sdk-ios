@@ -29,8 +29,8 @@ extension TransactionView {
         var paymentHeadless: YunoPaymentHeadless?
         var enrollHeadless: YunoEnrollHeadless?
         
-        @Published var selectedPaymentMehtod: PaymentMethodSelected?
-        var selectedPaymentMehtodLite: PaymentMethodSelected {
+        @Published var selectedPaymentMethod: PaymentMethodSelected?
+        var selectedPaymentMethodLite: PaymentMethodSelected {
             TransactionPaymentSelected(paymentType: paymentType, vaultedToken: vaultedToken)
         }
         
@@ -157,7 +157,7 @@ extension TransactionView.ViewModel: YunoPaymentFullDelegate {
     }
     
     func yunoDidSelect(paymentMethod: YunoSDK.PaymentMethodSelected) {
-        selectedPaymentMehtod = paymentMethod
+        selectedPaymentMethod = paymentMethod
     }
 
 }
