@@ -13,7 +13,6 @@ import YunoSDK
 struct PaymentFullView: View {
     
     @EnvironmentObject var viewModel: TransactionView.ViewModel
-    @StateObject var viewContainer = ViewContainer()
     
     var body: some View {
         Group {
@@ -50,38 +49,6 @@ struct PaymentFullView: View {
         )
     }
 }
-
-@MainActor
-final class ViewContainer: ObservableObject {
-    
-    let view = UIView()
-    weak var currentView: UIView?
-    
-    private func addNewView(_ newView: UIView) {
-        currentView?.removeFromSuperview()
-        view.addSubview(newView)
-        newView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            newView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            newView.topAnchor.constraint(equalTo: view.topAnchor),
-            newView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-        currentView = newView
-    }
-}
-
-struct UIViewRepresentedView: UIViewRepresentable {
-    
-    unowned let view: UIView
-    
-    func makeUIView(context: Context) -> UIView {
-        view
-    }
-    
-    func updateUIView(_ uiView: UIView, context: Context) {}
-}
-
 
 #Preview {
     PaymentFullView()
