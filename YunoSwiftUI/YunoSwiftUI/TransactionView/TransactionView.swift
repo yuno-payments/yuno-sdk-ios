@@ -96,7 +96,7 @@ struct TransactionView: View {
                     Button {
                         Yuno.startCheckout(with: viewModel)
                         Yuno.startPaymentLite(
-                            paymentSelected: viewModel.selectedPaymentMehtodLite,
+                            paymentSelected: viewModel.selectedPaymentMethodLite,
                             showPaymentStatus: true
                         )
                     } label: {

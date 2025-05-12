@@ -28,10 +28,10 @@ struct PaymentFullView: View {
                         .foregroundColor(.white)
                         .font(.system(size: 16, weight: .bold))
                         .padding([.top, .bottom])
-                        .disabled(viewModel.selectedPaymentMehtod == nil)
+                        .disabled(viewModel.selectedPaymentMethod == nil)
                         .frame(maxWidth: .infinity)
                 }
-                .background(viewModel.selectedPaymentMehtod == nil ? Color.gray : Color.black)
+                .background(viewModel.selectedPaymentMethod == nil ? Color.gray : Color.black)
                 .cornerRadius(8.0)
             }
             .padding()
