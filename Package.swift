@@ -14,7 +14,7 @@ let package = Package(
         .binaryTarget(
             name: "YunoSDK",
             url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/2.2.2/YunoSDK_SPM.xcframework.zip",
-            checksum: "195109b60157a14628d64a37b1b3b87629f0c06b7d94ced0ef4d15196afbe9ca"
+            checksum: "222b028c2724b56b94524382104323197d7b36ffbd5da238adf92f27ed508e79"
         )
     ]
 )
