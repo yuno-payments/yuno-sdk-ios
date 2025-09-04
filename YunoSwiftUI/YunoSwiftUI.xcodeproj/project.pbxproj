@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B281D352DC27B33004C4DA7 /* YunoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 2B281D342DC27B33004C4DA7 /* YunoSDK */; };
 		2BDDAE5E2C402971002F2C16 /* YunoSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDDAE5D2C402971002F2C16 /* YunoSwiftUIApp.swift */; };
 		2BDDAE622C402972002F2C16 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BDDAE612C402972002F2C16 /* Assets.xcassets */; };
 		2BDDAE652C402972002F2C16 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BDDAE642C402972002F2C16 /* Preview Assets.xcassets */; };
@@ -19,6 +18,7 @@
 		2BDDAE7F2C406BAC002F2C16 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDDAE7E2C406BAC002F2C16 /* OptionsView.swift */; };
 		2BDDAE822C4077A4002F2C16 /* PaymentFullView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDDAE812C4077A4002F2C16 /* PaymentFullView.swift */; };
 		2BDDAE852C408083002F2C16 /* SwiftUI+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDDAE842C408083002F2C16 /* SwiftUI+Utils.swift */; };
+		F4695CFD2E69EA700018EA8A /* YunoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = F4695CFC2E69EA700018EA8A /* YunoSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B281D352DC27B33004C4DA7 /* YunoSDK in Frameworks */,
+				F4695CFD2E69EA700018EA8A /* YunoSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +139,7 @@
 			);
 			name = YunoSwiftUI;
 			packageProductDependencies = (
-				2B281D342DC27B33004C4DA7 /* YunoSDK */,
+				F4695CFC2E69EA700018EA8A /* YunoSDK */,
 			);
 			productName = YunoSwiftUI;
 			productReference = 2BDDAE5A2C402971002F2C16 /* YunoSwiftUI.app */;
@@ -170,7 +170,7 @@
 			);
 			mainGroup = 2BDDAE512C402971002F2C16;
 			packageReferences = (
-				2B281D332DC27B33004C4DA7 /* XCRemoteSwiftPackageReference "yuno-sdk-ios" */,
+				F4695CFB2E69EA700018EA8A /* XCRemoteSwiftPackageReference "yuno-sdk-ios" */,
 			);
 			productRefGroup = 2BDDAE5B2C402971002F2C16 /* Products */;
 			projectDirPath = "";
@@ -416,20 +416,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2B281D332DC27B33004C4DA7 /* XCRemoteSwiftPackageReference "yuno-sdk-ios" */ = {
+		F4695CFB2E69EA700018EA8A /* XCRemoteSwiftPackageReference "yuno-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/yuno-payments/yuno-sdk-ios";
+			repositoryURL = "https://github.com/yuno-payments/yuno-sdk-ios.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.24.0;
+				kind = exactVersion;
+				version = 2.5.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2B281D342DC27B33004C4DA7 /* YunoSDK */ = {
+		F4695CFC2E69EA700018EA8A /* YunoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2B281D332DC27B33004C4DA7 /* XCRemoteSwiftPackageReference "yuno-sdk-ios" */;
+			package = F4695CFB2E69EA700018EA8A /* XCRemoteSwiftPackageReference "yuno-sdk-ios" */;
 			productName = YunoSDK;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -16,7 +16,7 @@ struct ApiKeysView: View {
     var body: some View {
         VStack (spacing: 24.0) {
             Spacer()
-            Image("yuno-logo")
+            Image("yuno_logo")
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, maxHeight: 60.0)

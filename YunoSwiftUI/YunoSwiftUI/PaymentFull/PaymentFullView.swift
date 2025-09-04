@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import UIKit
 import YunoSDK
 
 struct PaymentFullView: View {
@@ -18,10 +17,10 @@ struct PaymentFullView: View {
         Group {
             VStack {
                 ScrollView(showsIndicators: false) {
-                    Yuno.getPaymentMethodView(delegate: viewModel)
+                    viewModel.paymentListView
                 }
                 Button {
-                    Yuno.startPayment(showPaymentStatus: true)
+                    Yuno.startPayment(showPaymentStatus: false)
                 } label: {
                     Label("Pay", systemImage: "dollarsign.square")
                         .foregroundColor(.white)
@@ -39,8 +38,12 @@ struct PaymentFullView: View {
             }
             .navigationBarTitleDisplayMode(.large)
             .navigationTitle("Merchant App")
+            .onAppear {
+                Task {
+                    await viewModel.loadPaymentMethodsViewIfNeeded()
+                }
+            }
         }
-
         .optionsView(
             type: .ott(token: viewModel.ott) {
                 viewModel.continuePayment = true
