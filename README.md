@@ -21,7 +21,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
 
 ```ruby
-pod 'YunoSDK', '~> 2.4.0'
+pod 'YunoSDK', '~> 2.5.0'
 ```
 
 Then run pod install in your directory:
@@ -40,7 +40,7 @@ dependencies: [
 ```
 
 ## Usage
-YunoSDK minimum required version is iOS 13.0
+YunoSDK minimum required version is iOS 14.0
 
 First, you'll need to get your Yuno app ID and iOS API key. Then initialize Yuno by importing Yuno and adding the following to your application delegate:
 
