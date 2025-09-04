@@ -94,10 +94,9 @@ struct TransactionView: View {
                     TextField("Vaulted Token", text: $viewModel.vaultedToken)
                         .padding([.top, .bottom], 6.0)
                     Button {
-                        Yuno.startCheckout(with: viewModel)
-                        Yuno.startPaymentLite(
+                        Yuno.startPaymentLite(with: viewModel,
                             paymentSelected: viewModel.selectedPaymentMethodLite,
-                            showPaymentStatus: true
+                            showPaymentStatus: false
                         )
                     } label: {
                         HStack {

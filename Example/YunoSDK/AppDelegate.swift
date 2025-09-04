@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         // Here your scheme URL should be the same as the one you set in the customer session
         guard url.scheme == "yunoexample" else { return false }
-        return Yuno.receiveDeeplink(url, showStatusView: true)
+        return Yuno.receiveDeeplink(url)
     }
 }
 

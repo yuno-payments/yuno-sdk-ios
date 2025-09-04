@@ -88,6 +88,10 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
     var paymentSelected: PaymentMethodSelected?
     var enrollmentSelected: EnrollmentMethodSelected?
     
+    var viewController: UIViewController? {
+        return self
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.view.backgroundColor = .systemBackground
@@ -113,7 +117,6 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
                 .sink { [weak self] (checkoutSession: String) in
                     guard let self = self else { return }
                     self.checkoutSession = checkoutSession
-                    Yuno.startCheckout(with: self)
                     if self.type == .payment {
                         self.generatePaymentViews()
                     }
@@ -131,7 +134,6 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
             .sink { [weak self] (countryCode: String) in
                 guard let self = self else { return }
                 self.countryCode = countryCode
-                Yuno.startCheckout(with: self)
             }
             .store(in: &anyCancellables)
         languageTextField.text = language
@@ -141,23 +143,23 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
             .sink { [weak self] (language: String) in
                 guard let self = self else { return }
                 self.language = language
-                Yuno.startCheckout(with: self)
             }
             .store(in: &anyCancellables)
-        Yuno.startCheckout(with: self)
     }
 
-    func generatePaymentViews() {
-        let methodsView: UIView = Yuno.getPaymentMethodView(delegate: self)
-        self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
-        self.paymentMethodsContainer.addSubview(methodsView)
-        methodsView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            methodsView.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
-            methodsView.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
-            methodsView.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
-            methodsView.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
-        ])
+    func generatePaymentViews()  {
+        Task {
+            let methodsView: UIView = await Yuno.getPaymentMethodViewAsync(delegate: self)
+            self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
+            self.paymentMethodsContainer.addSubview(methodsView)
+            methodsView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                methodsView.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
+                methodsView.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
+                methodsView.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
+                methodsView.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
+            ])
+        }
     }
    
     
@@ -167,7 +169,7 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
                 vaultedToken: paymentTokenTextField.text,
                 paymentMethodType: paymentMethodSelectedTextField.text ?? ""
             )
-            Yuno.startPaymentLite(paymentSelected: paymentSelected)
+            Yuno.startPaymentLite(with: self, paymentSelected: paymentSelected)
         } else {
             Yuno.startPayment()
         }

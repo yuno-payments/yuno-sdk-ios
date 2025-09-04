@@ -5,7 +5,6 @@
 //  Created by Viviana Amezquita on 11/07/24.
 //
 
-import UIKit
 import Combine
 import YunoSDK
 import SwiftUI
@@ -34,17 +33,20 @@ extension TransactionView {
             TransactionPaymentSelected(paymentType: paymentType, vaultedToken: vaultedToken)
         }
         
+        @Published var paymentListView: AnyView?
+        @Published var hasLoadedPaymentMethods = false
+        
         @Published var configLanguage: String = "EN"
         
         @Published var configCountryCode: String = "CO"
         
-        var language: String? {
-            configLanguage
-        }
+        nonisolated var language: String? {
+               MainActor.assumeIsolated { configLanguage }
+           }
         
-        var countryCode: String {
-            configCountryCode
-        }
+        nonisolated var countryCode: String {
+               MainActor.assumeIsolated { configCountryCode }
+           }
         
         @Published var customerSession: String = ""
         @Published var checkoutSession: String = ""
@@ -55,7 +57,6 @@ extension TransactionView {
         init(apiKey: String) {
             self.apiKey = apiKey
         }
-        
         
         var viewController: UIViewController? {
             UIApplication.shared.windows.first?.rootViewController
@@ -78,12 +79,27 @@ extension TransactionView {
         }
         
         func loadMethodsView() {
-            Yuno.startCheckout(with: self)
+            Task {
+                await refreshPaymentMethods()
+            }
             showSdkFullView = true
         }
         
+        func loadPaymentMethodsViewIfNeeded() async {
+            guard !hasLoadedPaymentMethods else { return }
+            hasLoadedPaymentMethods = true
+            paymentListView = await AnyView(Yuno.getPaymentMethodViewAsync(delegate: self))
+        }
+        
+        /// Refrescar payment methods manualmente forzando la recarga
+        func refreshPaymentMethods() async {
+            hasLoadedPaymentMethods = false
+            paymentListView = nil
+            await loadPaymentMethodsViewIfNeeded()
+        }
+        
         private func continuePaymentAction() {
-            Yuno.continuePayment(showPaymentStatus: true)
+            Yuno.continuePayment()
             continuePayment = false
             presentOtt = false
         }
@@ -103,7 +119,7 @@ final class TransactionPaymentSelected: PaymentMethodSelected {
 
 extension TransactionView.ViewModel: YunoPaymentDelegate {
     
-    func yunoPaymentResult(_ result: YunoSDK.Yuno.Result) {
+    nonisolated func yunoPaymentResult(_ result: YunoSDK.Yuno.Result) {
         switch result {
         case .reject:
             print(">>>>>>> yunoPaymentResult Reject")
@@ -115,21 +131,25 @@ extension TransactionView.ViewModel: YunoPaymentDelegate {
             print(">>>>>>> yunoPaymentResult Processing")
         case .internalError:
             print(">>>>>>> yunoPaymentResult InternalError")
-        case .userCancell:
+        case .userCancelled:
             print(">>>>>>> yunoPaymentResult UserCancell")
+        @unknown default:
+            print(">>>>>>> yunoPaymentResult @unknown")
         }
     }
     
-    func yunoCreatePayment(with token: String, information: [String: Any]) {
-        ott = token
-        presentOtt = true
-        continuePayment = false
+    nonisolated func yunoCreatePayment(with token: String, information: [String: Any]) {
+        Task { @MainActor in
+            ott = token
+            presentOtt = true
+            continuePayment = false
+        }
     }
 }
 
 extension TransactionView.ViewModel: YunoEnrollmentDelegate {
     
-    func yunoEnrollmentResult(_ result: YunoSDK.Yuno.Result) {
+    nonisolated func yunoEnrollmentResult(_ result: YunoSDK.Yuno.Result) {
         switch result {
         case .reject:
             print(">>>>>>> yunoEnrollmentResult Reject")
@@ -141,23 +161,31 @@ extension TransactionView.ViewModel: YunoEnrollmentDelegate {
             print(">>>>>>> yunoEnrollmentResult Processing")
         case .internalError:
             print(">>>>>>> yunoEnrollmentResult InternalError")
-        case .userCancell:
+        case .userCancelled:
             print(">>>>>>> yunoEnrollmentResult UserCancel")
+        @unknown default:
+            print(">>>>>>> yunoEnrollmentResult @unknown")
         }
+        
     }
 }
 
 extension TransactionView.ViewModel: YunoPaymentFullDelegate {
-    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
+    nonisolated func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
         print("paymentViewHeight \(height)")
+        Task { @MainActor in
+            paymentViewHeight = height
+        }
     }
     
-    func yunoDidUnenrollSuccessfully(_ success: Bool) {
+    nonisolated func yunoDidUnenrollSuccessfully(_ success: Bool) {
         
     }
     
-    func yunoDidSelect(paymentMethod: YunoSDK.PaymentMethodSelected) {
-        selectedPaymentMethod = paymentMethod
+    nonisolated func yunoDidSelect(paymentMethod: YunoSDK.PaymentMethodSelected) {
+        Task { @MainActor in
+            selectedPaymentMethod = paymentMethod
+        }
     }
 
 }
