@@ -202,7 +202,7 @@ Yuno.continuePayment(showPaymentStatus: Bool)
 The transactions could return three different states: success, fail, processing and reject, to listen this state you have to implement the delegate, like in the follow piece of code:
 ```swift
 enum Result {
-    case reject, success, fail, processing, internalError, userCancell
+    case reject, success, fail, processing, internalError, userCancelled
 }
 
 func yunoPaymentResult(_ result: Yuno.Result) { ... }
