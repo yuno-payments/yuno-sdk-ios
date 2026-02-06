@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YunoSDK'
-  s.version          = '2.11.1'
+  s.version          = '2.11.2'
   s.summary          = 'A short description of YunoSDK.'
 
   s.description      = <<-DESC
@@ -44,6 +44,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '13.0'
   s.swift_version         = '5.4'
   s.platform              = :ios, '13.0'
+  s.static_framework      = true
 
   s.requires_arc          = true
 
