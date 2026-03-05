@@ -56,13 +56,6 @@ extension TransactionView {
 
         init(apiKey: String) {
             self.apiKey = apiKey
-        }
-        
-        var viewController: UIViewController? {
-            UIApplication.shared.windows.first?.rootViewController
-        }
-        
-        func loadConfiguration() async {
             $continuePayment
                 .removeDuplicates()
                 .filter { $0 }
@@ -70,7 +63,13 @@ extension TransactionView {
                     self?.continuePaymentAction()
                 }
                 .store(in: &anyCancellables)
-            
+        }
+
+        var viewController: UIViewController? {
+            UIApplication.shared.windows.first?.rootViewController
+        }
+
+        func loadConfiguration() async {
             initializeYunoSDK()
         }
         
