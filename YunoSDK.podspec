@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YunoSDK'
-  s.version          = '2.12.2'
+  s.version          = '2.12.3'
   s.summary          = 'A short description of YunoSDK.'
 
   s.description      = <<-DESC
