@@ -14,14 +14,15 @@ typealias CustomerData = (id: String?, merchantId: String?)
 extension TransactionView {
     
     @MainActor
-    final class ViewModel: ObservableObject {
-        
-        private var anyCancellables: Set<AnyCancellable> = []
+    class ViewModel: ObservableObject {
+
+        var anyCancellables: Set<AnyCancellable> = []
         @Published var presentOtt: Bool = false
         @Published var ott: String = ""
         let apiKey: String
-        private var customer: Customer?
+        var customer: Customer?
         @Published var continuePayment = false
+        @Published var renderIsLoading: Bool = false
         
         @Published var isShowHeadless: Bool = false
         @Published var paymentViewHeight: CGFloat = 0
@@ -53,15 +54,13 @@ extension TransactionView {
         @Published var paymentType: String = ""
         @Published var vaultedToken: String = ""
         @Published var showSdkFullView: Bool = false
+        @Published var showSdkPaymentRenderView: Bool = false
+        @Published var showSdkEnrollmentRenderView: Bool = false
 
         init(apiKey: String) {
             self.apiKey = apiKey
         }
-        
-        var viewController: UIViewController? {
-            UIApplication.shared.windows.first?.rootViewController
-        }
-        
+
         func loadConfiguration() async {
             $continuePayment
                 .removeDuplicates()
@@ -143,6 +142,12 @@ extension TransactionView.ViewModel: YunoPaymentDelegate {
             ott = token
             presentOtt = true
             continuePayment = false
+        }
+    }
+
+    nonisolated func onLoading(isLoading: Bool) {
+        Task { @MainActor in
+            renderIsLoading = isLoading
         }
     }
 }

@@ -120,13 +120,50 @@ struct TransactionView: View {
                     }
                     .disabled(viewModel.checkoutSession.isEmpty)
                     .opacity(viewModel.checkoutSession.isEmpty ? 0.5 : 1.0)
-                    
+
+                    Button {
+                        viewModel.showSdkPaymentRenderView = true
+                    } label: {
+                        HStack {
+                            Label("Execute payment RENDER", systemImage: "rectangle.on.rectangle.angled")
+                                .foregroundColor(.black)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
+                    }
+                    .disabled(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty)
+                    .opacity(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty ? 0.5 : 1.0)
+
+                }
+                Section(header: Text("ENROLLMENT RENDER")) {
+                    Button {
+                        viewModel.showSdkEnrollmentRenderView = true
+                    } label: {
+                        HStack {
+                            Label("Execute enrollment RENDER", systemImage: "rectangle.and.pencil.and.ellipsis")
+                                .foregroundColor(.black)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
+                    }
+                    .disabled(viewModel.customerSession.isEmpty)
+                    .opacity(viewModel.customerSession.isEmpty ? 0.5 : 1.0)
                 }
             }
             Group {
                 NavigationLink(
                     destination: LazyView(PaymentFullView().environmentObject(viewModel)),
                     isActive: $viewModel.showSdkFullView,
+                    label: { EmptyView() }
+                )
+                NavigationLink(
+                    destination: LazyView(PaymentRenderView(viewModel: viewModel)),
+                    isActive: $viewModel.showSdkPaymentRenderView,
+                    label: { EmptyView() }
+                )
+                NavigationLink(
+                    destination: LazyView(EnrollmentRenderView(viewModel: viewModel)),
+                    isActive: $viewModel.showSdkEnrollmentRenderView,
                     label: { EmptyView() }
                 )
             }

@@ -19,6 +19,10 @@
 		2BDDAE822C4077A4002F2C16 /* PaymentFullView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDDAE812C4077A4002F2C16 /* PaymentFullView.swift */; };
 		2BDDAE852C408083002F2C16 /* SwiftUI+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDDAE842C408083002F2C16 /* SwiftUI+Utils.swift */; };
 		F4695CFD2E69EA700018EA8A /* YunoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = F4695CFC2E69EA700018EA8A /* YunoSDK */; };
+		FA0000010000000000000001 /* PaymentRenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000010000000000000101 /* PaymentRenderView.swift */; };
+		FA0000010000000000000002 /* PaymentRenderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000010000000000000102 /* PaymentRenderViewModel.swift */; };
+		FA0000010000000000000003 /* EnrollmentRenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000010000000000000103 /* EnrollmentRenderView.swift */; };
+		FA0000010000000000000004 /* EnrollmentRenderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0000010000000000000104 /* EnrollmentRenderViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +38,10 @@
 		2BDDAE7E2C406BAC002F2C16 /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		2BDDAE812C4077A4002F2C16 /* PaymentFullView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFullView.swift; sourceTree = "<group>"; };
 		2BDDAE842C408083002F2C16 /* SwiftUI+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+Utils.swift"; sourceTree = "<group>"; };
+		FA0000010000000000000101 /* PaymentRenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRenderView.swift; sourceTree = "<group>"; };
+		FA0000010000000000000102 /* PaymentRenderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRenderViewModel.swift; sourceTree = "<group>"; };
+		FA0000010000000000000103 /* EnrollmentRenderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentRenderView.swift; sourceTree = "<group>"; };
+		FA0000010000000000000104 /* EnrollmentRenderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentRenderViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +76,8 @@
 			isa = PBXGroup;
 			children = (
 				2BDDAE802C407798002F2C16 /* PaymentFull */,
+				FA0000010000000000000201 /* PaymentRender */,
+				FA0000010000000000000202 /* EnrollmentRender */,
 				2BDDAE7D2C406B9D002F2C16 /* OptionView */,
 				2BDDAE7A2C4067BF002F2C16 /* TransactionView */,
 				2BDDAE6D2C403A08002F2C16 /* ApiKeysView */,
@@ -78,6 +88,24 @@
 				2BDDAE842C408083002F2C16 /* SwiftUI+Utils.swift */,
 			);
 			path = YunoSwiftUI;
+			sourceTree = "<group>";
+		};
+		FA0000010000000000000201 /* PaymentRender */ = {
+			isa = PBXGroup;
+			children = (
+				FA0000010000000000000101 /* PaymentRenderView.swift */,
+				FA0000010000000000000102 /* PaymentRenderViewModel.swift */,
+			);
+			path = PaymentRender;
+			sourceTree = "<group>";
+		};
+		FA0000010000000000000202 /* EnrollmentRender */ = {
+			isa = PBXGroup;
+			children = (
+				FA0000010000000000000103 /* EnrollmentRenderView.swift */,
+				FA0000010000000000000104 /* EnrollmentRenderViewModel.swift */,
+			);
+			path = EnrollmentRender;
 			sourceTree = "<group>";
 		};
 		2BDDAE632C402972002F2C16 /* Preview Content */ = {
@@ -207,6 +235,10 @@
 				2BDDAE792C4067B5002F2C16 /* TransactionView.swift in Sources */,
 				2BDDAE7C2C406B05002F2C16 /* TransactionViewModel.swift in Sources */,
 				2BDDAE852C408083002F2C16 /* SwiftUI+Utils.swift in Sources */,
+				FA0000010000000000000001 /* PaymentRenderView.swift in Sources */,
+				FA0000010000000000000002 /* PaymentRenderViewModel.swift in Sources */,
+				FA0000010000000000000003 /* EnrollmentRenderView.swift in Sources */,
+				FA0000010000000000000004 /* EnrollmentRenderViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
