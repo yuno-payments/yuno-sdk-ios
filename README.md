@@ -153,7 +153,7 @@ protocol YunoPaymentDelegate: AnyObject {
     var checkoutSession: String { get }
     var countryCode: String { get }
     var language: String? { get }
-    var navigationController: UINavigationController? { get }
+    var viewController: UIViewController? { get }
 
     func yunoCreatePayment(with token: String)
     func yunoPaymentResult(_ result: Yuno.Result)
@@ -163,19 +163,37 @@ class ViewController: YunoPaymentDelegate {
 
     func viewDidLoad() {
         super.viewDidLoad()
-        Yuno.startCheckout(with: self)
     }
 }
 ```
 #### Show Payment Methods
-When you implement a SDK Full you have to add the next view on your layout to show the payment methods available
+When you implement a SDK Full you have to add the next view on your layout to show the payment methods available.
+
+Your delegate must conform to `YunoPaymentFullDelegate` (extends `YunoPaymentDelegate`):
+
 ```swift
-Yuno.methodsView(delegate: self)
-    generator.getPaymentMethodsView(checkoutSession: checkoutSession) { [weak self] (view: UIView) in
-        // Add view to your superview
-    }
+@objc protocol YunoPaymentFullDelegate: YunoPaymentDelegate {
+    func yunoDidSelect(paymentMethod: PaymentMethodSelected)
+    func yunoDidUnenrollSuccessfully(_ success: Bool)
+    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat)
 }
 ```
+
+**UIKit** — returns a `UIView`:
+```swift
+Task {
+    let view = await Yuno.getPaymentMethodViewAsync(delegate: self)
+    containerView.addSubview(view)
+}
+```
+
+**SwiftUI** — returns a SwiftUI view:
+```swift
+.task {
+    paymentMethodsView = await Yuno.getPaymentMethodViewAsync(delegate: coordinator)
+}
+```
+
 #### Start Payment
 To start a payment process you have to call the method `startPayment` but if your are using the lite version you must to call `startPaymentLite`
 ```swift

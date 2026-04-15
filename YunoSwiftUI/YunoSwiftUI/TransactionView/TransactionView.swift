@@ -12,7 +12,10 @@ struct TransactionView: View {
     
     @StateObject var viewModel: ViewModel
     @State private var isConfigurationPresented = false
-    
+    @State private var isGeneralExpanded = true
+    @State private var isEnrollmentExpanded = false
+    @State private var isPaymentExpanded = true
+
     init(apiKey: String) {
         _viewModel = StateObject(wrappedValue: ViewModel(apiKey: apiKey))
     }
@@ -38,95 +41,152 @@ struct TransactionView: View {
     var content: some View {
         VStack {
             List {
-                Section(header: Text("General")) {
-                    HStack {
-                        Label("Country", systemImage: "mappin.and.ellipse")
-                            .foregroundColor(.black)
-                        Spacer()
-                        TextField("Code", text: $viewModel.configCountryCode)
-                            .autocapitalization(.none)
-                            .autocorrectionDisabled()
-                            .frame(width: 40.0)
-                            .textFieldStyle(.roundedBorder)
-                            .multilineTextAlignment(.center)
-                    }.frame(maxWidth: .infinity)
-                    HStack {
-                        Label("Language", systemImage: "globe")
-                            .foregroundColor(.black)
-                        Spacer()
-                        TextField("Code", text: $viewModel.configLanguage)
-                            .autocapitalization(.none)
-                            .autocorrectionDisabled()
-                            .frame(width: 40.0)
-                            .textFieldStyle(.roundedBorder)
-                            .multilineTextAlignment(.center)
-                    }.frame(maxWidth: .infinity)
+                Section {
+                    DisclosureGroup(
+                        isExpanded: $isGeneralExpanded,
+                        content: {
+                            HStack {
+                                Label("Country", systemImage: "mappin.and.ellipse")
+                                    .foregroundColor(.black)
+                                Spacer()
+                                TextField("Code", text: $viewModel.configCountryCode)
+                                    .autocapitalization(.none)
+                                    .autocorrectionDisabled()
+                                    .frame(width: 40.0)
+                                    .textFieldStyle(.roundedBorder)
+                                    .multilineTextAlignment(.center)
+                            }.frame(maxWidth: .infinity)
+                            HStack {
+                                Label("Language", systemImage: "globe")
+                                    .foregroundColor(.black)
+                                Spacer()
+                                TextField("Code", text: $viewModel.configLanguage)
+                                    .autocapitalization(.none)
+                                    .autocorrectionDisabled()
+                                    .frame(width: 40.0)
+                                    .textFieldStyle(.roundedBorder)
+                                    .multilineTextAlignment(.center)
+                            }.frame(maxWidth: .infinity)
+                        },
+                        label: {
+                            Text("General")
+                        }
+                    )
                 }
-                
-                Section(header: Text("ENROLLMENT")) {
-                    TextField("Customer Session", text: $viewModel.customerSession)
-                        .frame(height: 54.0)
-                    Button {
-                        Yuno.enrollPayment(
-                            with: viewModel,
-                            showPaymentStatus: true
-                        )
-                    } label: {
-                        HStack {
-                            Label("Execute enrollment", systemImage: "rectangle.and.pencil.and.ellipsis")
-                                .foregroundColor(.black)
-                            Spacer()
-                            Image(systemName: "chevron.right")
+
+                Section {
+                    DisclosureGroup(
+                        isExpanded: $isEnrollmentExpanded,
+                        content: {
+                            TextField("Customer Session", text: $viewModel.customerSession)
+                                .frame(height: 54.0)
+                            Button {
+                                Yuno.enrollPayment(
+                                    with: viewModel,
+                                    showPaymentStatus: true
+                                )
+                            } label: {
+                                HStack {
+                                    Label("Execute enrollment", systemImage: "rectangle.and.pencil.and.ellipsis")
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
+                            .disabled(viewModel.customerSession.isEmpty)
+                            .opacity(viewModel.customerSession.isEmpty ? 0.5 : 1.0)
+                            Button {
+                                viewModel.showSdkEnrollmentRenderView = true
+                            } label: {
+                                HStack {
+                                    Label("Execute enrollment RENDER", systemImage: "rectangle.and.pencil.and.ellipsis")
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
+                            .disabled(viewModel.customerSession.isEmpty)
+                            .opacity(viewModel.customerSession.isEmpty ? 0.5 : 1.0)
+                        },
+                        label: {
+                            Text("ENROLLMENT")
                         }
-                    }
-                    .disabled(viewModel.customerSession.isEmpty)
-                    .opacity(viewModel.customerSession.isEmpty ? 0.5 : 1.0)
-                    
+                    )
                 }
-                Section(header: Text("PAYMENT")) {
-                    VStack {
-                        TextField("Checkout Session", text: $viewModel.checkoutSession)
-                            .frame(height: 54.0)
-                        
-                    }
-                    TextField("Payment Type", text: $viewModel.paymentType)
-                        .padding([.top, .bottom], 6.0)
-                    TextField("Vaulted Token", text: $viewModel.vaultedToken)
-                        .padding([.top, .bottom], 6.0)
-                    Button {
-                        Yuno.startPaymentLite(with: viewModel,
-                            paymentSelected: viewModel.selectedPaymentMethodLite,
-                            showPaymentStatus: false
-                        )
-                    } label: {
-                        HStack {
-                            Label("Execute payment LITE", systemImage: "dollarsign.square")
-                                .foregroundColor(.black)
-                            Spacer()
-                            Image(systemName: "chevron.right")
+                Section {
+                    DisclosureGroup(
+                        isExpanded: $isPaymentExpanded,
+                        content: {
+                            VStack {
+                                TextField("Checkout Session", text: $viewModel.checkoutSession)
+                                    .frame(height: 54.0)
+
+                            }
+                            TextField("Payment Type", text: $viewModel.paymentType)
+                                .padding([.top, .bottom], 6.0)
+                            TextField("Vaulted Token", text: $viewModel.vaultedToken)
+                                .padding([.top, .bottom], 6.0)
+                            Button {
+                                Yuno.startPaymentLite(with: viewModel,
+                                    paymentSelected: viewModel.selectedPaymentMethodLite,
+                                    showPaymentStatus: false
+                                )
+                            } label: {
+                                HStack {
+                                    Label("Execute payment LITE", systemImage: "dollarsign.square")
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
+                            .disabled(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty)
+                            .opacity(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty ? 0.5 : 1.0)
+                            Button {
+                                viewModel.loadMethodsView()
+                            } label: {
+                                HStack {
+                                    Label("Execute payment FULL", systemImage: "list.bullet.rectangle")
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
+                            .disabled(viewModel.checkoutSession.isEmpty)
+                            .opacity(viewModel.checkoutSession.isEmpty ? 0.5 : 1.0)
+
+                            Button {
+                                viewModel.showSdkPaymentRenderView = true
+                            } label: {
+                                HStack {
+                                    Label("Execute payment RENDER", systemImage: "rectangle.on.rectangle.angled")
+                                        .foregroundColor(.black)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                }
+                            }
+                            .disabled(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty)
+                            .opacity(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty ? 0.5 : 1.0)
+                        },
+                        label: {
+                            Text("PAYMENT")
                         }
-                    }
-                    .disabled(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty)
-                    .opacity(viewModel.checkoutSession.isEmpty || viewModel.paymentType.isEmpty ? 0.5 : 1.0)
-                    Button {
-                        viewModel.loadMethodsView()
-                    } label: {
-                        HStack {
-                            Label("Execute payment FULL", systemImage: "list.bullet.rectangle")
-                                .foregroundColor(.black)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                    }
-                    .disabled(viewModel.checkoutSession.isEmpty)
-                    .opacity(viewModel.checkoutSession.isEmpty ? 0.5 : 1.0)
-                    
+                    )
                 }
             }
             Group {
                 NavigationLink(
                     destination: LazyView(PaymentFullView().environmentObject(viewModel)),
                     isActive: $viewModel.showSdkFullView,
+                    label: { EmptyView() }
+                )
+                NavigationLink(
+                    destination: LazyView(PaymentRenderView(viewModel: viewModel)),
+                    isActive: $viewModel.showSdkPaymentRenderView,
+                    label: { EmptyView() }
+                )
+                NavigationLink(
+                    destination: LazyView(EnrollmentRenderView(viewModel: viewModel)),
+                    isActive: $viewModel.showSdkEnrollmentRenderView,
                     label: { EmptyView() }
                 )
             }
