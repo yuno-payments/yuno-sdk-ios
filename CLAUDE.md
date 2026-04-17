@@ -115,8 +115,9 @@ pod install
 
 ### Build Requirements
 - iOS deployment target: **13.0** (podspec), **14.0** (recommended per README)
-- Swift version: **5.4+** (podspec specifies 5.4, Package.swift uses swift-tools-version 5.6)
-- Xcode with CocoaPods (`gem install cocoapods`) for the Example app
+- Swift version: **5.7+** 
+- Xcode: **26.2+** (minimum required to build the example apps and consume the XCFramework)
+- CocoaPods (`gem install cocoapods`) for the Example app
 - No CI configuration is present in this repository
 
 ## Important Notes
