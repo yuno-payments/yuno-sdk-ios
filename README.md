@@ -3,12 +3,9 @@
 [![Version](https://img.shields.io/cocoapods/v/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
 [![License](https://img.shields.io/cocoapods/l/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
 [![Platform](https://img.shields.io/cocoapods/p/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
-[![iOS Minimum Deploy Target - 13.0](https://img.shields.io/static/v1?label=iOS+Minimum+Deploy+Target&message=13.0&color=2ea44f)](https://)
-<<<<<<< Updated upstream
-=======
+[![iOS Minimum Deploy Target - 14.0](https://img.shields.io/static/v1?label=iOS+Minimum+Deploy+Target&message=14.0&color=2ea44f)](https://)
 [![Xcode - 26.2+](https://img.shields.io/static/v1?label=Xcode&message=26.2%2B&color=2ea44f)](https://)
 [![Swift - 5.7+](https://img.shields.io/static/v1?label=Swift&message=5.7%2B&color=2ea44f)](https://)
->>>>>>> Stashed changes
 
 
 A fast checkout that integrates your company to the payments and fraud ecosystem.
