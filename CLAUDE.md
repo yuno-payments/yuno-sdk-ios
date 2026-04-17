@@ -114,7 +114,7 @@ pod install
 - **Nimble** — matcher framework for Swift
 
 ### Build Requirements
-- iOS deployment target: **13.0** (podspec), **14.0** (recommended per README)
+- iOS deployment target: **14.0** 
 - Swift version: **5.7+** 
 - Xcode: **26.2+** (minimum required to build the example apps and consume the XCFramework)
 - CocoaPods (`gem install cocoapods`) for the Example app
