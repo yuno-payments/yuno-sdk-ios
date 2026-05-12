@@ -47,6 +47,45 @@ dependencies: [
 ]
 ```
 
+## Optional 3DS provider: Netcetera
+
+`YunoSDK3DSNetcetera` plugs Netcetera's `ThreeDS_SDK` into YunoSDK. It
+auto-registers with `YunoThreeDSRegistry` at framework load time — no
+setup code required, just add it to your dependencies.
+
+**Requires YunoSDK 2.17.0 or newer.**
+
+`YunoSDK3DSNetcetera` does **not** declare `YunoSDK` as a dependency on
+purpose, so you can manage the YunoSDK version yourself alongside any
+other Yuno side-libraries (antifraud providers, etc.) without
+version-range conflicts. You must add both pods explicitly:
+
+#### CocoaPods
+
+```ruby
+pod 'YunoSDK',              '~> 2.17'
+pod 'YunoSDK3DSNetcetera',  '~> 2.17'
+```
+
+If `YunoSDK` is missing or older than 2.17.0, the build fails with
+undefined symbols (`_OBJC_CLASS_$_YunoThreeDSRegistry`, etc.).
+
+#### Swift Package Manager
+
+Add the package once and select **both** products on your app target:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", from: "2.17.0")
+],
+targets: [
+    .target(name: "MyApp", dependencies: [
+        .product(name: "YunoSDK",          package: "yuno-sdk-ios"),
+        .product(name: "Yuno3DSNetcetera", package: "yuno-sdk-ios")
+    ])
+]
+```
+
 ## Usage
 YunoSDK minimum required version is iOS 14.0
 
