@@ -119,7 +119,7 @@ final class TransactionPaymentSelected: PaymentMethodSelected {
 extension TransactionView.ViewModel: YunoPaymentDelegate {
     
     nonisolated func yunoPaymentResult(_ result: YunoSDK.Yuno.Result) {
-        switch result {
+        switch result.status {
         case .reject:
             print(">>>>>>> yunoPaymentResult Reject")
         case .succeeded:
@@ -132,7 +132,7 @@ extension TransactionView.ViewModel: YunoPaymentDelegate {
             print(">>>>>>> yunoPaymentResult InternalError")
         case .userCancelled:
             print(">>>>>>> yunoPaymentResult UserCancell")
-        default:
+        @unknown default:
             print(">>>>>>> yunoPaymentResult @unknown")
         }
     }
@@ -155,7 +155,7 @@ extension TransactionView.ViewModel: YunoPaymentDelegate {
 extension TransactionView.ViewModel: YunoEnrollmentDelegate {
     
     nonisolated func yunoEnrollmentResult(_ result: YunoSDK.Yuno.Result) {
-        switch result {
+        switch result.status {
         case .reject:
             print(">>>>>>> yunoEnrollmentResult Reject")
         case .succeeded:
@@ -168,10 +168,10 @@ extension TransactionView.ViewModel: YunoEnrollmentDelegate {
             print(">>>>>>> yunoEnrollmentResult InternalError")
         case .userCancelled:
             print(">>>>>>> yunoEnrollmentResult UserCancel")
-        default:
+        @unknown default:
             print(">>>>>>> yunoEnrollmentResult @unknown")
         }
-        
+
     }
 }
 

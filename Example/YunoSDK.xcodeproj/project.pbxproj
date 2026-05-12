@@ -210,10 +210,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Then/Then.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK3DSNetcetera/Yuno3DSNetcetera.framework/Yuno3DSNetcetera",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK3DSNetcetera/ThreeDS_SDK.framework/ThreeDS_SDK",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Then.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Yuno3DSNetcetera.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ThreeDS_SDK.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -227,11 +231,11 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-YunoSDK_Example/Pods-YunoSDK_Example-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/YunoSDK/YunoSDK_Resources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/YunoSDK/Resources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/YunoSDK_Resources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Resources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -472,7 +476,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = 607FACC81AFB9204008FA782 /* Project object */;
 }

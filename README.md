@@ -47,6 +47,76 @@ dependencies: [
 ]
 ```
 
+## Optional 3DS provider: Netcetera
+
+`YunoSDK3DSNetcetera` plugs Netcetera's `ThreeDS_SDK` into YunoSDK so card
+payments can run the 3DS challenge flow.
+
+**Requires YunoSDK 2.17.0 or newer.** YunoSDK is intentionally **not**
+declared as a transitive dependency — you add it explicitly so the
+version is the same across other Yuno side-libraries you may use.
+
+### Swift Package Manager (auto-registration)
+
+The SPM distribution is a **dynamic framework**: the provider registers
+itself with `YunoThreeDSRegistry` at framework load time (via an ObjC
+`+load` bootstrap). No setup code required — just add the products to
+your target:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", from: "2.17.0")
+],
+targets: [
+    .target(name: "MyApp", dependencies: [
+        .product(name: "YunoSDK",          package: "yuno-sdk-ios"),
+        .product(name: "Yuno3DSNetcetera", package: "yuno-sdk-ios")
+    ])
+]
+```
+
+### CocoaPods (manual registration)
+
+The CocoaPods distribution is a **static framework** (matches the static
+YunoSDK pod). The `+load` bootstrap is intentionally **not** shipped in
+this variant, so you must register the provider yourself once at app
+startup:
+
+```ruby
+# Podfile
+pod 'YunoSDK',              '~> 2.17'
+pod 'YunoSDK3DSNetcetera',  '~> 2.17'
+```
+
+```swift
+// AppDelegate.swift
+import YunoSDK
+import Yuno3DSNetcetera
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        Yuno3DSNetcetera.register()
+        Yuno.initialize(apiKey: "<your iOS API key>")
+        return true
+    }
+}
+```
+
+If you forget the `Yuno3DSNetcetera.register()` call, card payments fall
+back to no-3DS provider and the challenge flow won't appear.
+
+If `YunoSDK` is missing or older than 2.17.0 in the Podfile, the build
+fails with undefined symbols (`_OBJC_CLASS_$_YunoThreeDSRegistry`, etc.).
+
+### Sandbox certificate
+
+When initializing the SDK against the **sandbox** environment, you must
+include `acq-root-certeq-prev-environment.crt` in your app's bundle
+resources. Yuno provides the file at onboarding. The production
+environment does not require it.
+
 ## Usage
 YunoSDK minimum required version is iOS 14.0
 
@@ -225,14 +295,33 @@ Yuno.continuePayment(showPaymentStatus: Bool)
 > showPaymentStatus by default is true
 
 #### Callback
-The transactions could return three different states: success, fail, processing and reject, to listen this state you have to implement the delegate, like in the follow piece of code:
+The transactions return a `Yuno.Result` whose `status` describes the outcome
+(`succeeded`, `fail`, `processing`, `reject`, `internalError`, `userCancelled`)
+and `substatus` carries an optional provider-specific reason string. Implement
+the delegate to receive it:
 ```swift
-enum Result {
-    case reject, success, fail, processing, internalError, userCancelled
+extension Yuno.Result {
+    @objc public class Result {
+        public let status: Status
+        public let substatus: String?
+
+        @objc public enum Status: Int {
+            case reject, succeeded, fail, processing, internalError, userCancelled
+        }
+    }
 }
 
-func yunoPaymentResult(_ result: Yuno.Result) { ... }
-func yunoEnrollmentResult(_ result: Yuno.Result) { ... }
+func yunoPaymentResult(_ result: Yuno.Result) {
+    switch result.status {
+    case .succeeded: break
+    case .fail, .reject: break
+    case .processing: break
+    case .userCancelled, .internalError: break
+    @unknown default: break
+    }
+}
+
+func yunoEnrollmentResult(_ result: Yuno.Result) { /* same shape */ }
 ```
 ## Author
 
