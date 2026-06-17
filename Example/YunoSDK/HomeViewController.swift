@@ -27,8 +27,7 @@ class HomeViewController: UIViewController {
     
     
     @IBAction func startPaymentFull(_ sender: Any) {
-        selectedTestType = .payment
-        performSegue(withIdentifier: "goToPay", sender: self)
+        navigationController?.pushViewController(PaymentFullViewController(), animated: true)
     }
     
     
