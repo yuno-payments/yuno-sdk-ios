@@ -14,8 +14,7 @@ let package = Package(
         .binaryTarget(
             name: "SdkPayments",
             url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/3.0.0-alpha.1/SdkPayments_SPM.xcframework.zip",
-            // TODO: regenerate after uploading the renamed artifact (swift package compute-checksum)
-            checksum: "8e1e8dd56dad32e3dec8e58e8e1c4326fd70b6e204e4c2e545767e1b65a9495b"
+            checksum: "a53617441bdfb10393a56894a22049e26dc1b7e4922344152978b314fe0f2009"
         )
     ]
 )
