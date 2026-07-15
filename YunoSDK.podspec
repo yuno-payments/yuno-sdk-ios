@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
 }
 
   s.author           = { 'Jonathan Pacheco' => 'jonathan.pacheco@y.uno.com' }
-  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/' + s.version.to_s + '/YunoSDK.xcframework.zip' }
+  s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/' + s.version.to_s + '/SdkPayments.xcframework.zip' }
 
   s.ios.deployment_target = '13.0'
   s.swift_version         = '5.4'
@@ -48,18 +48,19 @@ Pod::Spec.new do |s|
 
   s.requires_arc          = true
 
-  s.vendored_frameworks = 'YunoSDK.xcframework'
+  s.module_name           = 'SdkPayments'
+  s.vendored_frameworks   = 'SdkPayments.xcframework'
   
   s.resource_bundles = {
         'Resources' => [
-            'YunoSDK.xcframework/Assets/**/*.xcassets',
-            'YunoSDK.xcframework/Assets/Localization/*.lproj',
-            'YunoSDK.xcframework/Assets/**/*.{storyboard,xib,json,ttf}'
+            'SdkPayments.xcframework/Assets/**/*.xcassets',
+            'SdkPayments.xcframework/Assets/Localization/*.lproj',
+            'SdkPayments.xcframework/Assets/**/*.{storyboard,xib,json,ttf}'
         ]
     }
 
   s.frameworks = 'UIKit'
   s.frameworks = 'Combine'
-  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => ['${PODS_XCFRAMEWORKS_BUILD_DIR}/YunoSDK'] }
+  s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => ['${PODS_XCFRAMEWORKS_BUILD_DIR}/SdkPayments'] }
   s.pod_target_xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
 end
