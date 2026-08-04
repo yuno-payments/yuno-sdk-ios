@@ -55,7 +55,7 @@ First, you'll need to get your Yuno app ID and iOS API key. Then initialize Yuno
 > Note: If your app is using a UISceneDelegate you will need to put your Yuno initialisation code into your SceneDelegate
 
 ```swift
-import YunoSDK
+import SdkPayments
 
 Yuno.initialize(
     apiKey: "<Your iOS API Key>",
