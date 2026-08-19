@@ -4,13 +4,11 @@
 //
 
 import SwiftUI
-import YunoSDK
+import SdkPayments
 
 struct PaymentRenderView: View {
 
     @StateObject var viewModel: PaymentRenderView.ViewModel
-    @State private var paymentFlow: YunoPaymentRenderFlowProtocol?
-    @State private var formView: AnyView?
 
     init(viewModel: TransactionView.ViewModel) {
         self._viewModel = StateObject(wrappedValue: PaymentRenderView.ViewModel(viewModel))
@@ -36,7 +34,7 @@ struct PaymentRenderView: View {
                                     .scaleEffect(0.8)
                             }
                         }
-                        if let formView {
+                        if let formView = viewModel.embeddedView {
                             formView
                                 .padding()
                                 .background(Color.white)
@@ -58,7 +56,7 @@ struct PaymentRenderView: View {
             .padding(.bottom, 16)
 
             Button {
-                paymentFlow?.submitForm()
+                viewModel.submitForm()
             } label: {
                 Text("Merchant - Pay")
                     .padding()
@@ -71,33 +69,22 @@ struct PaymentRenderView: View {
         }
         .optionsView(
             type: .ott(token: viewModel.ott) {
-                continuePayment()
+                viewModel.continuePayment = true
             },
             showModal: $viewModel.presentOtt
         )
-        .onReceive(viewModel.continueSubject) {
-            continuePayment()
+        .onChange(of: viewModel.presentOtt) { isPresented in
+            if !isPresented { viewModel.cancelOttIfPending() }
         }
-        .onViewDidLoadAsync {
-            let flow = await Yuno.startPaymentRenderFlow(
-                paymentMethodSelected: viewModel.selectedPaymentMethodLite,
-                with: viewModel
-            )
-            await MainActor.run { paymentFlow = flow }
-            let view = await flow.formView(
-                paymentMethodSelected: viewModel.selectedPaymentMethodLite,
-                with: viewModel
-            )
-            await MainActor.run { formView = view }
+        .onReceive(viewModel.continueSubject) {
+            viewModel.continuePayment = true
+        }
+        .onDisappear { viewModel.cancelOttIfPending() }
+        .onViewDidLoad {
+            viewModel.start()
         }
         .navigationTitle("Payment render")
         .navigationBarTitleDisplayMode(.large)
-    }
-
-    private func continuePayment() {
-        Task { @MainActor in
-            formView = await paymentFlow?.continuePayment()
-        }
     }
 
     private func sectionShimmer(title: String, rows: Int, height: CGFloat) -> some View {
