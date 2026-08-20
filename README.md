@@ -43,7 +43,25 @@ Once you have your Swift package set up, adding YunoSDK as a dependency is as ea
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.17"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "2.22.0"))
+]
+```
+
+### Installing the 3.0.0 alpha
+
+The 3.0.0 line is published as a prerelease under the module name `SdkPayments`. It is **not** API-compatible with 2.x and is not recommended for production use.
+
+CocoaPods — pin the exact version:
+
+```ruby
+pod 'SdkPayments', '3.0.0-alpha.1'
+```
+
+Swift Package Manager — pin the exact tag:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", exact: "3.0.0-alpha.1")
 ]
 ```
 
