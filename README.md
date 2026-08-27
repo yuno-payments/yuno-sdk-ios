@@ -43,7 +43,7 @@ Once you have your Swift package set up, adding YunoSDK as a dependency is as ea
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "1.1.17"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "2.22.0"))
 ]
 ```
 
