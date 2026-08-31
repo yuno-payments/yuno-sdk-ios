@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = 'SdkPayments'
   s.version          = '3.0.0-alpha.1'
-  s.summary          = 'A short description of YunoSDK.'
+  s.summary          = 'Yuno Payments SDK — a fast, secure checkout for the Yuno payments and fraud ecosystem.'
 
   s.description      = <<-DESC
 
@@ -41,9 +41,9 @@ Pod::Spec.new do |s|
   s.author           = { 'Jonathan Pacheco' => 'jonathan.pacheco@y.uno.com' }
   s.source           = { :http => 'https://github.com/yuno-payments/yuno-sdk-ios/releases/download/' + s.version.to_s + '/SdkPayments.xcframework.zip' }
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '14.0'
   s.swift_version         = '5.4'
-  s.platform              = :ios, '13.0'
+  s.platform              = :ios, '14.0'
   s.static_framework      = true
 
   s.requires_arc          = true
@@ -59,8 +59,7 @@ Pod::Spec.new do |s|
         ]
     }
 
-  s.frameworks = 'UIKit'
-  s.frameworks = 'Combine'
+  s.frameworks = 'UIKit', 'Combine'
   s.xcconfig = { 'SWIFT_INCLUDE_PATHS' => ['${PODS_XCFRAMEWORKS_BUILD_DIR}/SdkPayments'] }
   s.pod_target_xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
 end
