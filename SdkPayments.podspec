@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'SdkPayments'
-  s.version          = '3.0.0-alpha.1'
+  s.version          = '3.0.0-alpha.2'
   s.summary          = 'Yuno Payments SDK — a fast, secure checkout for the Yuno payments and fraud ecosystem.'
 
   s.description      = <<-DESC
