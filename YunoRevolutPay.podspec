@@ -6,8 +6,8 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 
   Adds native Revolut Pay support to the Yuno iOS SDK on top of Revolut's
-  official RevolutPayments SDK. Add this pod next to YunoSDK; the provider
-  registers itself automatically, no merchant code required.
+  official RevolutPayments SDK. Add this pod next to YunoSDK and register the
+  provider once before starting a payment flow.
 
                        DESC
 
