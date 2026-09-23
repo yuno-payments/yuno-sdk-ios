@@ -50,6 +50,6 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = 'YunoRevolutPay.xcframework'
 
   s.dependency 'YunoSDK', '~> 2.25'
-  s.dependency 'RevolutPayments/RevolutPay', '~> 3.9'
+  s.dependency 'RevolutPayments/RevolutPay', '~> 3.16.0'
   s.dependency 'lottie-ios', '>= 4.4.1', '< 4.6'
 end
