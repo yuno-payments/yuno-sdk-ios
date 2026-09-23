@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name             = 'YunoAntifraudClearsale'
+  s.name             = 'YunoClearsaleAntifraud'
   s.version          = '1.0.0'
   s.summary          = 'ClearSale antifraud provider module for the Yuno iOS SDK.'
 
@@ -7,7 +7,9 @@ Pod::Spec.new do |s|
 
   Native ClearSale device fingerprinting for the Yuno iOS SDK, built on
   ClearSale's CSBehavior SDK. Add this pod next to YunoSDK and register the
-  provider once before starting a payment flow.
+  provider once before starting a payment flow. The module is named
+  YunoAntifraudClearsale (import YunoAntifraudClearsale), same as the Swift
+  Package Manager product.
 
                        DESC
 
