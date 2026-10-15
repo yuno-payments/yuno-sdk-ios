@@ -4,13 +4,11 @@
 //
 
 import SwiftUI
-import YunoSDK
+import SdkPayments
 
 struct EnrollmentRenderView: View {
 
     @StateObject var viewModel: EnrollmentRenderView.ViewModel
-    @State private var enrollmentFlow: YunoEnrollmentRenderFlowProtocol?
-    @State private var formView: AnyView?
 
     init(viewModel: TransactionView.ViewModel) {
         self._viewModel = StateObject(wrappedValue: EnrollmentRenderView.ViewModel(viewModel))
@@ -33,7 +31,7 @@ struct EnrollmentRenderView: View {
                                     .scaleEffect(0.8)
                             }
                         }
-                        if let formView {
+                        if let formView = viewModel.embeddedView {
                             formView
                                 .padding()
                                 .background(Color.white)
@@ -65,9 +63,9 @@ struct EnrollmentRenderView: View {
             }
             .padding(.bottom, 16)
 
-            if enrollmentFlow?.needSubmit ?? false {
+            if viewModel.embeddedView != nil {
                 Button {
-                    enrollmentFlow?.submitForm()
+                    viewModel.submitForm()
                 } label: {
                     Text("Merchant - Enroll")
                         .padding()
@@ -80,12 +78,7 @@ struct EnrollmentRenderView: View {
             }
         }
         .onViewDidLoad {
-            let flow = Yuno.startEnrollmentRender(with: viewModel)
-            enrollmentFlow = flow
-            Task {
-                let view = await flow.formView(with: viewModel)
-                await MainActor.run { formView = view }
-            }
+            viewModel.start()
         }
         .navigationTitle("Enrollment render")
         .navigationBarTitleDisplayMode(.large)

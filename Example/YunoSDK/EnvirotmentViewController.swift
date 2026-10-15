@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YunoSDK
+import SdkPayments
 import Combine
 
 class EnvirotmentViewController: UIViewController {
@@ -31,7 +31,7 @@ class EnvirotmentViewController: UIViewController {
     }
     
     @IBAction private func goToPay() {
-        Yuno.initialize(apiKey: apiKey)
+        SdkPayments.initialize(apiKey: apiKey)
         performSegue(withIdentifier: "goToHome", sender: self)
     }
 }

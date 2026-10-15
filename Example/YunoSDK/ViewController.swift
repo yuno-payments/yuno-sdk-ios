@@ -8,30 +8,19 @@
 
 import UIKit
 import Combine
-import YunoSDK
+import SdkPayments
 import Then
 
 enum Key: String {
     case checkoutSession, customerSession, country, apiKey, language, paymentSelectedString, paymentToken
 }
 
-class PaymentMethod: PaymentMethodSelected {
-    
-    var vaultedToken: String?
-    var paymentMethodType: String
-    
-    init(vaultedToken: String?, paymentMethodType: String) {
-        self.vaultedToken = vaultedToken
-        self.paymentMethodType = paymentMethodType
-    }
-}
+class ViewController: UIViewController, SdkPayments.TransactionController, SdkPayments.PaymentListController {
+    func onUnenroll(success: Bool) {
 
-class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullDelegate {
-    func yunoDidUnenrollSuccessfully(_ success: Bool) {
-        
     }
-    
-    
+
+
     enum TestType {
         case enrollment, payment, paymentLite
     }
@@ -85,13 +74,12 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
     var paymentSelectedString: String
     
     private var anyCancellables = Set<AnyCancellable>()
-    var paymentSelected: PaymentMethodSelected?
-    var enrollmentSelected: EnrollmentMethodSelected?
-    
-    var viewController: UIViewController? {
-        return self
-    }
-    
+    var paymentSelected: SdkPayments.PaymentMethodSelected?
+
+    // Held for the duration of the flow: the SDK keeps the controller weakly, so
+    // the merchant must retain the Transaction it started.
+    private var transaction: SdkPayments.Transaction?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.view.backgroundColor = .systemBackground
@@ -148,30 +136,53 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
     }
 
     func generatePaymentViews()  {
-        Task {
-            let methodsView: UIView = await Yuno.getPaymentMethodViewAsync(delegate: self)
-            self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
-            self.paymentMethodsContainer.addSubview(methodsView)
-            methodsView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                methodsView.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
-                methodsView.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
-                methodsView.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
-                methodsView.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
-            ])
-        }
+        let config = SdkPayments.TransactionConfig(
+            checkoutSession: checkoutSession,
+            countryCode: countryCode,
+            language: language,
+            controller: self,
+            showStatusScreen: true,
+            viewController: self
+        )
+        let transaction = SdkPayments.Transaction(config: config)
+        self.transaction = transaction
+        let views = transaction.getPaymentMethodsViewsUIKit(
+            types: [.PAYMENT_METHOD_LIST],
+            controller: self
+        )
+        guard let methodsView = views[.PAYMENT_METHOD_LIST] else { return }
+        self.paymentMethodsContainer.subviews.forEach { $0.removeFromSuperview() }
+        self.paymentMethodsContainer.addSubview(methodsView)
+        methodsView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            methodsView.topAnchor.constraint(equalTo: self.paymentMethodsContainer.topAnchor),
+            methodsView.leadingAnchor.constraint(equalTo: self.paymentMethodsContainer.leadingAnchor),
+            methodsView.trailingAnchor.constraint(equalTo: self.paymentMethodsContainer.trailingAnchor),
+            methodsView.bottomAnchor.constraint(equalTo: self.paymentMethodsContainer.bottomAnchor)
+        ])
     }
    
     
     @IBAction func startPayment(sender: Any) {
         if type == .paymentLite {
-            let paymentSelected = PaymentMethod(
-                vaultedToken: paymentTokenTextField.text,
-                paymentMethodType: paymentMethodSelectedTextField.text ?? ""
+            let paymentSelected = SdkPayments.PaymentMethodSelected(
+                paymentMethodType: paymentMethodSelectedTextField.text ?? "",
+                vaultedToken: paymentTokenTextField.text
             )
-            Yuno.startPaymentLite(with: self, paymentSelected: paymentSelected)
+            let config = SdkPayments.TransactionConfig(
+                checkoutSession: checkoutSession,
+                countryCode: countryCode,
+                language: language,
+                controller: self,
+                showStatusScreen: true,
+                viewController: self
+            )
+            let transaction = SdkPayments.Transaction(config: config)
+            self.transaction = transaction
+            transaction.start(paymentSelected: paymentSelected)
         } else {
-            Yuno.startPayment()
+            guard let paymentSelected = paymentSelected else { return }
+            transaction?.start(paymentSelected: paymentSelected)
         }
     }
     
@@ -179,9 +190,13 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
         view.endEditing(true)
     }
     
-    func yunoCreatePayment(with token: String, information: [String : Any]) {
-        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
-        let debugView = DebugView(token: token)
+    func createPayment(token: SdkPayments.TransactionController.OneTimeToken) async throws {
+        let tokenString = token["token"] as? String ?? ""
+        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else {
+            try await defaultCreatePayment(token: token)
+            return
+        }
+        let debugView = DebugView(token: tokenString)
         window.addSubview(debugView)
         debugView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -190,41 +205,49 @@ class ViewController: UIViewController, YunoEnrollmentDelegate, YunoPaymentFullD
             debugView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.8)
         ])
         debugView.layoutIfNeeded()
-        debugView.continuePublisher
-            .sink {
-                debugView.removeFromSuperview()
-                Yuno.continuePayment()
-            }
-            .store(in: &self.anyCancellables)
+
+        // Suspend until the user taps "Continuar" in the DebugView, then let the SDK
+        // create the payment — mirroring the old yunoCreatePayment + Yuno.continuePayment flow.
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            debugView.continuePublisher
+                .first()
+                .sink {
+                    debugView.removeFromSuperview()
+                    continuation.resume()
+                }
+                .store(in: &self.anyCancellables)
+        }
+        try await defaultCreatePayment(token: token)
     }
-    
+
     @IBAction func startEnrollment(sender: Any) {
-        Yuno.enrollPayment(with: self)
+        let config = SdkPayments.TransactionConfig(
+            customerSession: customerSession,
+            countryCode: countryCode,
+            language: language,
+            controller: self,
+            showStatusScreen: true,
+            viewController: self
+        )
+        let transaction = SdkPayments.Transaction(config: config)
+        self.transaction = transaction
+        transaction.start(paymentSelected: SdkPayments.PaymentMethodSelected(paymentMethodType: "CARD"))
     }
-    
-    func yunoPaymentResult(_ result: Yuno.Result) {
-        debugPrint("yunoPaymentResult \(result)")
+
+    func onStatus(status: SdkPayments.TransactionStatus) {
+        debugPrint("onStatus \(status.status)")
     }
-    
-    func yunoEnrollmentResult(_ result: Yuno.Result) {
-        debugPrint("yunoEnrollmentResult \(result)")
-    }
-    
-    func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat) {
-        paymentMethodsContainerHeight.constant = height
+
+    func onHeightChange(newHeight: CGFloat) {
+        paymentMethodsContainerHeight.constant = newHeight
         UIView.animate(withDuration: 0.33) {
             self.view.layoutIfNeeded()
         }
     }
-    
-    func yunoDidSelect(paymentMethod: PaymentMethodSelected) {
-        debugPrint("yunoDidSelect(paymentMethod \(paymentMethod)")
-        self.paymentSelected = paymentMethod
-    }
-    
-    func yunoDidSelect(enrollmentMethod: EnrollmentMethodSelected) {
-        debugPrint("yunoDidSelect(paymentMethod \(enrollmentMethod)")
-        self.enrollmentSelected = enrollmentMethod
+
+    func onPaymentSelected(paymentSelected: SdkPayments.PaymentMethodSelected) {
+        debugPrint("onPaymentSelected \(paymentSelected)")
+        self.paymentSelected = paymentSelected
     }
 }
 

@@ -1,8 +1,8 @@
 use_frameworks!
 
-platform :ios, '13.0'
+platform :ios, '14.0'
 
 target 'YunoSDK_Example' do
-  pod 'YunoSDK', '~> 2.27.1'
+  pod 'SdkPayments', '~> 3.0.0'
   pod 'Then'
 end

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import YunoSDK
+import SdkPayments
 
 struct TransactionView: View {
     
@@ -28,6 +28,9 @@ struct TransactionView: View {
                 },
                 showModal: $viewModel.presentOtt
             )
+            .onChange(of: viewModel.presentOtt) { isPresented in
+                if !isPresented { viewModel.cancelOttIfPending() }
+            }
             .navigationTitle("Transaction")
             .navigationBarTitleDisplayMode(.large)
             .onViewDidLoad {
@@ -81,10 +84,7 @@ struct TransactionView: View {
                             TextField("Customer Session", text: $viewModel.customerSession)
                                 .frame(height: 54.0)
                             Button {
-                                Yuno.enrollPayment(
-                                    with: viewModel,
-                                    showPaymentStatus: true
-                                )
+                                viewModel.startEnrollment()
                             } label: {
                                 HStack {
                                     Label("Execute enrollment", systemImage: "rectangle.and.pencil.and.ellipsis")
@@ -127,10 +127,7 @@ struct TransactionView: View {
                             TextField("Vaulted Token", text: $viewModel.vaultedToken)
                                 .padding([.top, .bottom], 6.0)
                             Button {
-                                Yuno.startPaymentLite(with: viewModel,
-                                    paymentSelected: viewModel.selectedPaymentMethodLite,
-                                    showPaymentStatus: false
-                                )
+                                viewModel.startLitePayment()
                             } label: {
                                 HStack {
                                     Label("Execute payment LITE", systemImage: "dollarsign.square")
