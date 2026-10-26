@@ -18,7 +18,10 @@ let package = Package(
             targets: ["YunoAntifraudKoinWrapper"]),
         .library(
             name: "Yuno3DSNetcetera",
-            targets: ["Yuno3DSNetceteraWrapper"])
+            targets: ["Yuno3DSNetceteraWrapper"]),
+        .library(
+            name: "YunoAntifraudRiskified",
+            targets: ["YunoAntifraudRiskifiedWrapper"])
     ],
     targets: [
         .binaryTarget(
@@ -68,6 +71,25 @@ let package = Package(
             name: "ThreeDS_SDK",
             url: "https://nexus.extranet.netcetera.biz/nexus/repository/public-repository-maven/com/netcetera/nca-341-2/3ds-sdk/ios/release/2.6.01/ThreeDS_SDK.zip",
             checksum: "90284f80dbad0258687d39a724d967f53d47db99cf4bfc3faaeee1fbe9671e2a"
+        ),
+        .target(
+            name: "YunoAntifraudRiskifiedWrapper",
+            dependencies: [
+                "YunoAntifraudRiskified",
+                "RiskifiedBeacon"
+            ],
+            path: "YunoAntifraudRiskifiedWrapper",
+            publicHeadersPath: "include"
+        ),
+        .binaryTarget(
+            name: "YunoAntifraudRiskified",
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/riskified-2.0.0/YunoAntifraudRiskified.xcframework.zip",
+            checksum: "59564c842ede867d9b0ed37013b90867929f218027b4277c6fe95033c87001b2"
+        ),
+        .binaryTarget(
+            name: "RiskifiedBeacon",
+            url: "https://github.com/Riskified/riskified_ios_sdk/archive/refs/tags/1.6.4.zip",
+            checksum: "f531a5d9cf48b8c50d5d6194913db4a7028ad9f4a36324b4f87f28c8878d0b49"
         )
     ]
 )
