@@ -1,0 +1,12 @@
+# Code owners for yuno-sdk-ios.
+#
+# GitHub automatically requests a review from these accounts on every pull
+# request. Once "Require review from Code Owners" is enabled in the branch
+# protection of master, a pull request cannot be merged until at least one of
+# them approves.
+#
+# Keep this list to the people who actually maintain this repository. If
+# someone stops reviewing, remove them: a code owner who never responds makes
+# the review request look handled when it is not.
+
+*   @viviamezquita18 @rocca-ignacio @daniel-vega-santos @tanveerg
