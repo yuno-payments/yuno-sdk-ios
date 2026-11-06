@@ -31,7 +31,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To integrate the Yuno SDK with CocoaPods, add the line below to your Podfile:
 
 ```ruby
-pod 'SdkPayments', '~> 3.0.0'
+pod 'SdkPayments', '~> 3.1.0'
 ```
 
 Then run pod install in your directory:
@@ -46,7 +46,7 @@ Once you have your Swift package set up, add SdkPayments to the `dependencies` v
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "3.0.0"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "3.1.0"))
 ]
 ```
 
