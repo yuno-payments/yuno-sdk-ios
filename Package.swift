@@ -15,16 +15,16 @@ let package = Package(
             targets: ["YunoSDK-Static"]),
         .library(
             name: "YunoAntifraudClearsale",
-            targets: ["YunoAntifraudClearsaleWrapper", "YunoAntifraudClearsaleShim"]),
+            targets: ["YunoAntifraudClearsaleWrapper", "YunoAntifraudClearsaleTarget"]),
         .library(
             name: "YunoAntifraudKoin",
-            targets: ["YunoAntifraudKoinWrapper", "YunoAntifraudKoinShim"]),
+            targets: ["YunoAntifraudKoinWrapper", "YunoAntifraudKoinTarget"]),
         .library(
             name: "Yuno3DSNetcetera",
-            targets: ["Yuno3DSNetceteraWrapper", "Yuno3DSNetceteraShim"]),
+            targets: ["Yuno3DSNetceteraWrapper", "Yuno3DSNetceteraTarget"]),
         .library(
             name: "YunoAntifraudRiskified",
-            targets: ["YunoAntifraudRiskifiedWrapper", "YunoAntifraudRiskifiedShim"])
+            targets: ["YunoAntifraudRiskifiedWrapper", "YunoAntifraudRiskifiedTarget"])
     ],
     targets: [
         .binaryTarget(
@@ -47,8 +47,8 @@ let package = Package(
             publicHeadersPath: "include"
         ),
         .target(
-            name: "YunoAntifraudClearsaleShim",
-            path: "YunoAntifraudClearsaleShim"
+            name: "YunoAntifraudClearsaleTarget",
+            path: "YunoAntifraudClearsaleTarget"
         ),
         .binaryTarget(
             name: "YunoAntifraudClearsale",
@@ -70,8 +70,8 @@ let package = Package(
             publicHeadersPath: "include"
         ),
         .target(
-            name: "YunoAntifraudKoinShim",
-            path: "YunoAntifraudKoinShim"
+            name: "YunoAntifraudKoinTarget",
+            path: "YunoAntifraudKoinTarget"
         ),
         .binaryTarget(
             name: "YunoAntifraudKoin",
@@ -93,8 +93,8 @@ let package = Package(
             publicHeadersPath: "include"
         ),
         .target(
-            name: "Yuno3DSNetceteraShim",
-            path: "Yuno3DSNetceteraShim"
+            name: "Yuno3DSNetceteraTarget",
+            path: "Yuno3DSNetceteraTarget"
         ),
         .binaryTarget(
             name: "Yuno3DSNetcetera",
@@ -116,8 +116,8 @@ let package = Package(
             publicHeadersPath: "include"
         ),
         .target(
-            name: "YunoAntifraudRiskifiedShim",
-            path: "YunoAntifraudRiskifiedShim"
+            name: "YunoAntifraudRiskifiedTarget",
+            path: "YunoAntifraudRiskifiedTarget"
         ),
         .binaryTarget(
             name: "YunoAntifraudRiskified",

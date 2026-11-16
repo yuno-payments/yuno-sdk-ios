@@ -1,1 +1,0 @@
-enum Yuno3DSNetceteraShim {}

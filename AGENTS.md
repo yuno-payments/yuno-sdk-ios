@@ -81,7 +81,7 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 ├── Package.swift              # SPM manifest - YunoSDK (dynamic), YunoSDK-Static and 4 module products, binary targets pinned by URL + checksum
 ├── <Module>Wrapper/           # Per module: Objective-C bootstrap whose +load calls the module's register(),
 │                              #   linked to the static module binary and the provider's binary
-├── <Module>Shim/              # Per module: empty Swift target, so the product also links when two binaries use it
+├── <Module>Target/            # Per module: empty Swift target (Firebase's naming), so the product also links when two binaries use it
 ├── CHANGELOG.md               # Release history up to 1.1.19 only (2.x lives in GitHub Releases)
 ├── .github/CODEOWNERS         # iOS maintainers requested on every PR (no CI workflows)
 ├── Example/                   # UIKit example app (CocoaPods-based)
