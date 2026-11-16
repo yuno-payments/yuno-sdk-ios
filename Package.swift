@@ -11,17 +11,20 @@ let package = Package(
             name: "YunoSDK",
             targets: ["YunoSDK"]),
         .library(
+            name: "YunoSDK-Static",
+            targets: ["YunoSDK-Static"]),
+        .library(
             name: "YunoAntifraudClearsale",
-            targets: ["YunoAntifraudClearsale"]),
+            targets: ["YunoAntifraudClearsaleWrapper", "YunoAntifraudClearsaleTarget"]),
         .library(
             name: "YunoAntifraudKoin",
-            targets: ["YunoAntifraudKoinWrapper"]),
+            targets: ["YunoAntifraudKoinWrapper", "YunoAntifraudKoinTarget"]),
         .library(
             name: "Yuno3DSNetcetera",
-            targets: ["Yuno3DSNetceteraWrapper"]),
+            targets: ["Yuno3DSNetceteraWrapper", "Yuno3DSNetceteraTarget"]),
         .library(
             name: "YunoAntifraudRiskified",
-            targets: ["YunoAntifraudRiskifiedWrapper"])
+            targets: ["YunoAntifraudRiskifiedWrapper", "YunoAntifraudRiskifiedTarget"])
     ],
     targets: [
         .binaryTarget(
@@ -30,9 +33,32 @@ let package = Package(
             checksum: "0186393d69a893ee17abaf5cdf7587ae8e4e4f9fef0a0083e75c83e7e3b9f0ab"
         ),
         .binaryTarget(
+            name: "YunoSDK-Static",
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/2.30.0/YunoSDK-Static.xcframework.zip",
+            checksum: "0000000000000000000000000000000000000000000000000000000000000000"
+        ),
+        .target(
+            name: "YunoAntifraudClearsaleWrapper",
+            dependencies: [
+                "YunoAntifraudClearsale",
+                "CSBehavior"
+            ],
+            path: "YunoAntifraudClearsaleWrapper",
+            publicHeadersPath: "include"
+        ),
+        .target(
+            name: "YunoAntifraudClearsaleTarget",
+            path: "YunoAntifraudClearsaleTarget"
+        ),
+        .binaryTarget(
             name: "YunoAntifraudClearsale",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/clearsale-1.0.1/YunoAntifraudClearsale.xcframework.zip",
-            checksum: "54ee4f77bc4b84627b59720060db9f250984449f0ec2be534b9e9f4e4332745d"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/clearsale-1.0.2/YunoAntifraudClearsale.xcframework.zip",
+            checksum: "d80a12e560343823215c91242aeb9ef2ea11ee2e1d9e1bdcae0142d588381987"
+        ),
+        .binaryTarget(
+            name: "CSBehavior",
+            url: "https://device.clearsale.com.br/ios/CSBehavior.xcframework-5.1.1.zip",
+            checksum: "3594a6cf7c4fb9a1db162a94e8cea814f59370c736da9b8bf48715a63866f986"
         ),
         .target(
             name: "YunoAntifraudKoinWrapper",
@@ -43,15 +69,19 @@ let package = Package(
             path: "YunoAntifraudKoinWrapper",
             publicHeadersPath: "include"
         ),
+        .target(
+            name: "YunoAntifraudKoinTarget",
+            path: "YunoAntifraudKoinTarget"
+        ),
         .binaryTarget(
             name: "YunoAntifraudKoin",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/koin-1.0.0/YunoAntifraudKoin.xcframework.zip",
-            checksum: "41339b005d00b3bbb1d9487b3aa30f7af5bc60964a6ca004331e0e6dc2308b6f"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/koin-1.0.1/YunoAntifraudKoin.xcframework.zip",
+            checksum: "d81d67d3114e4f716d1422c574ff42c49d8cd2dd3c448eb463a5536db4f1faea"
         ),
         .binaryTarget(
             name: "KoinFingerprint",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/koin-1.0.0/KoinFingerprint.xcframework.zip",
-            checksum: "33ffd08d660ee26ab0c583dcb5580f71044beff4825b481f9b5b14e327223497"
+            url: "https://github.com/koinlatam/ios-sdk/archive/refs/tags/1.8.0.zip",
+            checksum: "4f0c23cef9a20628509791628e9f69beb9c197911f945c91bc027eaf61d3f23b"
         ),
         .target(
             name: "Yuno3DSNetceteraWrapper",
@@ -62,10 +92,14 @@ let package = Package(
             path: "Yuno3DSNetceteraWrapper",
             publicHeadersPath: "include"
         ),
+        .target(
+            name: "Yuno3DSNetceteraTarget",
+            path: "Yuno3DSNetceteraTarget"
+        ),
         .binaryTarget(
             name: "Yuno3DSNetcetera",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/netcetera-3.0.0/Yuno3DSNetcetera.xcframework.zip",
-            checksum: "7a7ddd0517dae5935958516e02e600f02efc8353b4b6cfa29f9295fe3a3376dd"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/netcetera-3.0.1/Yuno3DSNetcetera.xcframework.zip",
+            checksum: "f71c4cc25d9001df48a1af7868bc29cc44e8cc42da20a7a08ffe543f07da1376"
         ),
         .binaryTarget(
             name: "ThreeDS_SDK",
@@ -81,10 +115,14 @@ let package = Package(
             path: "YunoAntifraudRiskifiedWrapper",
             publicHeadersPath: "include"
         ),
+        .target(
+            name: "YunoAntifraudRiskifiedTarget",
+            path: "YunoAntifraudRiskifiedTarget"
+        ),
         .binaryTarget(
             name: "YunoAntifraudRiskified",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/riskified-2.0.0/YunoAntifraudRiskified.xcframework.zip",
-            checksum: "59564c842ede867d9b0ed37013b90867929f218027b4277c6fe95033c87001b2"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/riskified-2.0.1/YunoAntifraudRiskified.xcframework.zip",
+            checksum: "0a4a3b078e05e0cc60e8060747bbe0c2523fb8963616c135d0ace889deccd601"
         ),
         .binaryTarget(
             name: "RiskifiedBeacon",
