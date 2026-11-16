@@ -24,18 +24,16 @@ Every change to documentation, examples, manifests or modules on one line must b
 
 ## Essential Commands
 
-Tooling: macOS with Xcode 26.2+ and the Swift toolchain that ships with Xcode (CocoaPods only for the UIKit example). None of these commands run on Linux.
+Tooling: macOS with Xcode 26.2+ and the Swift toolchain that ships with Xcode. None of these commands run on Linux.
 
-### Running the Example App (UIKit - CocoaPods)
+### Running the Example App (UIKit - SPM)
 ```bash
-cd Example
-pod install                 # generates YunoSDK.xcworkspace and Pods/ (both git-ignored)
-open YunoSDK.xcworkspace
-# Build and run the YunoSDK-Example scheme (target YunoSDK_Example) in Xcode
+open Example/YunoSDK.xcodeproj
+# Xcode resolves the yuno-sdk-ios package (product YunoSDK, up to next major from 2.30.0) and Then; build and run the YunoSDK-Example scheme (target YunoSDK_Example)
 ```
 Command-line build (no signing):
 ```bash
-xcodebuild -workspace Example/YunoSDK.xcworkspace -scheme YunoSDK-Example \
+xcodebuild -project Example/YunoSDK.xcodeproj -scheme YunoSDK-Example \
   -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
   CODE_SIGNING_ALLOWED=NO build
 ```
@@ -60,13 +58,13 @@ https://github.com/yuno-payments/yuno-sdk-ios.git
 
 There are no runnable unit tests in this repository, because there is no SDK source to test. SDK unit tests live in `yuno-ios`.
 
-- `Example/Tests/Tests.swift` is the CocoaPods template placeholder (half of its specs fail on purpose). No test target compiles it: `Example/YunoSDK.xcodeproj` has a single target, `YunoSDK_Example`, and the Podfile does not install Quick or Nimble. The `YunoSDK-Example` scheme still lists `YunoSDK_Tests` / `YunoSDK-Unit-Tests` targets that no longer exist, so `Cmd+U` / `xcodebuild test` do not run anything meaningful.
+- `Example/YunoSDK.xcodeproj` has a single target, `YunoSDK_Example`, with no test target.
 - A change is verified by the checks that match what it touches:
 
 | You changed | Verify with |
 |-------------|-------------|
 | `Package.swift` (URL, checksum, product, target) | `swift package dump-package` and `swift package resolve` (checksum mismatch fails resolve), then build the SwiftUI app |
-| `Example/` | `pod install`, then the `xcodebuild ... build` command above, then a Full, Lite and Enrollment run against a sandbox API key |
+| `Example/` | The `xcodebuild ... build` command above, then a Full, Lite and Enrollment run against a sandbox API key |
 | `YunoSwiftUI/` | Build and run the `YunoSwiftUI` scheme |
 | `README.md`, `docs/`, `AGENTS.md` | Every symbol and signature you document exists in the released binary or the example apps (`grep -rn "Yuno\." Example/YunoSDK YunoSwiftUI/YunoSwiftUI`); every link and version matches `Package.swift` |
 
@@ -84,8 +82,7 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 ├── <Module>Target/            # Per module: empty Swift target (Firebase's naming), so the product also links when two binaries use it
 ├── CHANGELOG.md               # Release history up to 1.1.19 only (2.x lives in GitHub Releases)
 ├── .github/CODEOWNERS         # iOS maintainers requested on every PR (no CI workflows)
-├── Example/                   # UIKit example app (CocoaPods-based)
-│   ├── Podfile                # CocoaPods dependencies (YunoSDK, Then)
+├── Example/                   # UIKit example app (SPM-based: YunoSDK and Then)
 │   ├── YunoSDK.xcodeproj/     # Xcode project, target YunoSDK_Example, scheme YunoSDK-Example
 │   ├── YunoSDK/               # Example app source files
 │   │   ├── AppDelegate.swift
@@ -94,7 +91,6 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 │   │   ├── ViewController.swift             # Main payment/enrollment flow UI
 │   │   ├── PaymentLiteViewController.swift  # Lite payment flow
 │   │   └── ...
-│   └── Tests/                 # CocoaPods template placeholder, not wired to any target
 ├── YunoSwiftUI/               # SwiftUI example app (SPM-based)
 │   ├── YunoSwiftUI.xcodeproj/
 │   └── YunoSwiftUI/
@@ -147,15 +143,14 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 
 Any new third-party dependency must be pinned (exact version or checksum) and listed here.
 
-### Example App (CocoaPods)
-- **YunoSDK** `~> 2.29.0` — the SDK itself
-- **Then** — sugar for object initialization (used in example UI code)
+### Example App (UIKit)
+- **YunoSDK** up to next major from `2.30.0` — the SDK itself, from this package
+- **Then** `3.0.0` (exact) — sugar for object initialization (used in example UI code)
 
 ### Build Requirements
-- iOS deployment target: **14.0** (`Package.swift`); the UIKit example still declares 13.0
+- iOS deployment target: **14.0** (`Package.swift` and the UIKit example); the SwiftUI example targets a higher version
 - Swift version: **5.7+**
 - Xcode: **26.2+** (minimum required to build the example apps and consume the XCFramework)
-- CocoaPods (`gem install cocoapods`) for the Example app
 - No CI workflows run in this repository; releases are pushed here by the `yuno-ios` Bitrise pipeline
 
 ## Code rules
@@ -200,7 +195,5 @@ This repo only holds example and manifest code, but it is what merchants copy. H
 
 - This repo does **not** contain the SDK source code. It is a distribution repo for the pre-built XCFrameworks.
 - The default branch is `master` (not `main`), and it carries the Legacy 2.x line.
-- `Example/YunoSDK.xcworkspace` and `Example/Pods/` are generated by `pod install` and are not committed.
 - The Example app uses storyboards (`Base.lproj`) for its UI layout.
-- `Example/Tests/Tests.swift` contains placeholder tests from the CocoaPods template; they are not meaningful SDK tests and no target builds them.
 - The CHANGELOG.md only covers versions up to 1.1.19; later version history (2.x and 3.x) is tracked via GitHub Releases.

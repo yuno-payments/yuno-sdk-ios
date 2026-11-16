@@ -18,7 +18,7 @@ Checkout + Routing + Reconciliations + Alternative Payment Methods
 
 ## Example
 
-To run the SPM example, open `YunoSwiftUI/YunoSwiftUI.xcodeproj`. The UIKit example in `Example/` still uses CocoaPods and the last version published there (2.30.0): run `pod install` from the Example directory first.
+Both example apps use Swift Package Manager: open `YunoSwiftUI/YunoSwiftUI.xcodeproj` (SwiftUI) or `Example/YunoSDK.xcodeproj` (UIKit), and Xcode resolves the package.
 
 ## Installation
 
