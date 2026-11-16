@@ -53,7 +53,7 @@ let package = Package(
         .binaryTarget(
             name: "YunoAntifraudClearsale",
             url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/clearsale-1.0.2/YunoAntifraudClearsale.xcframework.zip",
-            checksum: "e8e4b512dc67badc7259ec333d8ca15b63cea98b4422cbbfc53a5c44da30c909"
+            checksum: "d80a12e560343823215c91242aeb9ef2ea11ee2e1d9e1bdcae0142d588381987"
         ),
         .binaryTarget(
             name: "CSBehavior",
@@ -76,7 +76,7 @@ let package = Package(
         .binaryTarget(
             name: "YunoAntifraudKoin",
             url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/koin-1.0.1/YunoAntifraudKoin.xcframework.zip",
-            checksum: "8bad33e8c2e7bd72600ed6c34a6104a6eefbf321fbc7afa6146b90325f45bec3"
+            checksum: "d81d67d3114e4f716d1422c574ff42c49d8cd2dd3c448eb463a5536db4f1faea"
         ),
         .binaryTarget(
             name: "KoinFingerprint",
@@ -99,7 +99,7 @@ let package = Package(
         .binaryTarget(
             name: "Yuno3DSNetcetera",
             url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/netcetera-3.0.1/Yuno3DSNetcetera.xcframework.zip",
-            checksum: "05c0b34ea68a59da0cc3445c2a5b699772d2fc5ff0caec8f9930ec2fe438ce5e"
+            checksum: "f71c4cc25d9001df48a1af7868bc29cc44e8cc42da20a7a08ffe543f07da1376"
         ),
         .binaryTarget(
             name: "ThreeDS_SDK",
@@ -121,8 +121,8 @@ let package = Package(
         ),
         .binaryTarget(
             name: "YunoAntifraudRiskified",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/riskified-2.0.0/YunoAntifraudRiskified_cocoapods.zip",
-            checksum: "512e50781cdd177cb5e8c99e86259fa5546cf47e66863f1326eafd6b85530505"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/riskified-2.0.1/YunoAntifraudRiskified.xcframework.zip",
+            checksum: "0a4a3b078e05e0cc60e8060747bbe0c2523fb8963616c135d0ace889deccd601"
         ),
         .binaryTarget(
             name: "RiskifiedBeacon",

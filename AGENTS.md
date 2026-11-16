@@ -127,7 +127,7 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 - **Version synchronization** (core SDK): these files must be updated in sync, normally by the release PR CI opens:
   1. `Package.swift` — the `YunoSDK` and `YunoSDK-Static` binary target download URLs and checksums
   2. `README.md` — the SPM `from:` version
-- **Module versions**: each optional module has its own semantic version and release asset tag (`<module>-<version>`, e.g. `koin-1.0.1`, `riskified-2.0.0`). Its `Package.swift` URL and checksum point at that tag.
+- **Module versions**: each optional module has its own semantic version and release asset tag (`<module>-<version>`, e.g. `koin-1.0.1`, `riskified-2.0.1`). Its `Package.swift` URL and checksum point at that tag.
 - **Deep link handling**: Apps must call `Yuno.receiveDeeplink(url)` in `application(_:open:options:)` with a custom URL scheme matching the one configured in the customer session.
 - **Delegate-based callbacks**: Payment and enrollment results are delivered through delegate methods, not closures or Combine publishers. The example app wraps these in Combine where needed.
 - **Localization**: The SDK supports English (EN), Spanish (ES), and Portuguese (PT) via the `language` parameter.
