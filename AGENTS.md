@@ -4,9 +4,9 @@ Guidance for any engineer or coding agent (Claude, Codex, Cursor, Gemini or othe
 
 ## Overview
 
-YunoSDK is the official Yuno Payments iOS SDK, distributed as pre-built binaries (XCFrameworks). It provides a fast checkout experience that integrates merchants into the payments and fraud ecosystem, supporting checkout flows, payment routing, reconciliations, and alternative payment methods. The SDK is available via CocoaPods and Swift Package Manager, and supports three integration modes: Full (complete UI), Lite (merchant-controlled UI with SDK payment logic), and Headless (full API-level control for payments and enrollment).
+YunoSDK is the official Yuno Payments iOS SDK, distributed as pre-built binaries (XCFrameworks). It provides a fast checkout experience that integrates merchants into the payments and fraud ecosystem, supporting checkout flows, payment routing, reconciliations, and alternative payment methods. The SDK is available via Swift Package Manager (CocoaPods stopped at 2.30.0), and supports three integration modes: Full (complete UI), Lite (merchant-controlled UI with SDK payment logic), and Headless (full API-level control for payments and enrollment).
 
-This repository does not contain SDK source code. It is the public distribution repository: it hosts the distribution manifests (`Package.swift`, `YunoSDK.podspec` and one podspec per optional module), example apps (UIKit and SwiftUI), and documentation. The SDK binaries are downloaded from GitHub Releases of this repository. The SDK source lives in the private monorepo `yuno-payments/yuno-ios`; its CI (Bitrise, `yuno-build` workflow) builds the XCFrameworks, publishes the GitHub release and the CocoaPods trunk push, and opens the "Change version number" pull requests here.
+This repository does not contain SDK source code. It is the public distribution repository: it hosts the distribution manifest (`Package.swift`), the SPM wrapper targets of the optional modules, example apps (UIKit and SwiftUI), and documentation. The SDK binaries are downloaded from GitHub Releases of this repository. The SDK source lives in the private monorepo `yuno-payments/yuno-ios`; its CI (Bitrise, `yuno-build` workflow) builds the XCFrameworks, publishes the GitHub release, and opens the "Change version number" pull requests here.
 
 ## SDK lines: Universal and Legacy
 
@@ -24,7 +24,7 @@ Every change to documentation, examples, manifests or modules on one line must b
 
 ## Essential Commands
 
-Tooling: macOS with Xcode 26.2+, CocoaPods (`gem install cocoapods`) and the Swift toolchain that ships with Xcode. None of these commands run on Linux.
+Tooling: macOS with Xcode 26.2+ and the Swift toolchain that ships with Xcode (CocoaPods only for the UIKit example). None of these commands run on Linux.
 
 ### Running the Example App (UIKit - CocoaPods)
 ```bash
@@ -44,12 +44,6 @@ xcodebuild -workspace Example/YunoSDK.xcworkspace -scheme YunoSDK-Example \
 ```bash
 open YunoSwiftUI/YunoSwiftUI.xcodeproj
 # Xcode resolves the yuno-sdk-ios package (product YunoSDK, up to next major from 2.15.0); build and run the YunoSwiftUI scheme
-```
-
-### Validating the Podspecs
-```bash
-pod spec lint YunoSDK.podspec
-pod spec lint Yuno3DSNetcetera.podspec YunoAntifraudKoin.podspec YunoAntifraudRiskified.podspec YunoClearsaleAntifraud.podspec YunoRevolutPay.podspec
 ```
 
 ### Validating the SPM Manifest
@@ -72,10 +66,9 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 | You changed | Verify with |
 |-------------|-------------|
 | `Package.swift` (URL, checksum, product, target) | `swift package dump-package` and `swift package resolve` (checksum mismatch fails resolve), then build the SwiftUI app |
-| A `*.podspec` | `pod spec lint <name>.podspec` |
 | `Example/` | `pod install`, then the `xcodebuild ... build` command above, then a Full, Lite and Enrollment run against a sandbox API key |
 | `YunoSwiftUI/` | Build and run the `YunoSwiftUI` scheme |
-| `README.md`, `docs/`, `AGENTS.md` | Every symbol and signature you document exists in the released binary or the example apps (`grep -rn "Yuno\." Example/YunoSDK YunoSwiftUI/YunoSwiftUI`); every link and version matches `Package.swift` / `YunoSDK.podspec` |
+| `README.md`, `docs/`, `AGENTS.md` | Every symbol and signature you document exists in the released binary or the example apps (`grep -rn "Yuno\." Example/YunoSDK YunoSwiftUI/YunoSwiftUI`); every link and version matches `Package.swift` |
 
 - If you cannot run a check (for example, no macOS host), say so in the pull request and state how you verified the change instead. Never claim a check passed that you did not run.
 
@@ -85,16 +78,10 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 ```
 /
 ├── AGENTS.md                  # This file (CLAUDE.md imports it)
-├── Package.swift              # SPM manifest - 5 library products, binary targets pinned by URL + checksum
-├── YunoSDK.podspec            # CocoaPods spec of the core SDK
-├── Yuno3DSNetcetera.podspec   # Optional module pods, each with its own version and asset tag
-├── YunoAntifraudKoin.podspec
-├── YunoAntifraudRiskified.podspec
-├── YunoClearsaleAntifraud.podspec
-├── YunoRevolutPay.podspec     # CocoaPods only (not in Package.swift), iOS 15+
-├── Yuno3DSNetceteraWrapper/   # SPM wrapper targets (dummy.m + include/) that bundle a module
-├── YunoAntifraudKoinWrapper/  #   binary with its third-party binary
-├── YunoAntifraudRiskifiedWrapper/
+├── Package.swift              # SPM manifest - YunoSDK (dynamic), YunoSDK-Static and 4 module products, binary targets pinned by URL + checksum
+├── <Module>Wrapper/           # Per module: Objective-C bootstrap whose +load calls the module's register(),
+│                              #   linked to the static module binary and the provider's binary
+├── <Module>Shim/              # Per module: empty Swift target, so the product also links when two binaries use it
 ├── CHANGELOG.md               # Release history up to 1.1.19 only (2.x lives in GitHub Releases)
 ├── .github/CODEOWNERS         # iOS maintainers requested on every PR (no CI workflows)
 ├── Example/                   # UIKit example app (CocoaPods-based)
@@ -132,22 +119,20 @@ There are no runnable unit tests in this repository, because there is no SDK sou
   - `YunoEnrollmentDelegate`: For payment method enrollment flows (provides `customerSession`, `countryCode`, receives results via `yunoEnrollmentResult(_:)`)
 - **Headless API**: `Yuno.apiClientPayment(countryCode:checkoutSession:)` and `Yuno.apiClientEnroll(country_code:customer_session:)` for programmatic token generation and enrollment without SDK UI.
 - **YunoConfig**: Configuration object for card form type (`.oneStep`/`.multiStep`), appearance customization (`Yuno.Appearance`), save card checkbox, and loader persistence.
-- **Optional modules**: 3DS (`Yuno3DSNetcetera`, bundles Netcetera `ThreeDS_SDK`), antifraud (`YunoAntifraudClearsale`, `YunoAntifraudKoin`, `YunoAntifraudRiskified`) and Revolut Pay (`YunoRevolutPay`, CocoaPods only). Per ADR-0004 they are products of this package and reach `Package.swift` only in an SDK release.
+- **Optional modules**: 3DS (`Yuno3DSNetcetera`, with Netcetera `ThreeDS_SDK`) and antifraud (`YunoAntifraudClearsale`, `YunoAntifraudKoin`, `YunoAntifraudRiskified`). Each module binary is a static framework that works with both `YunoSDK` and `YunoSDK-Static`; its wrapper's `+load` forward-declares the module class by its Swift runtime name and calls `register()`, so the module registers itself without `-ObjC`. Provider binaries are separate binary targets pointing at the provider's own URL; Yuno does not host them. Per ADR-0004 they are products of this package and reach `Package.swift` only in an SDK release. Revolut Pay has no SPM product yet (tracked in CXE-816).
 
 ## Key Patterns
 
 - **Binary distribution only**: There is no compilable Swift source for the SDK itself in this repo. Changes to SDK behavior require a new binary release from `yuno-ios`.
 - **Version synchronization** (core SDK): these files must be updated in sync, normally by the release PR CI opens:
-  1. `Package.swift` — the `YunoSDK` binary target download URL and checksum
-  2. `YunoSDK.podspec` — `s.version` (the download URL uses `s.version.to_s`)
-  3. `Example/Podfile` — the pod version constraint
-  4. `README.md` — the install snippets
-- **Module versions**: each optional module has its own semantic version in its podspec and its own release asset tag (`<module>-<version>`, e.g. `koin-1.0.0`, `riskified-2.0.0`). Its `Package.swift` URL and checksum point at that tag, and its podspec declares the minimum `YunoSDK` it needs.
+  1. `Package.swift` — the `YunoSDK` and `YunoSDK-Static` binary target download URLs and checksums
+  2. `README.md` — the SPM `from:` version
+- **Module versions**: each optional module has its own semantic version and release asset tag (`<module>-<version>`, e.g. `koin-1.0.1`, `riskified-2.0.0`). Its `Package.swift` URL and checksum point at that tag.
 - **Deep link handling**: Apps must call `Yuno.receiveDeeplink(url)` in `application(_:open:options:)` with a custom URL scheme matching the one configured in the customer session.
 - **Delegate-based callbacks**: Payment and enrollment results are delivered through delegate methods, not closures or Combine publishers. The example app wraps these in Combine where needed.
 - **Localization**: The SDK supports English (EN), Spanish (ES), and Portuguese (PT) via the `language` parameter.
-- **BUILD_LIBRARY_FOR_DISTRIBUTION**: The podspecs enable `BUILD_LIBRARY_FOR_DISTRIBUTION` to ensure module stability across Swift compiler versions.
-- **Static framework**: The CocoaPods distribution uses `static_framework = true`.
+- **BUILD_LIBRARY_FOR_DISTRIBUTION**: The binaries are built with `BUILD_LIBRARY_FOR_DISTRIBUTION` for module stability across Swift compiler versions.
+- **Static and dynamic core**: `YunoSDK` is a dynamic framework; `YunoSDK-Static` is the same SDK as a static framework that carries its resources. A target links only one of them, and the static one only when a single binary of the app links it.
 
 ## Dependencies
 
@@ -156,9 +141,9 @@ There are no runnable unit tests in this repository, because there is no SDK sou
 
 ### Optional modules (third-party binaries, pinned)
 - `Yuno3DSNetcetera`: Netcetera `ThreeDS_SDK` 2.6.01 (SPM, from Netcetera's Nexus)
-- `YunoAntifraudKoin`: `KoinFingerprint` (shipped on the `koin-1.0.0` asset tag)
-- `YunoAntifraudRiskified`: Riskified Beacon 1.6.4 (SPM) / `RiskifiedBeaconXCFramework ~> 1.6.4` (pod)
-- `YunoRevolutPay`: `RevolutPayments/RevolutPay ~> 3.16.0`, `lottie-ios >= 4.4.1, < 4.6`
+- `YunoAntifraudClearsale`: ClearSale `CSBehavior` 5.1.1 (from ClearSale's CDN)
+- `YunoAntifraudKoin`: `KoinFingerprint` 1.8.0 (from Koin's GitHub release)
+- `YunoAntifraudRiskified`: Riskified Beacon 1.6.4 (from Riskified's GitHub release)
 
 Any new third-party dependency must be pinned (exact version or checksum) and listed here.
 
@@ -167,8 +152,8 @@ Any new third-party dependency must be pinned (exact version or checksum) and li
 - **Then** — sugar for object initialization (used in example UI code)
 
 ### Build Requirements
-- iOS deployment target: **14.0** for SPM (`Package.swift`) and the module pods; `YunoSDK.podspec` and the UIKit example still declare 13.0; `YunoRevolutPay` needs 15.0
-- Swift version: **5.7+** (`YunoSDK.podspec` still declares `swift_version` 5.4)
+- iOS deployment target: **14.0** (`Package.swift`); the UIKit example still declares 13.0
+- Swift version: **5.7+**
 - Xcode: **26.2+** (minimum required to build the example apps and consume the XCFramework)
 - CocoaPods (`gem install cocoapods`) for the Example app
 - No CI workflows run in this repository; releases are pushed here by the `yuno-ios` Bitrise pipeline

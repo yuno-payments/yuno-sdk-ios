@@ -1,8 +1,6 @@
 # YunoSDK
 
-[![Version](https://img.shields.io/cocoapods/v/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
-[![License](https://img.shields.io/cocoapods/l/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
-[![Platform](https://img.shields.io/cocoapods/p/YunoSDK.svg?style=flat)](https://cocoapods.org/pods/YunoSDK)
+[![Swift Package Manager](https://img.shields.io/static/v1?label=SPM&message=compatible&color=2ea44f)](https://swift.org/package-manager/)
 [![iOS Minimum Deploy Target - 14.0](https://img.shields.io/static/v1?label=iOS+Minimum+Deploy+Target&message=14.0&color=2ea44f)](https://)
 [![Xcode - 26.2+](https://img.shields.io/static/v1?label=Xcode&message=26.2%2B&color=2ea44f)](https://)
 [![Swift - 5.7+](https://img.shields.io/static/v1?label=Swift&message=5.7%2B&color=2ea44f)](https://)
@@ -20,32 +18,51 @@ Checkout + Routing + Reconciliations + Alternative Payment Methods
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+To run the SPM example, open `YunoSwiftUI/YunoSwiftUI.xcodeproj`. The UIKit example in `Example/` still uses CocoaPods and the last version published there (2.30.0): run `pod install` from the Example directory first.
 
 ## Installation
 
-### [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html)
-
-To integrate Yuno SDK with Cocoapods, please add the line below to your Podfile and run pod install.
-
-```ruby
-pod 'YunoSDK', '~> 2.30.0'
-```
-
-Then run pod install in your directory:
-
-```shell
-$ pod install
-```
 ### [Swift Package Manager](https://swift.org/package-manager/)
 
-Once you have your Swift package set up, adding YunoSDK as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+Add the package in Xcode with **File > Add Package Dependencies** using `https://github.com/yuno-payments/yuno-sdk-ios.git`, or add it to the `dependencies` of your `Package.swift`:
 
 ```swift
 dependencies: [
     .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "2.30.0"))
 ]
 ```
+
+Then add **one** of the two SDK products to your target:
+
+| Product | Framework | Use it when |
+|---|---|---|
+| `YunoSDK` | Dynamic | Default. Keep it if you already integrate through SPM |
+| `YunoSDK-Static` | Static | You are moving from CocoaPods, which shipped a static library |
+
+Both products contain the same `YunoSDK` module, so `import YunoSDK` does not change. Never add both to the same target. Use `YunoSDK-Static` only when a single binary of your app links the SDK (your app target); if your app target and one of your own dynamic frameworks both import the SDK, use `YunoSDK`, or each binary gets its own copy of the SDK.
+
+#### Optional modules
+
+| Product | Provider |
+|---|---|
+| `Yuno3DSNetcetera` | Netcetera 3DS |
+| `YunoAntifraudClearsale` | ClearSale |
+| `YunoAntifraudKoin` | Koin |
+| `YunoAntifraudRiskified` | Riskified |
+
+Modules work with both `YunoSDK` and `YunoSDK-Static` and register themselves when the app starts, so you don't need to call `register()`. Each provider's binary is downloaded from the provider's own release URL.
+
+#### App Store upload warnings with `YunoSDK-Static`
+
+When you upload an app that uses `YunoSDK-Static` or a module, App Store Connect can show "Upload Symbols Failed" for `YunoSDK.framework` or a module framework. Xcode embeds a placeholder binary in static frameworks, and that placeholder has no dSYM. The SDK code is part of your app binary and its symbols are in your app's dSYM, so crash reports are still symbolicated. You can ignore these warnings.
+
+### CocoaPods
+
+CocoaPods is no longer supported. `2.30.0` is the last version of `YunoSDK` available on CocoaPods, and CocoaPods trunk becomes read-only on December 2, 2026. To move to Swift Package Manager:
+
+1. Remove the YunoSDK pod (and any Yuno module pod) from your `Podfile` and run `pod install`.
+2. Add this package with SPM and select `YunoSDK-Static` (the same static linking you had with CocoaPods), plus the modules you use.
+3. If you called a module's `register()` at startup, you can keep or remove that call: modules now register themselves.
 
 ## Usage
 YunoSDK minimum required version is iOS 14.0
