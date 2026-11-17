@@ -73,11 +73,11 @@ import YunoSDK
 Yuno.initialize(apiKey: apiKey)
 ```
 
-An optional `YunoConfig` (card form type, `Yuno.Appearance`, save card checkbox, keep loader) can be passed as `Yuno.initialize(apiKey:config:)`; see `README.md`. If the app uses a `UISceneDelegate`, initialize from the scene delegate or the first screen, as the examples do.
+An optional `YunoConfig(appearance:saveCardEnabled:keepLoader:localizableBundle:)` can be passed as `Yuno.initialize(apiKey:config:)`. The card form type is not a code setting; it is configured in the Yuno Dashboard. If the app uses a `UISceneDelegate`, initialize from the scene delegate or the first screen, as the examples do.
 
 ## Flows
 
-Every symbol below is called by the example apps. Treat the examples as the source of truth for signatures; some `README.md` snippets are older.
+Every symbol below is called by the example apps (Headless: by the guides in `docs/`) and exists in the released 2.31.0 interface. Treat the examples as the source of truth for signatures; some `README.md` snippets are older.
 
 ### Full
 
@@ -139,19 +139,24 @@ After the backend creates the payment, if it requires a customer action (for exa
 
 ### Headless
 
-No SDK UI. `Yuno.apiClientPayment(countryCode:checkoutSession:)` returns a `YunoPaymentHeadless` that generates the one-time token; `Yuno.apiClientEnroll(country_code:customer_session:)` returns a `YunoEnrollHeadless` that enrolls a payment method. Follow `docs/HeadlessSDK(Payment).md` and `docs/HeadlessSDK(Enrollment).md`.
+No SDK UI. Both factories `throw`:
+
+- `try Yuno.apiClientPayment(countryCode:checkoutSession:)` returns a `YunoPaymentHeadless`: `generateToken(data:)` creates the one-time token, and after the backend creates the payment, `continueCardPayment(onResult:)` completes any remaining step (such as 3DS) and reports each status (CARD only).
+- `try Yuno.apiClientEnroll(countryCode:customerSession:)` returns a `YunoEnrollHeadless`: `continueEnrollment(data:)` enrolls a card and returns its `vaultedToken`.
+
+Guides: `docs/HeadlessSDK(Payment).md` and `docs/HeadlessSDK(Enrollment).md` in this repo, and the official docs, [Headless SDK (Payment iOS)](https://docs.y.uno/docs/sdks/headless-ios/checkout) and [Headless SDK (Enrollment iOS)](https://docs.y.uno/docs/sdks/headless-ios/enrollment).
 
 ## Delegates and results
 
-Exact signatures as implemented in `Example/YunoSDK/ViewController.swift` and `YunoSwiftUI/YunoSwiftUI/TransactionView/TransactionViewModel.swift`:
+Signatures as implemented in `Example/YunoSDK/ViewController.swift` and `YunoSwiftUI/YunoSwiftUI/TransactionView/TransactionViewModel.swift`. Members marked optional are `@objc optional` in the protocol:
 
 ```swift
 // YunoPaymentDelegate
 var checkoutSession: String { get }
 var countryCode: String { get }
-var language: String? { get }              // "EN", "ES" or "PT"
-var viewController: UIViewController? { get }
-func yunoCreatePayment(with token: String, information: [String: Any])
+var language: String? { get }              // optional; "EN", "ES" or "PT"
+var viewController: UIViewController? { get }   // optional
+func yunoCreatePayment(with token: String, information: [String: Any])   // optional; implement it to receive the one-time token
 func yunoPaymentResult(_ result: Yuno.Result)
 
 // YunoPaymentFullDelegate (adds)
@@ -162,11 +167,11 @@ func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat)
 // YunoEnrollmentDelegate
 var customerSession: String { get }
 var countryCode: String { get }
-var language: String? { get }
+var language: String? { get }              // optional
 func yunoEnrollmentResult(_ result: Yuno.Result)
 ```
 
-`Yuno.Result` cases handled by the examples: `.succeeded`, `.reject`, `.fail`, `.processing`, `.internalError`, `.userCancelled`. Add a `default` branch for future cases.
+`Yuno.Result` is a class: `result.status` is a `Yuno.Result.Status` (`.succeeded`, `.reject`, `.fail`, `.processing`, `.internalError`, `.userCancelled`), and `substatus` and `message` add detail when available. Switch on `result.status` and add an `@unknown default` branch.
 
 ## Deep links
 
@@ -207,7 +212,7 @@ In SwiftUI, call `Yuno.receiveDeeplink(_:)` from `.onOpenURL`. The UIKit example
 | `YunoSwiftUI/YunoSwiftUI/TransactionView/` | Delegates, Full, Lite and Enrollment with SwiftUI |
 | `YunoSwiftUI/YunoSwiftUI/PaymentRender/` | Payment Render flow |
 | `YunoSwiftUI/YunoSwiftUI/EnrollmentRender/` | Enrollment Render flow |
-| `docs/HeadlessSDK(Payment).md`, `docs/HeadlessSDK(Enrollment).md` | Headless payment and enrollment |
+| `docs/HeadlessSDK(Payment).md`, `docs/HeadlessSDK(Enrollment).md` | Headless payment and enrollment (official: [payment](https://docs.y.uno/docs/sdks/headless-ios/checkout), [enrollment](https://docs.y.uno/docs/sdks/headless-ios/enrollment)) |
 
 ## Running the examples
 
