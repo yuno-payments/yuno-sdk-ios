@@ -1,8 +1,5 @@
 # SdkPayments
 
-[![Version](https://img.shields.io/cocoapods/v/SdkPayments.svg?style=flat)](https://cocoapods.org/pods/SdkPayments)
-[![License](https://img.shields.io/cocoapods/l/SdkPayments.svg?style=flat)](https://cocoapods.org/pods/SdkPayments)
-[![Platform](https://img.shields.io/cocoapods/p/SdkPayments.svg?style=flat)](https://cocoapods.org/pods/SdkPayments)
 [![iOS Minimum Deploy Target - 14.0](https://img.shields.io/static/v1?label=iOS+Minimum+Deploy+Target&message=14.0&color=2ea44f)](https://)
 [![Xcode - 26.2+](https://img.shields.io/static/v1?label=Xcode&message=26.2%2B&color=2ea44f)](https://)
 [![Swift - 5.7+](https://img.shields.io/static/v1?label=Swift&message=5.7%2B&color=2ea44f)](https://)
@@ -20,35 +17,52 @@ Checkout + Routing + Reconciliations + Alternative Payment Methods
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+Both example apps use Swift Package Manager: open `YunoSwiftUI/YunoSwiftUI.xcodeproj` (SwiftUI) or `Example/YunoSDK.xcodeproj` (UIKit), and Xcode resolves the package.
 
 ## Installation
 
 > **3.0.0 is a major release.** The SDK is now distributed under the module name `SdkPayments` and is **not** API-compatible with the 2.x line (`YunoSDK`). The 2.x integration lives on the `master` branch.
 
-### [CocoaPods](https://guides.cocoapods.org/using/using-cocoapods.html)
-
-To integrate the Yuno SDK with CocoaPods, add the line below to your Podfile:
-
-```ruby
-pod 'SdkPayments', '~> 3.1.0'
-```
-
-Then run pod install in your directory:
-
-```shell
-$ pod install
-```
-
 ### [Swift Package Manager](https://swift.org/package-manager/)
 
-Once you have your Swift package set up, add SdkPayments to the `dependencies` value of your `Package.swift`:
+Add the package in Xcode with **File > Add Package Dependencies** using `https://github.com/yuno-payments/yuno-sdk-ios.git`, or add it to the `dependencies` of your `Package.swift`:
 
 ```swift
 dependencies: [
     .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "3.1.0"))
 ]
 ```
+
+Then add **one** of the two SDK products to your target:
+
+| Product | Framework | Use it when |
+|---|---|---|
+| `SdkPayments` | Dynamic | Default. Keep it if you already integrate through SPM |
+| `SdkPayments-Static` | Static | You are moving from CocoaPods, which shipped a static library |
+
+Both products contain the same `SdkPayments` module, so `import SdkPayments` does not change. Never add both to the same target. Use `SdkPayments-Static` only when a single binary of your app links the SDK (your app target); if your app target and one of your own dynamic frameworks both import the SDK, use `SdkPayments`, or each binary gets its own copy of the SDK.
+
+#### Optional modules
+
+| Product | Provider |
+|---|---|
+| `SdkPaymentsNetcetera` | Netcetera 3DS |
+| `SdkAntifraudClearsale` | ClearSale |
+| `SdkAntifraudKoin` | Koin |
+| `SdkAntifraudRiskified` | Riskified |
+
+Modules work with both `SdkPayments` and `SdkPayments-Static` and register themselves when the app starts, so you don't need to call `register()`. Each provider's binary is downloaded from the provider's own release URL.
+
+#### App Store upload warnings with `SdkPayments-Static`
+
+When you upload an app that uses `SdkPayments-Static` or a module, App Store Connect can show "Upload Symbols Failed" for `SdkPayments.framework` or a module framework. Xcode embeds a placeholder binary in static frameworks, and that placeholder has no dSYM. The SDK code is part of your app binary and its symbols are in your app's dSYM, so crash reports are still symbolicated. You can ignore these warnings.
+
+### CocoaPods
+
+CocoaPods is no longer supported. `3.1.0` is the last version of `SdkPayments` available on CocoaPods, and CocoaPods trunk becomes read-only on December 2, 2026. To move to Swift Package Manager:
+
+1. Remove the SdkPayments pod from your `Podfile` and run `pod install`.
+2. Add this package with SPM and select `SdkPayments-Static` (the same static linking you had with CocoaPods), plus the modules you use.
 
 ## Usage
 
