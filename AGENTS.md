@@ -1,199 +1,237 @@
 # AGENTS.md
 
-Guidance for any engineer or coding agent (Claude, Codex, Cursor, Gemini or other) working in this repository. `CLAUDE.md` imports this file; keep the content here.
+Guidance for coding agents (Claude, Codex, Cursor, Gemini or other) that integrate the Yuno iOS SDK into a merchant app. `CLAUDE.md` imports this file.
 
-## Overview
+## What this package is
 
-YunoSDK is the official Yuno Payments iOS SDK, distributed as pre-built binaries (XCFrameworks). It provides a fast checkout experience that integrates merchants into the payments and fraud ecosystem, supporting checkout flows, payment routing, reconciliations, and alternative payment methods. The SDK is available via Swift Package Manager (CocoaPods stopped at 2.30.0), and supports three integration modes: Full (complete UI), Lite (merchant-controlled UI with SDK payment logic), and Headless (full API-level control for payments and enrollment).
+`YunoSDK` is the official Yuno Payments iOS SDK, distributed through Swift Package Manager as prebuilt XCFrameworks. It offers these integration modes:
 
-This repository does not contain SDK source code. It is the public distribution repository: it hosts the distribution manifest (`Package.swift`), the SPM wrapper targets of the optional modules, example apps (UIKit and SwiftUI), and documentation. The SDK binaries are downloaded from GitHub Releases of this repository. The SDK source lives in the private monorepo `yuno-payments/yuno-ios`; its CI (Bitrise, `yuno-build` workflow) builds the XCFrameworks, publishes the GitHub release, and opens the "Change version number" pull requests here.
+| Mode | What the SDK does | What your app does |
+|---|---|---|
+| Full | Shows the payment method list and the payment forms | Hosts the list view and starts the payment |
+| Lite | Shows the payment forms | Shows its own payment method list and passes the selected method |
+| Render | Returns the payment or enrollment form as a view | Places the form in its own screen and submits it |
+| Enrollment | Shows the flow to save (vault) a payment method | Starts the flow with a customer session |
+| Headless | No UI; returns tokens from collected data | Builds all UI and collects the data |
 
-## SDK lines: Universal and Legacy
+This repository has no SDK source code. It contains the SPM manifest, two example apps and the Headless guides.
 
-| Line | Product (module, pod, SPM product) | Version | Branch in this repo | Source branch in `yuno-ios` |
-|------|------------------------------------|---------|---------------------|-----------------------------|
-| **Legacy** | `YunoSDK` + optional modules (`YunoAntifraudClearsale`, `YunoAntifraudKoin`, `YunoAntifraudRiskified`, `Yuno3DSNetcetera`, `YunoRevolutPay`) | 2.x (currently 2.29.0) | `master` (default branch) | `develop` → `release-v<x.y.z>` → `master` |
-| **Universal** | `SdkPayments` (single `SdkPayments.Transaction` entry point, results via `SdkPayments.TransactionController`) | 3.x (3.0.0 released 2026-10-15) | `release-3.0.0`; prereleases on `universal/3.0.0-alpha.*` | `universal-SDK` |
+## Requirements
 
-- 3.x is a major release and is **not API-compatible** with 2.x. Do not copy 2.x API (`Yuno.*`, `YunoPaymentDelegate`, ...) into Universal docs or examples, or the reverse.
-- Everything else in this file describes `master` (Legacy) unless a section says otherwise.
+- iOS **14.0+**
+- Xcode **26.2+**
+- Swift **5.7+**
 
-### Universal ↔ Legacy parity rule
+## Install
 
-Every change to documentation, examples, manifests or modules on one line must be applied to the other line in the same cycle, or explicitly recorded as not applicable, with the reason, in the pull request description. Exceptions that never port: version numbers, checksums and release asset URLs (each line has its own), and API that only exists on one line. When in doubt, ask the iOS code owners (`.github/CODEOWNERS`) before skipping a port.
+Add the package in Xcode with **File > Add Package Dependencies** using `https://github.com/yuno-payments/yuno-sdk-ios.git`, or in `Package.swift`:
 
-## Essential Commands
-
-Tooling: macOS with Xcode 26.2+ and the Swift toolchain that ships with Xcode. None of these commands run on Linux.
-
-### Running the Example App (UIKit - SPM)
-```bash
-open Example/YunoSDK.xcodeproj
-# Xcode resolves the yuno-sdk-ios package (product YunoSDK, up to next major from 2.30.0) and Then; build and run the YunoSDK-Example scheme (target YunoSDK_Example)
-```
-Command-line build (no signing):
-```bash
-xcodebuild -project Example/YunoSDK.xcodeproj -scheme YunoSDK-Example \
-  -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
-  CODE_SIGNING_ALLOWED=NO build
+```swift
+dependencies: [
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "2.31.0"))
+]
 ```
 
-### Running the Example App (SwiftUI - SPM)
-```bash
-open YunoSwiftUI/YunoSwiftUI.xcodeproj
-# Xcode resolves the yuno-sdk-ios package (product YunoSDK, up to next major from 2.15.0); build and run the YunoSwiftUI scheme
+### Pick one SDK product
+
+| Product | Framework | Use it when |
+|---|---|---|
+| `YunoSDK` | Dynamic | Default choice |
+| `YunoSDK-Static` | Static | The app is moving from CocoaPods, which shipped a static library |
+
+- Both products contain the same `YunoSDK` module, so the code always uses `import YunoSDK`.
+- Never add both products to the same target.
+- Use `YunoSDK-Static` only when a single binary of the app links the SDK (the app target). If the app target and one of the app's own dynamic frameworks both import the SDK, use `YunoSDK`; otherwise each binary gets its own copy of the SDK.
+
+### Optional modules
+
+| Product | Provider | Provider binary (downloaded from the provider) |
+|---|---|---|
+| `Yuno3DSNetcetera` | Netcetera 3DS | `ThreeDS_SDK` 2.6.01 |
+| `YunoAntifraudClearsale` | ClearSale | `CSBehavior` 5.1.1 |
+| `YunoAntifraudKoin` | Koin | `KoinFingerprint` 1.8.0 |
+| `YunoAntifraudRiskified` | Riskified | Riskified Beacon 1.6.4 |
+
+- Add only the modules the merchant's Yuno setup uses. They work with both `YunoSDK` and `YunoSDK-Static`.
+- Modules register themselves when the app starts. Do not call `register()` and do not add `-ObjC` to the linker flags.
+
+### CocoaPods
+
+CocoaPods is no longer supported: `2.30.0` is the last `YunoSDK` version on CocoaPods. To migrate:
+
+1. Remove the `YunoSDK` pod and any Yuno module pod from the `Podfile` and run `pod install`.
+2. Add this package with SPM, select `YunoSDK-Static` (the same static linking CocoaPods used), plus the modules in use.
+3. Existing `register()` calls for modules can stay or be removed; modules now register themselves.
+
+## Initialize
+
+Call `Yuno.initialize` once, before starting any flow, with the merchant's iOS public API key:
+
+```swift
+import YunoSDK
+
+Yuno.initialize(apiKey: apiKey)
 ```
 
-### Validating the SPM Manifest
-```bash
-swift package dump-package > /dev/null   # manifest parses
-swift package resolve                    # downloads every binary target and verifies its checksum
-```
-Or add the package in Xcode via `File > Add Packages` using:
-```
-https://github.com/yuno-payments/yuno-sdk-ios.git
-```
+An optional `YunoConfig(appearance:saveCardEnabled:keepLoader:localizableBundle:)` can be passed as `Yuno.initialize(apiKey:config:)`. The card form type is not a code setting; it is configured in the Yuno Dashboard. If the app uses a `UISceneDelegate`, initialize from the scene delegate or the first screen, as the examples do.
 
-## How to test
+## Flows
 
-There are no runnable unit tests in this repository, because there is no SDK source to test. SDK unit tests live in `yuno-ios`.
+Every symbol below is called by the example apps (Headless: by the guides in `docs/`) and exists in the released 2.31.0 interface. Treat the examples as the source of truth for signatures; some `README.md` snippets are older.
 
-- `Example/YunoSDK.xcodeproj` has a single target, `YunoSDK_Example`, with no test target.
-- A change is verified by the checks that match what it touches:
+### Full
 
-| You changed | Verify with |
-|-------------|-------------|
-| `Package.swift` (URL, checksum, product, target) | `swift package dump-package` and `swift package resolve` (checksum mismatch fails resolve), then build the SwiftUI app |
-| `Example/` | The `xcodebuild ... build` command above, then a Full, Lite and Enrollment run against a sandbox API key |
-| `YunoSwiftUI/` | Build and run the `YunoSwiftUI` scheme |
-| `README.md`, `docs/`, `AGENTS.md` | Every symbol and signature you document exists in the released binary or the example apps (`grep -rn "Yuno\." Example/YunoSDK YunoSwiftUI/YunoSwiftUI`); every link and version matches `Package.swift` |
+1. Conform to `YunoPaymentFullDelegate` (it extends `YunoPaymentDelegate`).
+2. Show the payment method list:
+   ```swift
+   Task {
+       let view = await Yuno.getPaymentMethodViewAsync(delegate: self)
+       // UIKit: UIView added to a container. SwiftUI: wrapped as AnyView.
+   }
+   ```
+3. Track the selection in `yunoDidSelect(paymentMethod:)` and resize the container in `yunoUpdatePaymentMethodsViewHeight(_:)`.
+4. Start the payment with `Yuno.startPayment()` or `Yuno.startPayment(showPaymentStatus: false)`.
 
-- If you cannot run a check (for example, no macOS host), say so in the pull request and state how you verified the change instead. Never claim a check passed that you did not run.
+### Lite
 
-## Architecture Overview
+The app shows its own list and passes the selected method:
 
-### Directory Structure (`master`)
-```
-/
-├── AGENTS.md                  # This file (CLAUDE.md imports it)
-├── Package.swift              # SPM manifest - YunoSDK (dynamic), YunoSDK-Static and 4 module products, binary targets pinned by URL + checksum
-├── <Module>Wrapper/           # Per module: Objective-C bootstrap whose +load calls the module's register(),
-│                              #   linked to the static module binary and the provider's binary
-├── <Module>Target/            # Per module: empty Swift target (Firebase's naming), so the product also links when two binaries use it
-├── CHANGELOG.md               # Release history up to 1.1.19 only (2.x lives in GitHub Releases)
-├── .github/CODEOWNERS         # iOS maintainers requested on every PR (no CI workflows)
-├── Example/                   # UIKit example app (SPM-based: YunoSDK and Then)
-│   ├── YunoSDK.xcodeproj/     # Xcode project, target YunoSDK_Example, scheme YunoSDK-Example
-│   ├── YunoSDK/               # Example app source files
-│   │   ├── AppDelegate.swift
-│   │   ├── EnvirotmentViewController.swift  # API key entry screen
-│   │   ├── HomeViewController.swift         # Flow selection (Payment/Enrollment/Lite)
-│   │   ├── ViewController.swift             # Main payment/enrollment flow UI
-│   │   ├── PaymentLiteViewController.swift  # Lite payment flow
-│   │   └── ...
-├── YunoSwiftUI/               # SwiftUI example app (SPM-based)
-│   ├── YunoSwiftUI.xcodeproj/
-│   └── YunoSwiftUI/
-│       ├── YunoSwiftUIApp.swift
-│       ├── ApiKeysView/       # API key configuration
-│       ├── OptionView/        # Flow option selection
-│       ├── PaymentFull/       # Full payment flow
-│       ├── PaymentRender/     # Render payment flow
-│       ├── EnrollmentRender/  # Render enrollment flow
-│       └── TransactionView/   # Transaction handling
-└── docs/                      # Headless SDK documentation
-    ├── HeadlessSDK(Payment).md
-    └── HeadlessSDK(Enrollment).md
+```swift
+final class SelectedMethod: PaymentMethodSelected {
+    let paymentMethodType: String
+    let vaultedToken: String?
+}
+
+Yuno.startPaymentLite(with: delegate, paymentSelected: selected, showPaymentStatus: false)
 ```
 
-### Key Components
+`paymentMethodType` is the payment method type (for example `CARD`); `vaultedToken` is `nil` for a new payment method.
 
-- **YunoSDK.xcframework**: The pre-built binary framework (downloaded from GitHub Releases, not checked into the repo).
-- **`Yuno` (main entry point)**: Static methods for SDK initialization (`Yuno.initialize(apiKey:config:)`), the Full payment method view (`Yuno.getPaymentMethodViewAsync(delegate:)`), starting payments (`Yuno.startPayment()`, `Yuno.startPaymentLite(with:paymentSelected:)`, `Yuno.continuePayment()`), render flows (`Yuno.startPaymentRenderFlow`, `Yuno.startEnrollmentRender`), enrollment (`Yuno.enrollPayment(with:)`), and handling deep links (`Yuno.receiveDeeplink(_:)`).
-- **Delegate Protocols**:
-  - `YunoPaymentDelegate` / `YunoPaymentFullDelegate`: For checkout and payment flows (provides `checkoutSession`, `countryCode`, receives OTT via `yunoCreatePayment(with:information:)`, results via `yunoPaymentResult(_:)`)
-  - `YunoEnrollmentDelegate`: For payment method enrollment flows (provides `customerSession`, `countryCode`, receives results via `yunoEnrollmentResult(_:)`)
-- **Headless API**: `Yuno.apiClientPayment(countryCode:checkoutSession:)` and `Yuno.apiClientEnroll(country_code:customer_session:)` for programmatic token generation and enrollment without SDK UI.
-- **YunoConfig**: Configuration object for card form type (`.oneStep`/`.multiStep`), appearance customization (`Yuno.Appearance`), save card checkbox, and loader persistence.
-- **Optional modules**: 3DS (`Yuno3DSNetcetera`, with Netcetera `ThreeDS_SDK`) and antifraud (`YunoAntifraudClearsale`, `YunoAntifraudKoin`, `YunoAntifraudRiskified`). Each module binary is a static framework that works with both `YunoSDK` and `YunoSDK-Static`; its wrapper's `+load` forward-declares the module class by its Swift runtime name and calls `register()`, so the module registers itself without `-ObjC`. Provider binaries are separate binary targets pointing at the provider's own URL; Yuno does not host them. Per ADR-0004 they are products of this package and reach `Package.swift` only in an SDK release. Revolut Pay has no SPM product yet (tracked in CXE-816).
+### Render (SwiftUI example)
 
-## Key Patterns
+```swift
+let flow = await Yuno.startPaymentRenderFlow(paymentMethodSelected: selected, with: delegate)
+let form = await flow.formView(paymentMethodSelected: selected, with: delegate)
+// show form, then on the app's own button:
+flow.submitForm()
+```
 
-- **Binary distribution only**: There is no compilable Swift source for the SDK itself in this repo. Changes to SDK behavior require a new binary release from `yuno-ios`.
-- **Version synchronization** (core SDK): these files must be updated in sync, normally by the release PR CI opens:
-  1. `Package.swift` — the `YunoSDK` and `YunoSDK-Static` binary target download URLs and checksums
-  2. `README.md` — the SPM `from:` version
-- **Module versions**: each optional module has its own semantic version and release asset tag (`<module>-<version>`, e.g. `koin-1.0.1`, `riskified-2.0.1`). Its `Package.swift` URL and checksum point at that tag.
-- **Deep link handling**: Apps must call `Yuno.receiveDeeplink(url)` in `application(_:open:options:)` with a custom URL scheme matching the one configured in the customer session.
-- **Delegate-based callbacks**: Payment and enrollment results are delivered through delegate methods, not closures or Combine publishers. The example app wraps these in Combine where needed.
-- **Localization**: The SDK supports English (EN), Spanish (ES), and Portuguese (PT) via the `language` parameter.
-- **BUILD_LIBRARY_FOR_DISTRIBUTION**: The binaries are built with `BUILD_LIBRARY_FOR_DISTRIBUTION` for module stability across Swift compiler versions.
-- **Static and dynamic core**: `YunoSDK` is a dynamic framework; `YunoSDK-Static` is the same SDK as a static framework that carries its resources. A target links only one of them, and the static one only when a single binary of the app links it.
+```swift
+let flow = Yuno.startEnrollmentRender(with: delegate)
+let form = await flow.formView(with: delegate)
+flow.submitForm()
+```
 
-## Dependencies
+Keep the returned flow (`YunoPaymentRenderFlowProtocol` / `YunoEnrollmentRenderFlowProtocol`) alive for as long as the form is on screen.
 
-### SDK (XCFramework)
-- **UIKit** and **Combine** (system frameworks)
+### Enrollment
 
-### Optional modules (third-party binaries, pinned)
-- `Yuno3DSNetcetera`: Netcetera `ThreeDS_SDK` 2.6.01 (SPM, from Netcetera's Nexus)
-- `YunoAntifraudClearsale`: ClearSale `CSBehavior` 5.1.1 (from ClearSale's CDN)
-- `YunoAntifraudKoin`: `KoinFingerprint` 1.8.0 (from Koin's GitHub release)
-- `YunoAntifraudRiskified`: Riskified Beacon 1.6.4 (from Riskified's GitHub release)
+Conform to `YunoEnrollmentDelegate` and call:
 
-Any new third-party dependency must be pinned (exact version or checksum) and listed here.
+```swift
+Yuno.enrollPayment(with: self)
+Yuno.enrollPayment(with: self, showPaymentStatus: true)
+```
 
-### Example App (UIKit)
-- **YunoSDK** up to next major from `2.30.0` — the SDK itself, from this package
-- **Then** `3.0.0` (exact) — sugar for object initialization (used in example UI code)
+### Continue a payment
 
-### Build Requirements
-- iOS deployment target: **14.0** (`Package.swift` and the UIKit example); the SwiftUI example targets a higher version
-- Swift version: **5.7+**
-- Xcode: **26.2+** (minimum required to build the example apps and consume the XCFramework)
-- No CI workflows run in this repository; releases are pushed here by the `yuno-ios` Bitrise pipeline
+After the backend creates the payment, if it requires a customer action (for example 3DS or a redirect), call `Yuno.continuePayment()` to finish it and get the final status in `yunoPaymentResult(_:)`.
 
-## Code rules
+### Headless
 
-This repo only holds example and manifest code, but it is what merchants copy. Hold it to the same rules as the SDK.
+No SDK UI. Both factories `throw`:
 
-### Architecture (iOS)
-- Keep example screens thin: a view or view controller renders and forwards events; SDK delegate conformance and flow state live in one place per flow (a view model in SwiftUI, the flow's view controller in UIKit). Do not add a new layer for a single use.
-- Integrate only through the SDK's public API, exactly as a merchant would. Never rely on undocumented SDK symbols in examples or docs.
-- Delegates are weak on the SDK side: the integrator owns and retains its delegate. Show it that way in examples.
-- No new dependency in the SDK binaries (ADR 001 of `yuno-ios`); a new third-party dependency in a module or example needs a reason in the PR and a pinned version.
-- Public SDK types stay Objective-C compatible (`NSObject` subclasses, `Int` enums); document them as such.
+- `try Yuno.apiClientPayment(countryCode:checkoutSession:)` returns a `YunoPaymentHeadless`: `generateToken(data:)` creates the one-time token, and after the backend creates the payment, `continueCardPayment(onResult:)` completes any remaining step (such as 3DS) and reports each status (CARD only).
+- `try Yuno.apiClientEnroll(countryCode:customerSession:)` returns a `YunoEnrollHeadless`: `continueEnrollment(data:)` enrolls a card and returns its `vaultedToken`.
 
-### Swift clean code
-- Follow the Swift API Design Guidelines; names state intent, no abbreviation-only names.
-- `private` by default, `final class` for leaf types, `struct` and `enum` where no identity is needed.
-- No force unwrap (`!`) or `try!`; use `guard let` and handle the failure.
-- Closures that outlive the call capture `[weak self]`; store Combine subscriptions in `Set<AnyCancellable>`.
-- Async SDK calls run in `Task { await ... }`; UI updates happen on the main actor.
-- Files under 500 lines, functions under 50 lines; split a type when it grows past one responsibility.
-- No commented-out code and no code comments that restate the code.
-- Match the surrounding file's style over personal preference.
+Guides: `docs/HeadlessSDK(Payment).md` and `docs/HeadlessSDK(Enrollment).md` in this repo, and the official docs, [Headless SDK (Payment iOS)](https://docs.y.uno/docs/sdks/headless-ios/checkout) and [Headless SDK (Enrollment iOS)](https://docs.y.uno/docs/sdks/headless-ios/enrollment).
 
-### Security and card data
-- Never log, print, persist or send to analytics a PAN, CVV, expiry date, cardholder name, one-time token, vaulted token or API key, in example code, docs or tests. Use the masked placeholders the docs already use.
-- No `print` with payment data; example logging is limited to flow results (status values).
-- Never commit real API keys, checkout or customer sessions; the example apps read keys entered at runtime.
-- Binary targets are always pinned by checksum; never replace a checksum without the matching release asset.
+## Delegates and results
 
-## Pull request rules
+Signatures as implemented in `Example/YunoSDK/ViewController.swift` and `YunoSwiftUI/YunoSwiftUI/TransactionView/TransactionViewModel.swift`. Members marked optional are `@objc optional` in the protocol:
 
-- **Scope**: one concern per PR. The PR description says what changed, why, and how it was verified (see "How to test").
-- **Improve what you touch**: fix small defects in the lines and files you are already changing (stale doc, wrong signature, a lint issue), and list them in the PR.
-- **Refactor limit**: if a cleanup or refactor would touch more than 3 files beyond the ones the task needs, do not include it. Open a separate PR for it, backed by its own AnyForge work item.
-- **Parity**: state in the PR whether the change was ported to the other line (Universal ↔ Legacy) or why it does not apply.
-- **Traceability**: reference the work item or ticket (`Fixes <code>`) in the PR description, never in code.
-- Write PRs, commits and docs in English. Branches use a type prefix (`docs/`, `fix/`, `feat/`, `chore/`).
-- Do not edit version numbers, URLs or checksums by hand outside a release; the `yuno-ios` release pipeline owns them.
-- A code owner from `.github/CODEOWNERS` approves every PR.
+```swift
+// YunoPaymentDelegate
+var checkoutSession: String { get }
+var countryCode: String { get }
+var language: String? { get }              // optional; "EN", "ES" or "PT"
+var viewController: UIViewController? { get }   // optional
+func yunoCreatePayment(with token: String, information: [String: Any])   // optional; implement it to receive the one-time token
+func yunoPaymentResult(_ result: Yuno.Result)
 
-## Important Notes
+// YunoPaymentFullDelegate (adds)
+func yunoDidSelect(paymentMethod: PaymentMethodSelected)
+func yunoDidUnenrollSuccessfully(_ success: Bool)
+func yunoUpdatePaymentMethodsViewHeight(_ height: CGFloat)
 
-- This repo does **not** contain the SDK source code. It is a distribution repo for the pre-built XCFrameworks.
-- The default branch is `master` (not `main`), and it carries the Legacy 2.x line.
-- The Example app uses storyboards (`Base.lproj`) for its UI layout.
-- The CHANGELOG.md only covers versions up to 1.1.19; later version history (2.x and 3.x) is tracked via GitHub Releases.
+// YunoEnrollmentDelegate
+var customerSession: String { get }
+var countryCode: String { get }
+var language: String? { get }              // optional
+func yunoEnrollmentResult(_ result: Yuno.Result)
+```
+
+`Yuno.Result` is a class: `result.status` is a `Yuno.Result.Status` (`.succeeded`, `.reject`, `.fail`, `.processing`, `.internalError`, `.userCancelled`), and `substatus` and `message` add detail when available. Switch on `result.status` and add an `@unknown default` branch.
+
+## Deep links
+
+Payment methods that leave the app (bank redirects, wallets) return through a custom URL scheme. Register the scheme in `Info.plist`, use the same scheme when the backend creates the checkout or customer session, and forward the URL:
+
+```swift
+func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+    guard url.scheme == "yourscheme" else { return false }
+    return Yuno.receiveDeeplink(url)
+}
+```
+
+In SwiftUI, call `Yuno.receiveDeeplink(_:)` from `.onOpenURL`. The UIKit example uses the scheme `yunoexample`; the SwiftUI example does not handle deep links.
+
+## Security
+
+- The app sends the one-time token from `yunoCreatePayment(with:information:)` to the merchant's own backend, and the backend creates the payment with Yuno's API using its private secret key. Never put the private secret key in the app.
+- Never log, print, persist or send to analytics a card number, CVV, expiry date, cardholder name, one-time token, vaulted token or API key.
+- Checkout sessions and customer sessions are created by the backend for each purchase or customer; never hardcode them. The example apps take the API key and sessions as runtime input.
+
+## Pitfalls
+
+- **Delegates are weak.** The SDK does not retain the delegate; the app must keep a strong reference (the view controller or view model) for the whole flow.
+- **Main actor.** Start flows and update UI on the main actor. In the SwiftUI example the delegate methods are `nonisolated` and hop to the main actor with `Task { @MainActor in ... }` before touching UI state.
+- **Session data must match.** `countryCode` must match the country of the checkout or customer session, and `language` must be `EN`, `ES` or `PT`.
+- **URL scheme.** If the scheme in the session differs from the one the app registers, redirect-based payment methods never return to the app.
+- **Only one SDK product per target.** Never link both `YunoSDK` and `YunoSDK-Static`.
+- **"Upload Symbols Failed" is expected** with `YunoSDK-Static` or a module: App Store Connect warns about `YunoSDK.framework` or a module framework because Xcode embeds a placeholder binary in static frameworks. The SDK code is in the app binary and its dSYM, so crashes are still symbolicated. Ignore the warning.
+- **Do not edit this package.** Depend on it by version; do not copy or modify its `Package.swift`, URLs or checksums.
+
+## Reference code
+
+| Path | Shows |
+|---|---|
+| `Example/YunoSDK/AppDelegate.swift` | Deep link forwarding |
+| `Example/YunoSDK/EnvirotmentViewController.swift` | `Yuno.initialize` |
+| `Example/YunoSDK/ViewController.swift` | Full, Lite and Enrollment with UIKit |
+| `YunoSwiftUI/YunoSwiftUI/TransactionView/` | Delegates, Full, Lite and Enrollment with SwiftUI |
+| `YunoSwiftUI/YunoSwiftUI/PaymentRender/` | Payment Render flow |
+| `YunoSwiftUI/YunoSwiftUI/EnrollmentRender/` | Enrollment Render flow |
+| `docs/HeadlessSDK(Payment).md`, `docs/HeadlessSDK(Enrollment).md` | Headless payment and enrollment (official: [payment](https://docs.y.uno/docs/sdks/headless-ios/checkout), [enrollment](https://docs.y.uno/docs/sdks/headless-ios/enrollment)) |
+
+## Running the examples
+
+Both apps need macOS with Xcode 26.2+, a sandbox iOS API key, and a checkout session (payments) or customer session (enrollment) created by your backend.
+
+- UIKit: open `Example/YunoSDK.xcodeproj` and run the `YunoSDK-Example` scheme. From the command line:
+  ```bash
+  xcodebuild -project Example/YunoSDK.xcodeproj -scheme YunoSDK-Example \
+    -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+    CODE_SIGNING_ALLOWED=NO build
+  ```
+- SwiftUI: open `YunoSwiftUI/YunoSwiftUI.xcodeproj` and run the `YunoSwiftUI` scheme (the app target requires iOS 15.0+).
+
+Enter the API key on the first screen, then the session, country and language, and pick a flow.
+
+## SDK 3.x
+
+`SdkPayments` (SDK 3.x) is a different API from the 2.x `YunoSDK` described here. Do not mix 2.x symbols (`Yuno.*`, `YunoPaymentDelegate`, ...) with 3.x code.
+
+## About this repository
+
+This is Yuno's distribution repository for the prebuilt iOS SDK binaries, the SPM manifest and the example apps. `Package.swift`, versions, release URLs and checksums are updated by Yuno's release process and must not be edited by hand. External contributions are not accepted. For integration questions, use the official Yuno documentation (https://docs.y.uno) or Yuno support.

@@ -53,7 +53,7 @@ struct ApiKeysView: View {
                 isActive: $goToCheckout,
                 label: { EmptyView() }
             )
-            Text("Made by iOS team with 💜")
+            Text("Made by the iOS team with 💜")
             
         }.padding(.horizontal, 28.0)
             .padding(.vertical, 10.0)

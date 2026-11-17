@@ -65,42 +65,44 @@ CocoaPods is no longer supported. `2.30.0` is the last version of `YunoSDK` avai
 3. If you called a module's `register()` at startup, you can keep or remove that call: modules now register themselves.
 
 ## Usage
-YunoSDK minimum required version is iOS 14.0
+YunoSDK requires iOS 14.0 or later.
 
-First, you'll need to get your Yuno app ID and iOS API key. Then initialize Yuno by importing Yuno and adding the following to your application delegate:
+First, get your iOS public API key from the Yuno Dashboard. Then import `YunoSDK` and initialize Yuno in your application delegate:
 
-> Note: If your app is using a UISceneDelegate you will need to put your Yuno initialisation code into your SceneDelegate
+> Note: If your app uses a `UISceneDelegate`, put your Yuno initialization code in your `SceneDelegate`.
 
 ```swift
 import YunoSDK
 
 Yuno.initialize(
     apiKey: "<Your iOS API Key>",
-    config: YunoConfig() // This is optional, by default it configures .oneStep card form and disables save card checkbox.
+    config: YunoConfig() // Optional. By default it uses Yuno styles and hides the save card checkbox.
 )
 ```
 
-## YunoConfig:
+The card form type (one step or step by step) is not set in code: configure it in the Yuno Dashboard.
+
+## YunoConfig
+
+All parameters are optional:
 
 ```swift
-
-final class YunoConfig {
-    let cardFormType: CardFormType, // This is optional, .oneStep by default, this is to choose Payment and Enrollment Card flow.
-    let appearance: Yuno.Appearance, // This is optional, by default uses Yuno styles.
-    let saveCardEnabled: Bool, // This is to choose if show save card checkbox on cards flows. It is false by default
-    let keepLoader: Bool,
-}
+YunoConfig(
+    appearance: Yuno.Appearance,   // SDK styles. Default: .default (Yuno styles)
+    saveCardEnabled: Bool,         // Shows the save card checkbox in card flows. Default: false
+    keepLoader: Bool,              // Keeps the loader after the transaction operations. Default: false
+    localizableBundle: Bundle?     // Bundle with your own localized strings. Default: nil
+)
 ```
 
-
 ##### Appearance
-With Yuno.Appearance you can customize the SDK styles:
+With `Yuno.Appearance` you can customize the SDK styles. Every parameter is optional:
 
 ```swift
 let appearance = Yuno.Appearance(fontFamily: "Climate Crisis",
-                                 accentColor: .orange, 
-                                 buttonBackgroundColor: .yellow, 
-                                 buttonTitleColor: .black, 
+                                 accentColor: .orange,
+                                 buttonBackgroundColor: .yellow,
+                                 buttonTitleColor: .black,
                                  buttonBorderColor: .black,
                                  secondaryButtonBackgroundColor: .yellow,
                                  secondaryButtonTitleColor: .black,
@@ -116,8 +118,8 @@ Yuno.initialize(
 ```
 
 ##### Keep loader
-By default, Yuno will stop the loading after processing transaction operations.
-You can make it persist via YunoConfig by setting `keepLoader: true`.
+By default, Yuno stops the loader after processing transaction operations.
+You can make it persist via `YunoConfig` by setting `keepLoader: true`.
 
 ```swift
 Yuno.initialize(
@@ -126,8 +128,8 @@ Yuno.initialize(
 )
 ```
 
-This will make the loader persist until you call either of the following functions.
-This only apply to payment flow
+The loader then persists until you call one of the following functions.
+This only applies to the payment flow.
 
 ```swift
 Yuno.hideLoader()
@@ -136,55 +138,51 @@ Yuno.hideLoader()
 or
 
 ```swift
-Yuno.continuePayment(showPaymentStatus: Bool)
+Yuno.continuePayment()
 ```
 
 ## Functions
 
 ### Enroll a new payment method
-To display a view controller with the flow to enroll a new payment method, call the following method:
+To display a view controller with the flow to enroll a new payment method, implement `YunoEnrollmentDelegate` and call `enrollPayment`:
 ```swift
-protocol YunoEnrollmentDelegate: AnyObject {
-
+@objc protocol YunoEnrollmentDelegate {
     var customerSession: String { get }
     var countryCode: String { get }
-    var language: String { get }
+    @objc optional var language: String? { get }
+    @objc optional var viewController: UIViewController? { get }
+
     func yunoEnrollmentResult(_ result: Yuno.Result)
 }
 
-class ViewController: YunoEnrollmentDelegate {
+class ViewController: UIViewController, YunoEnrollmentDelegate {
 
     @IBAction func startEnrollment(sender: Any) {
-        Yuno.enrollPayment(with: self, showPaymentStatus: Bool)
+        Yuno.enrollPayment(with: self, showPaymentStatus: true)
     }
 }
 ```
 
-> Note: showPaymentStatus by default is true
+> Note: `showPaymentStatus` is `true` by default.
 
 ### Checkout
-To start a new payment process, it is necessary to call the following method with a payment delegate as a parameter
+To start a new payment process, implement `YunoPaymentDelegate`:
 ```swift
-protocol YunoPaymentDelegate: AnyObject {
-
+@objc protocol YunoPaymentDelegate {
     var checkoutSession: String { get }
     var countryCode: String { get }
-    var language: String? { get }
-    var viewController: UIViewController? { get }
+    @objc optional var language: String? { get }
+    @objc optional var viewController: UIViewController? { get }
 
-    func yunoCreatePayment(with token: String)
     func yunoPaymentResult(_ result: Yuno.Result)
-}
-
-class ViewController: YunoPaymentDelegate {
-
-    func viewDidLoad() {
-        super.viewDidLoad()
-    }
+    @objc optional func yunoCreatePayment(with token: String, information: [String: Any])
 }
 ```
+
+`yunoCreatePayment(with:information:)` is optional in the protocol, but implement it to receive the one-time token.
+
 #### Show Payment Methods
-When you implement a SDK Full you have to add the next view on your layout to show the payment methods available.
+When you implement the Full SDK, add the payment methods view to your layout to show the available payment methods.
 
 Your delegate must conform to `YunoPaymentFullDelegate` (extends `YunoPaymentDelegate`):
 
@@ -199,7 +197,7 @@ Your delegate must conform to `YunoPaymentFullDelegate` (extends `YunoPaymentDel
 **UIKit** — returns a `UIView`:
 ```swift
 Task {
-    let view = await Yuno.getPaymentMethodViewAsync(delegate: self)
+    let view: UIView = await Yuno.getPaymentMethodViewAsync(delegate: self)
     containerView.addSubview(view)
 }
 ```
@@ -207,50 +205,53 @@ Task {
 **SwiftUI** — returns a SwiftUI view:
 ```swift
 .task {
-    paymentMethodsView = await Yuno.getPaymentMethodViewAsync(delegate: coordinator)
+    paymentMethodsView = AnyView(await Yuno.getPaymentMethodViewAsync(delegate: coordinator))
 }
 ```
 
 #### Start Payment
-To start a payment process you have to call the method `startPayment` but if your are using the lite version you must to call `startPaymentLite`
+To start a payment, call `startPayment`. If you use the Lite version, call `startPaymentLite` instead.
 ```swift
-Yuno.startPayment(showPaymentStatus: Bool)
+Yuno.startPayment(showPaymentStatus: true)
 ```
-for the Lite version you need to send an additional parameter, these consist, the vaulted token and/or payment type with which the user will pay
+For the Lite version, also pass your delegate and the payment method the user selected: its payment type and, for an enrolled payment method, its vaulted token.
 
 ```swift
-protocol PaymentMethodSelected {
+@objc protocol PaymentMethodSelected {
     var vaultedToken: String? { get }
     var paymentMethodType: String { get }
 }
 
-Yuno.startPaymentLite(paymentSelected: PaymentMethodSelected, showPaymentStatus: Bool)
+Yuno.startPaymentLite(with: self, paymentSelected: paymentSelected, showPaymentStatus: true)
 ```
-At the end of this process you will obtain the One Time Token to create back-back the payment, this data you can obtain from the callback of the delegate.
-
-You can get some information like OTT after call a `startPayment` or `startPaymentLite` method, how is showing in the next code:
+At the end of this process you receive the one-time token through the delegate. Send it to your backend, which creates the payment:
 
 ```swift
-func yunoCreatePayment(with token: String) { ... }
+func yunoCreatePayment(with token: String, information: [String: Any]) { ... }
 ```
 #### Complete Payment
-If the payment required a start an action to complete the payment, you can call the following method to execute the payment and get state of the transaction
+If the payment requires an additional action to complete, call the following method to continue the payment and get the state of the transaction:
 ```swift
-Yuno.continuePayment(showPaymentStatus: Bool)
+Yuno.continuePayment()
 ```
-
-> showPaymentStatus by default is true
 
 #### Callback
-The transactions could return three different states: success, fail, processing and reject, to listen this state you have to implement the delegate, like in the follow piece of code:
+The transaction result is delivered as a `Yuno.Result`. Its `status` is one of `reject`, `succeeded`, `fail`, `processing`, `internalError` or `userCancelled`; `substatus` and `message` add detail when available.
 ```swift
-enum Result {
-    case reject, success, fail, processing, internalError, userCancelled
+func yunoPaymentResult(_ result: Yuno.Result) {
+    switch result.status {
+    case .succeeded: break
+    case .reject, .fail: break
+    case .processing: break
+    case .userCancelled: break
+    case .internalError: break
+    @unknown default: break
+    }
 }
 
-func yunoPaymentResult(_ result: Yuno.Result) { ... }
 func yunoEnrollmentResult(_ result: Yuno.Result) { ... }
 ```
+
 ## Author
 
 Yuno Payments Inc.
