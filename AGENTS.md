@@ -60,7 +60,6 @@ The public documentation is the single source of truth for the API and the flows
 | Deep links | https://docs.y.uno/docs/yuno-sdk/features/handle-deeplinks |
 | Native modules (3DS and antifraud) | https://docs.y.uno/docs/yuno-sdk/features/native-modules |
 | Headless (no SDK UI) | https://docs.y.uno/docs/sdks/headless-ios/checkout |
-| Working with an AI agent | https://docs.y.uno/docs/yuno-sdk/build-with-ai |
 
 The example apps in this repository (`Example/YunoSDK`, `YunoSwiftUI/YunoSwiftUI`) are runnable references; when they and the documentation differ, follow the documentation.
 
