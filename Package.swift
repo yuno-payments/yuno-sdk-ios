@@ -29,13 +29,13 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "SdkPayments",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/3.2.0/SdkPayments_SPM.xcframework.zip",
-            checksum: "cd50e52f6cb470cfacb8ad0fae1959ae6a4e33a47295ca6fa996e3b94d2625bd"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/3.3.0/SdkPayments_SPM.xcframework.zip",
+            checksum: "a47b3422808a885d6af93e3a7520b5ac1fceef406f85395dcc39d9cc24136d09"
         ),
         .binaryTarget(
             name: "SdkPayments-Static",
-            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/3.2.0/SdkPayments-Static.xcframework.zip",
-            checksum: "92c6d7c1c5d2096cc560f2f62b01860c747983ec121ad6e4d1e976894168378a"
+            url: "https://github.com/yuno-payments/yuno-sdk-ios/releases/download/3.3.0/SdkPayments-Static.xcframework.zip",
+            checksum: "191f4cef92dd03288240aea73ecd946bac0d3e4a4451443cb9dcb63782793ce7"
         ),
         .target(
             name: "SdkAntifraudClearsaleWrapper",

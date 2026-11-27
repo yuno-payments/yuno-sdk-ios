@@ -29,7 +29,7 @@ Add the package in Xcode with **File > Add Package Dependencies** using `https:/
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "3.2.0"))
+    .package(url: "https://github.com/yuno-payments/yuno-sdk-ios.git", .upToNextMajor(from: "3.3.0"))
 ]
 ```
 
